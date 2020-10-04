@@ -13,7 +13,7 @@ export default Home = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					navigation.navigate('RegistrationScreen')
+					navigation.navigate('PreRegistrationScreen')
 				}}
 			>
 				<Text style={styles.textoBoton}>Registrarse</Text>
