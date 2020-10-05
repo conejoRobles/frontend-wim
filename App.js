@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
-import Registration from './src/screens/Registration';
+import PasajeroRegistration from './src/screens/PasajeroRegistration';
+import EmpresaRegistration from './src/screens/EmpresaRegistration';
 import PreRegistration from './src/screens/PreRegistration';
 
 const AppNavigator = createSwitchNavigator({
@@ -13,8 +13,11 @@ const AppNavigator = createSwitchNavigator({
   LoginScreen: {
     screen: Login
   },
-  RegistrationScreen: {
-    screen: Registration
+  PasajeroRegistrationScreen: {
+    screen: PasajeroRegistration
+  },
+  EmpresaRegistrationScreen: {
+    screen: EmpresaRegistration
   },
   PreRegistrationScreen: {
     screen: PreRegistration

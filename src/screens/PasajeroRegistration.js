@@ -1,17 +1,15 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-export default function Registration({ navigation }) {
-	const [usuario, setUsuario] = useState({
-		nombre: '',
-		pass: '',
-		correo: '',
-		rut: '',
-		telefono: ''
-	})
-	const [showPass, setShowPass] = useState({ value: true });
+const PasajeroRegistration = ({ navigation }) => {
+	const [nombre, setNombre] = useState('')
+	const [pass, setPass] = useState('')
+	const [correo, setCorreo] = useState('')
+	const [rut, setRut] = useState('')
+	const [telefono, setTelefono] = useState('')
+	const [showPass, setShowPass] = useState({ value: true })
 
 	return (
 		<View style={styles.container} >
@@ -24,7 +22,7 @@ export default function Registration({ navigation }) {
 					style={styles.inputText}
 					placeholder="Nombre"
 					placeholderTextColor="grey"
-					onChangeText={text => setUsuario({ nombre: text })}
+					onChangeText={text => setNombre(text)}
 				/>
 			</View>
 			<View style={styles.inputView}>
@@ -36,7 +34,7 @@ export default function Registration({ navigation }) {
 					style={styles.inputText}
 					placeholder="Contraseña"
 					placeholderTextColor="grey"
-					onChangeText={text => setUsuario({ pass: text })}
+					onChangeText={text => setPass(text)}
 				/>
 				<View style={styles.icon}>
 					<TouchableHighlight
@@ -57,7 +55,7 @@ export default function Registration({ navigation }) {
 					style={styles.inputText}
 					placeholder="Rut"
 					placeholderTextColor="grey"
-					onChangeText={text => setUsuario({ rut: text })}
+					onChangeText={text => setRut(text)}
 				/>
 			</View>
 			<View style={styles.inputView}>
@@ -68,7 +66,7 @@ export default function Registration({ navigation }) {
 					style={styles.inputText}
 					placeholder="Email"
 					placeholderTextColor="grey"
-					onChangeText={text => setUsuario({ correo: text })}
+					onChangeText={text => setCorreo(text)}
 				/>
 			</View>
 			<View style={styles.inputView}>
@@ -76,17 +74,22 @@ export default function Registration({ navigation }) {
 					<Icon name="phone" size={25} />
 				</View>
 				<TextInput
-					// secureTextEntry
 					style={styles.inputText}
 					placeholder="Telefono"
 					placeholderTextColor="grey"
-					onChangeText={text => setUsuario({ telefono: text })}
+					onChangeText={text => setTelefono(text)}
 				/>
 			</View>
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					navigation.navigate('LoginScreen')
+					registro({
+						nombre,
+						pass,
+						correo,
+						rut,
+						telefono
+					})
 				}}
 			>
 				<Text style={styles.textoBoton}>Registrarse</Text>
@@ -95,6 +98,42 @@ export default function Registration({ navigation }) {
 	);
 }
 
+const registro = async (usuario, navigation) => {
+	const res = await fetch('http://192.168.1.51:3000/addPasajero', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'Application/json',
+		},
+		body: JSON.stringify({
+			rut: usuario.rut,
+			nombre: usuario.nombre,
+			telefono: usuario.telefono,
+			correo: usuario.correo,
+			pass: usuario.pass,
+
+		}),
+	})
+	const ans = await res.json()
+	if (ans.ok) {
+		Alert.alert(
+			"Bienvenido!",
+			ans.mensaje,
+			[
+				{ text: "OK", onPress: () => navigation.navigate('LoginScreen') }
+			],
+			{ cancelable: false }
+		);
+	} else {
+		Alert.alert(
+			"Oh no! algo anda mal",
+			ans.mensaje,
+			[
+				{ text: "Volver a intentar" }
+			],
+			{ cancelable: false }
+		);
+	}
+}
 
 const styles = StyleSheet.create({
 	container: {
@@ -146,3 +185,5 @@ const styles = StyleSheet.create({
 		color: "black"
 	},
 });
+
+export default PasajeroRegistration

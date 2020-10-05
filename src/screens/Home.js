@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Logo from '../components/Logo';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default Home = ({ navigation }) => {
-	const [email, setEmail] = useState({ value: '', error: '' });
-	const [password, setPassword] = useState({ value: '', error: '' });
-	const [showPass, setShowPass] = useState({ value: true });
+const Home = ({ navigation }) => {
+	// const fetchPrueba = async () => {
+	// 	const res = await fetch('http://192.168.1.51:3000/')
+	// 	const json = await res.json()
+	// 	console.log(Object.values(json.payload)[0])
+	// }
+
+	// useEffect(() => {
+	// 	fetchPrueba()
+	// }, [])
+
 	return (
 		<View style={styles.container}>
 			<Logo />
@@ -80,3 +86,5 @@ const styles = StyleSheet.create({
 		color: "black"
 	},
 });
+
+export default Home

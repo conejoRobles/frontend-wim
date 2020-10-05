@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-export default Login = ({ navigation }) => {
+const Login = ({ navigation }) => {
 	const [email, setEmail] = useState({ value: '', error: '' });
 	const [password, setPassword] = useState({ value: '', error: '' });
 	const [showPass, setShowPass] = useState({ value: true });
@@ -121,3 +121,5 @@ const styles = StyleSheet.create({
 		color: "black"
 	},
 });
+
+export default Login

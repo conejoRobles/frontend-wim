@@ -4,13 +4,13 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-export default function Registro({ navigation }) {
+const PreRegistro = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.titulo}> Registrarse como:</Text>
 			<TouchableOpacity style={[styles.button, { backgroundColor: '#ff3d00' }]}
 				onPress={() => {
-					navigation.navigate('RegistrationScreen')
+					navigation.navigate('PasajeroRegistrationScreen')
 				}}
 			>
 				<Icon name="user" size={40} style={styles.icon} />
@@ -21,7 +21,7 @@ export default function Registro({ navigation }) {
 			</TouchableOpacity>
 			<TouchableOpacity style={[styles.button, { backgroundColor: '#000051' }]}
 				onPress={() => {
-					navigation.navigate('RegistrationScreen')
+					navigation.navigate('EmpresaRegistrationScreen')
 				}}
 			>
 				<Icon name="bus" size={40} style={styles.icon} />
@@ -75,3 +75,5 @@ const styles = StyleSheet.create({
 		margin: 10,
 	}
 })
+
+export default PreRegistro
