@@ -89,7 +89,7 @@ const PasajeroRegistration = ({ navigation }) => {
 						correo,
 						rut,
 						telefono
-					})
+					}, navigation)
 				}}
 			>
 				<Text style={styles.textoBoton}>Registrarse</Text>

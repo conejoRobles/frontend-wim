@@ -61,14 +61,33 @@ const Login = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					alert('correo:' + email.value + ' clave:' + password.value)
-					navigation.navigate('HomeScreen')
+					login({
+						email,
+						password,
+					}, navigation)
+
 				}}
 			>
 				<Text style={styles.textoBoton}>Iniciar sesión</Text>
 			</TouchableOpacity>
 		</View >
 	);
+}
+
+const login = async (usuario, navigation) => {
+	const res = await fetch('http://192.168.1.51:3000/login', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'Application/json',
+		},
+		body: JSON.stringify({
+
+			correo: usuario.correo,
+			pass: usuario.pass,
+
+		}),
+	})
+	navigation.navigate('HomeScreen')
 }
 
 const styles = StyleSheet.create({
