@@ -87,6 +87,15 @@ const login = async (usuario, navigation) => {
 			],
 			{ cancelable: false }
 		);
+	} else {
+		Alert.alert(
+			"Oh no!",
+			ans.mensaje,
+			[
+				{ text: "Intentar otra vez" }
+			],
+			{ cancelable: false }
+		);
 	}
 }
 
