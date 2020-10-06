@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Login = ({ navigation }) => {
-	const [email, setEmail] = useState({ value: '', error: '' });
-	const [password, setPassword] = useState({ value: '', error: '' });
-	const [showPass, setShowPass] = useState({ value: true });
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [showPass, setShowPass] = useState(true);
 	return (
 		<View style={styles.container}>
 			<Text style={styles.titulo}>
@@ -17,14 +17,10 @@ const Login = ({ navigation }) => {
 				</View>
 				<TextInput
 					style={styles.inputText}
-					label='Email'
 					returnKeyType='next'
-					value={email.value}
 					onChangeText={(text) => {
-						setEmail({ value: text, error: '' })
+						setEmail(text)
 					}}
-					error={!!email.error}
-					errorText={email.error}
 					autoCapitalize='none'
 					autoCompleteType='email'
 					textContentType='emailAddress'
@@ -38,20 +34,16 @@ const Login = ({ navigation }) => {
 				</View>
 				<TextInput
 					style={styles.inputText}
-					label='Password'
 					returnKeyType='done'
-					value={password.value}
-					onChangeText={text => setPassword({ value: text, error: '' })}
-					error={!!password.error}
-					errorText={password.error}
+					onChangeText={text => setPassword(text)}
 					placeholder={'contraseña'}
-					secureTextEntry={showPass.value}
+					secureTextEntry={showPass}
 				/>
 				<View style={styles.icon}>
 					<TouchableHighlight
 						underlayColor={'rgb(251, 91, 90)'}
 						onPress={() => {
-							setShowPass({ value: !showPass.value })
+							setShowPass(!showPass)
 						}}
 					>
 						<Icon name="eye" size={25} />
@@ -75,19 +67,27 @@ const Login = ({ navigation }) => {
 }
 
 const login = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.1.51:3000/login', {
+	const res = await fetch('http://192.168.1.51:3000/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',
 		},
 		body: JSON.stringify({
-
-			correo: usuario.correo,
-			pass: usuario.pass,
-
+			correo: usuario.email,
+			pass: usuario.password,
 		}),
 	})
-	navigation.navigate('HomeScreen')
+	const ans = await res.json()
+	if (ans.ok) {
+		Alert.alert(
+			"Bienvenido!",
+			ans.mensaje,
+			[
+				{ text: "OK", onPress: () => navigation.navigate('HomeScreen') }
+			],
+			{ cancelable: false }
+		);
+	}
 }
 
 const styles = StyleSheet.create({
