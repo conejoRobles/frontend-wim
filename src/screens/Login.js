@@ -23,7 +23,6 @@ const Login = ({ navigation }) => {
 					}}
 					autoCapitalize='none'
 					autoCompleteType='email'
-					textContentType='emailAddress'
 					keyboardType='email-address'
 					placeholder='correo@gmail.com'
 				/>
