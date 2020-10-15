@@ -82,7 +82,7 @@ const login = async (usuario, navigation) => {
 			"Bienvenido!",
 			ans.mensaje,
 			[
-				{ text: "OK", onPress: () => navigation.navigate('HomeScreen') }
+				{ text: "OK", onPress: () => navigation.navigate('TabPrincipal') }
 			],
 			{ cancelable: false }
 		);
