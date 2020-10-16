@@ -1,35 +1,38 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
 const PreRegistro = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
-			<Text style={styles.titulo}> Registrarse como:</Text>
-			<TouchableOpacity style={[styles.button, { backgroundColor: '#ff3d00' }]}
-				onPress={() => {
-					navigation.navigate('PasajeroRegistrationScreen')
-				}}
-			>
-				<Icon name="user" size={40} style={styles.icon} />
-				<Text style={styles.texto}>Pasajero</Text>
-				<View style={styles.lineStyle} />
-				<Text style={styles.texto2}>Si buscas un recorrido
-                para viajar, este es tu perfil</Text>
-			</TouchableOpacity>
-			<TouchableOpacity style={[styles.button, { backgroundColor: '#000051' }]}
-				onPress={() => {
-					navigation.navigate('EmpresaRegistrationScreen')
-				}}
-			>
-				<Icon name="bus" size={40} style={styles.icon} />
-				<Text style={styles.texto}>Empresa</Text>
-				<View style={styles.lineStyle} />
-				<Text style={styles.texto2}>Si quieres ofrecer un recorrido
-                para viajar, este es tu perfil</Text>
-			</TouchableOpacity>
+			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
+				<Text style={styles.titulo}>Registrarse</Text>
+				<Text style={styles.titulo}>como:</Text>
+				<TouchableOpacity style={[styles.button, { backgroundColor: '#ff3d00' }]}
+					onPress={() => {
+						navigation.navigate('PasajeroRegistrationScreen')
+					}}
+				>
+					<Icon name="user" size={40} style={styles.icon} />
+					<Text style={styles.texto}>Pasajero</Text>
+					<View style={styles.lineStyle} />
+					<Text style={styles.texto2}>Si buscas un recorrido
+					para viajar, este es tu perfil</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={[styles.button, { backgroundColor: '#000051' }]}
+					onPress={() => {
+						navigation.navigate('EmpresaRegistrationScreen')
+					}}
+				>
+					<Icon name="bus" size={40} style={styles.icon} />
+					<Text style={styles.texto}>Empresa</Text>
+					<View style={styles.lineStyle} />
+					<Text style={styles.texto2}>Si quieres ofrecer un recorrido
+					para viajar, este es tu perfil</Text>
+				</TouchableOpacity>
+			</ImageBackground>
 		</View>
 	)
 }
@@ -42,13 +45,12 @@ const styles = StyleSheet.create({
 	},
 	titulo: {
 		fontSize: 35,
-		marginBottom: 20,
 		fontWeight: 'bold'
 	},
 	button: {
-		width: "80%",
+		width: "70%",
 		borderRadius: 30,
-		height: 200,
+		height: 250,
 		alignItems: "center",
 		justifyContent: "center",
 		marginTop: 40,
@@ -73,6 +75,14 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		borderColor: 'white',
 		margin: 10,
+	},
+	image: {
+		flex: 1,
+		width: '100%',
+		height: '100%',
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'blue'
 	}
 })
 

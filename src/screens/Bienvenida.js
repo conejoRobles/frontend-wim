@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Constants from 'expo-constants'
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DATA = [
     {
@@ -57,18 +58,13 @@ export default function Bienvenida() {
         )
     }
     return (
-    <View style={styles.container}>
-        <View style = {styles.header}>
-            <View style = {{width:'20%'}}>
-                <Icon name="bars" size= {30} style= {styles.icon}/>
-            </View>
-            <View style = {{width:'65%', backgroundColor: 'blue'}}>
-            </View> 
-            <View style = {{width:'15%', alignContent: 'flex-end', alignItems: 'flex-end',right: -10}}>
-                <Icon name="info-circle" size= {30} style= {styles.icon}/>
-            </View>
-        </View>
-        <View style = {[styles.button, styles.bordes]}>
+    <View style={[styles.container, {backgroundColor:'green', zIndex: 0}]}>
+        <StatusBar backgroundColor="#ff6900"></StatusBar>
+        <LinearGradient
+         colors={["#0033ff","#6bc1ff"]}
+         style={{height:"20%"}}
+         />
+        <View style = {[styles.button, styles.bordes, {backgroundColor: 'white', zIndex:1}]}>
                 <Text style = {styles.texto2}>Bienvenido</Text>
                 <Text style = {styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>
         </View>
@@ -101,7 +97,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginTop: Constants.statusBarHeight,
+        // marginTop: Constants.statusBarHeight,
     },
     button: {
         marginHorizontal: 40,
@@ -109,8 +105,7 @@ const styles = StyleSheet.create({
         height:150,
         alignItems:"center",
         justifyContent:"center",
-        marginTop:40,
-        marginBottom:10
+        marginVertical: 15,
     },
     contenedor: {
         // flex: 1,

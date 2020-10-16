@@ -57,6 +57,7 @@ const DATA = [
     },
 ]
 
+// Crear componente *******************************************
 const Item = ({item, onPress, style}) =>(
     <TouchableOpacity onPress = {onPress} style={[styles.button, style]}>
         <View style = {[styles.bordes, {flex: 1,flexDirection: 'row', height: 120, alignItems:'center'}]}>

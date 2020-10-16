@@ -22,18 +22,22 @@
 // export default createAppContainer(AppNavigator)
 
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from './src/screens/Home'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { NavigationContainer } from '@react-navigation/native'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import Login from './src/screens/Login'
 import PasajeroRegistration from './src/screens/PasajeroRegistration'
 import EmpresaRegistration from './src/screens/EmpresaRegistration'
 import PreRegistration from './src/screens/PreRegistration'
 import Bienvenida from './src/screens/Bienvenida'
 import Noticias from './src/screens/Noticias'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer } from '@react-navigation/native'
+import Perfil from './src/screens/Perfil'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 function CustomHeader() {
   return (
@@ -50,24 +54,58 @@ function CustomHeader() {
   )
 }
 
-const HomeStack = createStackNavigator();
+const AuthStack = createStackNavigator()
+const NoticiaStack = createStackNavigator()
+const BuscarStack = createStackNavigator()
+const RutasStack = createStackNavigator()
 
-function HomeStackScreen() {
+function AuthStackScreen() {
   return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={Home} />
-      <HomeStack.Screen name="LoginScreen" component={Login} />
-      <HomeStack.Screen name="PreRegistrationScreen" component={PreRegistration} />
-      <HomeStack.Screen name="EmpresaRegistrationScreen" component={EmpresaRegistration} />
-      <HomeStack.Screen name="PasajeroRegistrationScreen" component={PasajeroRegistration} />
-      <HomeStack.Screen name="TabPrincipal" component={TabPrincipal} />
-    </HomeStack.Navigator>
+    <AuthStack.Navigator 
+    screenOptions = {{
+      headerShown: false
+    }}
+    >
+      <AuthStack.Screen name="Home" component={Home} />
+      <AuthStack.Screen name="LoginScreen" component={Login} />
+      <AuthStack.Screen name="PreRegistrationScreen" component={PreRegistration} />
+      <AuthStack.Screen name="EmpresaRegistrationScreen" component={EmpresaRegistration} />
+      <AuthStack.Screen name="PasajeroRegistrationScreen" component={PasajeroRegistration} />
+      <AuthStack.Screen name="PrincipalDrawer" component={PrincipalDrawer} options={{headerShown:true}} />
+    </AuthStack.Navigator>
   );
+}
+
+function NoticiaStackScreen(){
+  return (
+    <NoticiaStack.Navigator>
+      <NoticiaStack.Screen name="Noticias" component={Noticias} />
+      {/* <NoticiaStack.Screen name="NoticiasxEmpresa" component={Noticia} /> */}
+    </NoticiaStack.Navigator>
+  )
+}
+
+
+function BuscarStackScreen(){
+  return (
+    <BuscarStack.Navigator>
+      <BuscarStack.Screen name="Buscar" component={Noticias} />
+      {/* <NoticiaStack.Screen name="MostrarRecorrido" component={} /> */}
+    </BuscarStack.Navigator>
+  )
+}
+
+function RutasStackScreen(){
+  return (
+    <RutasStack.Navigator>
+      <RutasStack.Screen name="Bienvenida" component={Bienvenida} />
+    </RutasStack.Navigator>
+  )
 }
 
 const Tab = createBottomTabNavigator();
 
-function TabPrincipal(){
+function TabPasajero(){
   return (
     <Tab.Navigator
     initialRouteName="Bienvenida"
@@ -78,7 +116,7 @@ function TabPrincipal(){
     >
       <Tab.Screen
         name="HomePage"
-        component={Bienvenida}
+        component={BuscarStackScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5
@@ -90,7 +128,7 @@ function TabPrincipal(){
         }} />
       <Tab.Screen
         name="Bienvenida"
-        component={Bienvenida}
+        component={RutasStackScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5
@@ -102,7 +140,7 @@ function TabPrincipal(){
         }} />
         <Tab.Screen
         name="Noticia"
-        component={Noticias}
+        component={NoticiaStackScreen}
         options={{
           tabBarBadge: 3,
           tabBarIcon: ({ color }) => (
@@ -118,11 +156,23 @@ function TabPrincipal(){
   )
 }
 
+
+const Drawer = createDrawerNavigator()
+
+function PrincipalDrawer() {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name="Home" component={TabPasajero} />
+      <Drawer.Screen name="Profile" component={Perfil} />
+    </Drawer.Navigator>
+  )
+}
+
 function App() {
   
   return (
     <NavigationContainer>
-      <HomeStackScreen></HomeStackScreen>
+      <AuthStackScreen></AuthStackScreen>
     </NavigationContainer>
   );
 }

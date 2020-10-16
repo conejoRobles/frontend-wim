@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
+
+// const image = {path}
 
 const Login = ({ navigation }) => {
 	const [email, setEmail] = useState('');
@@ -8,65 +10,67 @@ const Login = ({ navigation }) => {
 	const [showPass, setShowPass] = useState(true);
 	return (
 		<View style={styles.container}>
-			<Text style={styles.titulo}>
-				Inicio de sesión
-   </Text>
-			<View style={styles.inputView}>
-				<View style={styles.icon}>
-					<Icon name="envelope" size={25} />
-				</View>
-				<TextInput
-					style={styles.inputText}
-					returnKeyType='next'
-					onChangeText={(text) => {
-						setEmail(text)
-					}}
-					autoCapitalize='none'
-					autoCompleteType='email'
-					keyboardType='email-address'
-					placeholder='correo@gmail.com'
-				/>
-			</View>
-			<View style={styles.inputView}>
-				<View style={styles.icon}>
-					<Icon name="lock" size={25} />
-				</View>
-				<TextInput
-					style={styles.inputText}
-					returnKeyType='done'
-					onChangeText={text => setPassword(text)}
-					placeholder={'contraseña'}
-					secureTextEntry={showPass}
-				/>
-				<View style={styles.icon}>
-					<TouchableHighlight
-						underlayColor={'rgb(251, 91, 90)'}
-						onPress={() => {
-							setShowPass(!showPass)
+			<ImageBackground source = {require('../../assets/login_register.png')} style = {styles.image} resizeMode= 'cover'>
+				<Text style={styles.titulo}>
+					Inicio de sesión
+				</Text>
+				<View style={styles.inputView}>
+					<View style={styles.icon}>
+						<Icon name="envelope" size={25} />
+					</View>
+					<TextInput
+						style={styles.inputText}
+						returnKeyType='next'
+						onChangeText={(text) => {
+							setEmail(text)
 						}}
-					>
-						<Icon name="eye" size={25} />
-					</TouchableHighlight>
+						autoCapitalize='none'
+						autoCompleteType='email'
+						keyboardType='email-address'
+						placeholder='correo@gmail.com'
+					/>
 				</View>
-			</View>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => {
-					login({
-						email,
-						password,
-					}, navigation)
+				<View style={styles.inputView}>
+					<View style={styles.icon}>
+						<Icon name="lock" size={25} />
+					</View>
+					<TextInput
+						style={styles.inputText}
+						returnKeyType='done'
+						onChangeText={text => setPassword(text)}
+						placeholder={'contraseña'}
+						secureTextEntry={showPass}
+					/>
+					<View style={styles.icon}>
+						<TouchableHighlight
+							underlayColor={'rgb(251, 91, 90)'}
+							onPress={() => {
+								setShowPass(!showPass)
+							}}
+						>
+							<Icon name="eye" size={25} />
+						</TouchableHighlight>
+					</View>
+				</View>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => {
+						login({
+							email,
+							password,
+						}, navigation)
 
-				}}
-			>
-				<Text style={styles.textoBoton}>Iniciar sesión</Text>
-			</TouchableOpacity>
+					}}
+				>
+					<Text style={styles.textoBoton}>Iniciar sesión</Text>
+				</TouchableOpacity>
+			</ImageBackground>
 		</View >
 	);
 }
 
 const login = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.1.51:3000/', {
+	const res = await fetch('http://192.168.0.16:3000/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',
@@ -82,7 +86,7 @@ const login = async (usuario, navigation) => {
 			"Bienvenido!",
 			ans.mensaje,
 			[
-				{ text: "OK", onPress: () => navigation.navigate('TabPrincipal') }
+				{ text: "OK", onPress: () => navigation.navigate('PrincipalDrawer') }
 			],
 			{ cancelable: false }
 		);
@@ -147,6 +151,14 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		color: "black"
 	},
+	image: {
+		flex: 1,
+		width: '100%',
+		height: '100%',
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'blue'
+	}
 });
 
 export default Login
