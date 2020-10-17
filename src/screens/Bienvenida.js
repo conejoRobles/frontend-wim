@@ -58,12 +58,12 @@ export default function Bienvenida() {
         )
     }
     return (
-    <View style={[styles.container, {backgroundColor:'green', zIndex: 0}]}>
+    <View style={[styles.container]}>
         <StatusBar backgroundColor="#ff6900"></StatusBar>
-        <LinearGradient
+        {/* <LinearGradient
          colors={["#0033ff","#6bc1ff"]}
          style={{height:"20%"}}
-         />
+         /> */}
         <View style = {[styles.button, styles.bordes, {backgroundColor: 'white', zIndex:1}]}>
                 <Text style = {styles.texto2}>Bienvenido</Text>
                 <Text style = {styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>

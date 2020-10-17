@@ -21,8 +21,8 @@
 
 // export default createAppContainer(AppNavigator)
 
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { Component } from 'react'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from './src/screens/Home'
@@ -37,20 +37,43 @@ import PreRegistration from './src/screens/PreRegistration'
 import Bienvenida from './src/screens/Bienvenida'
 import Noticias from './src/screens/Noticias'
 import Perfil from './src/screens/Perfil'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { DrawerActions } from 'react-navigation';
 
-function CustomHeader() {
+// function CustomHeader() {
+//   return (
+//     <View style = {styles.header}>
+//       <View style = {{flex: 1}}>
+//         <TouchableOpacity onPress= {() => navigation}>
+//           <Icon name="bars" size= {30} style= {styles.icon}/>
+//         </TouchableOpacity>
+//       </View>
+//       <View style = {{flex: 2}}>
+//         {/* <Text>HOLA</Text> */}
+//       </View> 
+//       <View style = {{flex: 1, alignContent: 'flex-end', alignItems: 'flex-end', marginRight:15 }}>
+//         <TouchableOpacity>
+//           <Icon name="info-circle" size= {30} style= {styles.icon}/>
+//         </TouchableOpacity>
+//       </View>
+//     </View>
+//   )
+// }
+
+const leftButton = ({navigation}) => {
   return (
-    <View style = {styles.header}>
-      <View style = {{flex: 1}}>
-        <Icon name="bars" size= {30} style= {styles.icon}/>
-      </View>
-      <View style = {{flex: 2, backgroundColor: 'blue'}}>
-      </View> 
-      <View style = {{flex: 1, alignContent: 'flex-end', alignItems: 'flex-end',right: -10}}>
-        <Icon name="info-circle" size= {30} style= {styles.icon}/>
-      </View>
-    </View>
+    <TouchableOpacity style = {{marginLeft: 20}} 
+    // onPress = {() => navigation.toggleDrawer()}
+    >
+      <Icon name="bars" size= {30} style= {styles.icon}/>
+    </TouchableOpacity>
+  )
+}
+
+function rightButton(){
+  return(
+    <TouchableOpacity>
+      <Icon name="info-circle" size= {30} style= {styles.icon}/>
+    </TouchableOpacity>
   )
 }
 
@@ -71,7 +94,7 @@ function AuthStackScreen() {
       <AuthStack.Screen name="PreRegistrationScreen" component={PreRegistration} />
       <AuthStack.Screen name="EmpresaRegistrationScreen" component={EmpresaRegistration} />
       <AuthStack.Screen name="PasajeroRegistrationScreen" component={PasajeroRegistration} />
-      <AuthStack.Screen name="PrincipalDrawer" component={PrincipalDrawer} options={{headerShown:true}} />
+      <AuthStack.Screen name="PrincipalDrawer" component={PrincipalDrawer} options={{headerShown:true, headerLeft: leftButton, headerStyle: {backgroundColor: '#ff6900'}, headerTitleStyle: {color: 'white'}, headerRight: rightButton}} />
     </AuthStack.Navigator>
   );
 }
@@ -161,20 +184,22 @@ const Drawer = createDrawerNavigator()
 
 function PrincipalDrawer() {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={TabPasajero} />
+    <Drawer.Navigator
+      // drawerContent={({navigation}) => (
+      // <DrawerComponent navigation={navigation} />)}
+      >
+      <Drawer.Screen options={{}} name="Home" component={TabPasajero} />
       <Drawer.Screen name="Profile" component={Perfil} />
     </Drawer.Navigator>
   )
 }
 
-function App() {
-  
-  return (
-    <NavigationContainer>
-      <AuthStackScreen></AuthStackScreen>
-    </NavigationContainer>
-  );
+function App(){
+    return (
+      <NavigationContainer>
+        <AuthStackScreen></AuthStackScreen>
+      </NavigationContainer>
+    )
 }
 export default App;
 
@@ -188,5 +213,9 @@ const styles = StyleSheet.create({
       paddingLeft: 20,
       alignItems: 'center',
       // justifyContent: 'center',
+  },
+  icon : {
+    width: 50,
+    color: 'white'
   },
 })
