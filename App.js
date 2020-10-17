@@ -1,3 +1,30 @@
+import React from 'react'
+import { StyleSheet, TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { createStackNavigator } from '@react-navigation/stack'
+import Home from './src/screens/Home'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { DrawerActions, NavigationContainer } from '@react-navigation/native'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import Login from './src/screens/Login'
+import PasajeroRegistration from './src/screens/PasajeroRegistration'
+import EmpresaRegistration from './src/screens/EmpresaRegistration'
+import PreRegistration from './src/screens/PreRegistration'
+import Bienvenida from './src/screens/Bienvenida'
+import Noticias from './src/screens/Noticias'
+import Perfil from './src/screens/Perfil'
+import { Provider } from 'react-redux'
+import store from './src/store/index'
+
+const AuthStack = createStackNavigator()
+const NoticiaStack = createStackNavigator()
+const BuscarStack = createStackNavigator()
+const RutasStack = createStackNavigator()
+const Tab = createBottomTabNavigator()
+const Drawer = createDrawerNavigator()
+
+
 // import React, { useState } from 'react';
 // import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
 // import { createAppContainer, createSwitchNavigator } from 'react-navigation'
@@ -21,23 +48,8 @@
 
 // export default createAppContainer(AppNavigator)
 
-import React, { Component } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { createStackNavigator } from '@react-navigation/stack'
-import Home from './src/screens/Home'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer } from '@react-navigation/native'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import Login from './src/screens/Login'
-import PasajeroRegistration from './src/screens/PasajeroRegistration'
-import EmpresaRegistration from './src/screens/EmpresaRegistration'
-import PreRegistration from './src/screens/PreRegistration'
-import Bienvenida from './src/screens/Bienvenida'
-import Noticias from './src/screens/Noticias'
-import Perfil from './src/screens/Perfil'
-import { DrawerActions } from 'react-navigation';
+
+
 
 // function CustomHeader() {
 //   return (
@@ -59,47 +71,61 @@ import { DrawerActions } from 'react-navigation';
 //   )
 // }
 
-const leftButton = ({navigation}) => {
+function leftButton({ navigation }) {
+
   return (
-    <TouchableOpacity style = {{marginLeft: 20}} 
-    // onPress = {() => navigation.toggleDrawer()}
+    <TouchableOpacity style={{ marginLeft: 20 }}
+      onPress={() => navigation.toggleDrawer()}
     >
-      <Icon name="bars" size= {30} style= {styles.icon}/>
+      <Icon name="bars" size={30} style={styles.icon} />
     </TouchableOpacity>
   )
 }
 
-function rightButton(){
-  return(
-    <TouchableOpacity>
-      <Icon name="info-circle" size= {30} style= {styles.icon}/>
-    </TouchableOpacity>
-  )
-}
-
-const AuthStack = createStackNavigator()
-const NoticiaStack = createStackNavigator()
-const BuscarStack = createStackNavigator()
-const RutasStack = createStackNavigator()
-
-function AuthStackScreen() {
+function rightButton() {
   return (
-    <AuthStack.Navigator 
-    screenOptions = {{
-      headerShown: false
-    }}
+    <TouchableOpacity>
+      <Icon name="info-circle" size={30} style={styles.icon} />
+    </TouchableOpacity>
+  )
+}
+
+function AuthStackScreen({ navigation }) {
+  return (
+    <AuthStack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
     >
       <AuthStack.Screen name="Home" component={Home} />
       <AuthStack.Screen name="LoginScreen" component={Login} />
       <AuthStack.Screen name="PreRegistrationScreen" component={PreRegistration} />
       <AuthStack.Screen name="EmpresaRegistrationScreen" component={EmpresaRegistration} />
       <AuthStack.Screen name="PasajeroRegistrationScreen" component={PasajeroRegistration} />
-      <AuthStack.Screen name="PrincipalDrawer" component={PrincipalDrawer} options={{headerShown:true, headerLeft: leftButton, headerStyle: {backgroundColor: '#ff6900'}, headerTitleStyle: {color: 'white'}, headerRight: rightButton}} />
+      <AuthStack.Screen name="PrincipalDrawer"
+        component={PrincipalDrawer}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => {
+            return (
+              <TouchableOpacity style={{ marginLeft: 20 }}
+                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+              >
+                <Icon name="bars" size={30} style={styles.icon} />
+              </TouchableOpacity>
+            )
+          },
+          headerStyle: { backgroundColor: '#ff6900' },
+          headerTitleStyle: { color: 'white' },
+          headerRight: rightButton
+
+        })}
+      />
     </AuthStack.Navigator>
   );
 }
 
-function NoticiaStackScreen(){
+function NoticiaStackScreen() {
   return (
     <NoticiaStack.Navigator>
       <NoticiaStack.Screen name="Noticias" component={Noticias} />
@@ -109,7 +135,7 @@ function NoticiaStackScreen(){
 }
 
 
-function BuscarStackScreen(){
+function BuscarStackScreen() {
   return (
     <BuscarStack.Navigator>
       <BuscarStack.Screen name="Buscar" component={Noticias} />
@@ -118,7 +144,7 @@ function BuscarStackScreen(){
   )
 }
 
-function RutasStackScreen(){
+function RutasStackScreen() {
   return (
     <RutasStack.Navigator>
       <RutasStack.Screen name="Bienvenida" component={Bienvenida} />
@@ -126,16 +152,14 @@ function RutasStackScreen(){
   )
 }
 
-const Tab = createBottomTabNavigator();
-
-function TabPasajero(){
+function TabPasajero() {
   return (
     <Tab.Navigator
-    initialRouteName="Bienvenida"
-    tabBarOptions={{
-      activeTintColor: '#ff6900',
-      showLabel: false,
-    }}
+      initialRouteName="Bienvenida"
+      tabBarOptions={{
+        activeTintColor: '#ff6900',
+        showLabel: false,
+      }}
     >
       <Tab.Screen
         name="HomePage"
@@ -143,9 +167,9 @@ function TabPasajero(){
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5
-              name = {'search'}
-              color = {color}
-              size = {35}
+              name={'search'}
+              color={color}
+              size={35}
             />
           ),
         }} />
@@ -155,23 +179,23 @@ function TabPasajero(){
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5
-              name= {'route'}
+              name={'route'}
               size={35}
-              color = {color}
+              color={color}
             />
           ),
         }} />
-        <Tab.Screen
+      <Tab.Screen
         name="Noticia"
         component={NoticiaStackScreen}
         options={{
           tabBarBadge: 3,
           tabBarIcon: ({ color }) => (
             <FontAwesome5
-              name= {'bell'}
+              name={'bell'}
               solid
               size={35}
-              color = {color}
+              color={color}
             />
           ),
         }} />
@@ -179,43 +203,41 @@ function TabPasajero(){
   )
 }
 
-
-const Drawer = createDrawerNavigator()
-
 function PrincipalDrawer() {
   return (
     <Drawer.Navigator
-      // drawerContent={({navigation}) => (
-      // <DrawerComponent navigation={navigation} />)}
-      >
+    // drawerContent={({navigation}) => (
+    // <DrawerComponent navigation={navigation} />)}
+    >
       <Drawer.Screen options={{}} name="Home" component={TabPasajero} />
       <Drawer.Screen name="Profile" component={Perfil} />
     </Drawer.Navigator>
   )
 }
 
-function App(){
-    return (
-      <NavigationContainer>
-        <AuthStackScreen></AuthStackScreen>
-      </NavigationContainer>
-    )
+function App() {
+  return (
+    <NavigationContainer>
+      <AuthStackScreen />
+    </NavigationContainer>
+  )
 }
-export default App;
 
 const styles = StyleSheet.create({
   header: {
-      width: '100%',
-      height: 50,
-      // flex: 1,
-      flexDirection:'row',
-      backgroundColor: '#ff6900',
-      paddingLeft: 20,
-      alignItems: 'center',
-      // justifyContent: 'center',
+    width: '100%',
+    height: 50,
+    // flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#ff6900',
+    paddingLeft: 20,
+    alignItems: 'center',
+    // justifyContent: 'center',
   },
-  icon : {
+  icon: {
     width: 50,
     color: 'white'
   },
 })
+
+export default App;
