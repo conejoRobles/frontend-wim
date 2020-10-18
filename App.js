@@ -14,8 +14,9 @@ import PreRegistration from './src/screens/PreRegistration'
 import Bienvenida from './src/screens/Bienvenida'
 import Noticias from './src/screens/Noticias'
 import Perfil from './src/screens/Perfil'
-import { Provider } from 'react-redux'
-import store from './src/store/index'
+import { Provider, connect } from 'react-redux'
+import store from './src/store/store'
+import EditarCuenta from './src/screens/EditarCuenta'
 
 const AuthStack = createStackNavigator()
 const NoticiaStack = createStackNavigator()
@@ -102,6 +103,7 @@ function AuthStackScreen({ navigation }) {
       <AuthStack.Screen name="PreRegistrationScreen" component={PreRegistration} />
       <AuthStack.Screen name="EmpresaRegistrationScreen" component={EmpresaRegistration} />
       <AuthStack.Screen name="PasajeroRegistrationScreen" component={PasajeroRegistration} />
+      <AuthStack.Screen name="EditarCuentaScreen" component={EditarCuenta} />
       <AuthStack.Screen name="PrincipalDrawer"
         component={PrincipalDrawer}
         options={({ navigation }) => ({
@@ -209,17 +211,21 @@ function PrincipalDrawer() {
     // drawerContent={({navigation}) => (
     // <DrawerComponent navigation={navigation} />)}
     >
-      <Drawer.Screen options={{}} name="Home" component={TabPasajero} />
-      <Drawer.Screen name="Profile" component={Perfil} />
+      <Drawer.Screen options={{}} name="Inicio" component={TabPasajero} />
+      <Drawer.Screen options={{}} name="Cuenta" component={EditarCuenta} />
+
     </Drawer.Navigator>
   )
 }
 
-function App() {
+
+const App = () => {
   return (
-    <NavigationContainer>
-      <AuthStackScreen />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <AuthStackScreen />
+      </NavigationContainer>
+    </Provider>
   )
 }
 

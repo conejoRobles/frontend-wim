@@ -1,103 +1,104 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
 import { Badge } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Constants from 'expo-constants'
+import { connect } from 'react-redux'
 
 const DATA = [
     {
-        id:"0",
-        origen:'Chillán',
+        id: "0",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"1",
-        origen:'San Carlos',
+        id: "1",
+        origen: 'San Carlos',
         destino: 'Chillán'
     },
     {
-        id:"2",
-        origen:'Chillán',
+        id: "2",
+        origen: 'Chillán',
         destino: 'Pinto'
     },
     {
-        id:"3",
-        origen:'Pinto',
+        id: "3",
+        origen: 'Pinto',
         destino: 'Chillán'
     },
     {
-        id:"4",
-        origen:'Chillán',
+        id: "4",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"5",
-        origen:'Chillán',
+        id: "5",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"6",
-        origen:'Chillán',
+        id: "6",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"7",
-        origen:'Chillán',
+        id: "7",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"8",
-        origen:'Chillán',
+        id: "8",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"9",
-        origen:'Chillán',
+        id: "9",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
 ]
 
 // Crear componente *******************************************
-const Item = ({item, onPress, style}) =>(
-    <TouchableOpacity onPress = {onPress} style={[styles.button, style]}>
-        <View style = {[styles.bordes, {flex: 1,flexDirection: 'row', height: 120, alignItems:'center'}]}>
-            <View style= {{flex: 2}}>
-                <View style = {styles.foto}>
-                    <Text style = {styles.texto3}>T</Text>
-                    <View style = {{width:'100%',height:'100%', zIndex: 0, position: 'absolute'}}>
-                        <Badge size= {25} >5</Badge>
+const Item = ({ item, onPress, style }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+        <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
+            <View style={{ flex: 2 }}>
+                <View style={styles.foto}>
+                    <Text style={styles.texto3}>T</Text>
+                    <View style={{ width: '100%', height: '100%', zIndex: 0, position: 'absolute' }}>
+                        <Badge size={25} >5</Badge>
                     </View>
                 </View>
             </View>
-            <View style= {{flex: 5}}>
-                <Text style = {styles.texto2}>Empresa Bonita</Text>
-                <Text style = {styles.texto}>{item.origen} - {item.destino}</Text>
+            <View style={{ flex: 5 }}>
+                <Text style={styles.texto2}>Empresa Bonita</Text>
+                <Text style={styles.texto}>{item.origen} - {item.destino}</Text>
             </View>
         </View>
     </TouchableOpacity>
 )
 
-export default function Noticia() {
-    const [selectedId,setSelectedId] = useState(null)
-    const renderItem = ({item}) => {
-    const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
+function Noticia() {
+    const [selectedId, setSelectedId] = useState(null)
+    const renderItem = ({ item }) => {
+        const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
-            <Item 
-                item = {item}
-                onPress = {() => setSelectedId(item.id)}
-                style = {{backgroundColor}}
+            <Item
+                item={item}
+                onPress={() => setSelectedId(item.id)}
+                style={{ backgroundColor }}
             />
         )
     }
     return (
-    <View style={styles.container}>
-        <FlatList 
-            data = {DATA}
-            renderItem = {renderItem}
-            keyExtractor = {(item) => item.id}
-            extraData = {selectedId}
-        />
-    </View>
+        <View style={styles.container}>
+            <FlatList
+                data={DATA}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                extraData={selectedId}
+            />
+        </View>
     );
 }
 
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         zIndex: 1,
     },
-    foto : {
+    foto: {
         backgroundColor: 'orange',
         borderRadius: 50,
         height: 70,
@@ -142,6 +143,14 @@ const styles = StyleSheet.create({
         width: 70,
         alignItems: 'center',
         alignSelf: 'center',
-        justifyContent:'center',
+        justifyContent: 'center',
     }
 });
+
+
+const mapStateToProps = state => {
+    console.log(state)
+    return state
+}
+
+export default connect(mapStateToProps)(Noticia)

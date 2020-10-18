@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
-import Logo from '../components/Logo';
+import { connect } from 'react-redux'
+import Logo from '../components/Logo'
 
 const Home = ({ navigation }) => {
 	// const fetchPrueba = async () => {
@@ -15,7 +16,7 @@ const Home = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
+			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
 				<Logo />
 				<TouchableOpacity
 					style={styles.button}
@@ -97,4 +98,9 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Home
+const mapStateToProps = state => {
+	console.log(state)
+	return state
+}
+
+export default connect(mapStateToProps)(Home)

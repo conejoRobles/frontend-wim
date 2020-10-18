@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux'
 
 const EmpresaRegistration = ({ navigation }) => {
 
@@ -196,4 +197,9 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default EmpresaRegistration
+const mapStateToProps = state => {
+	console.log(state)
+	return state
+}
+
+export default connect(mapStateToProps)(EmpresaRegistration)

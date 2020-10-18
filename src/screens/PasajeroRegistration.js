@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux'
 
 const PasajeroRegistration = ({ navigation }) => {
 	const [nombre, setNombre] = useState('')
@@ -196,4 +197,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default PasajeroRegistration
+
+const mapStateToProps = state => {
+	console.log(state)
+	return state
+}
+
+export default connect(mapStateToProps)(PasajeroRegistration)

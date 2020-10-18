@@ -1,8 +1,2 @@
-import { combineReducers } from 'redux'
-import user from './user'
-import empresas from './empresas'
-
-export default rootReducer = () => combineReducers({
-    user,
-    empresas,
-})
+export { default as user } from './user'
+export { default as empresas } from './empresas'

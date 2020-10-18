@@ -2,12 +2,12 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+import { connect } from 'react-redux'
 
 const PreRegistro = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
-			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
+			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
 				<Text style={styles.titulo}>Registrarse</Text>
 				<Text style={styles.titulo}>como:</Text>
 				<TouchableOpacity style={[styles.button, { backgroundColor: '#ff3d00' }]}
@@ -86,4 +86,10 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default PreRegistro
+
+const mapStateToProps = state => {
+	console.log(state)
+	return state
+}
+
+export default connect(mapStateToProps)(PreRegistro)

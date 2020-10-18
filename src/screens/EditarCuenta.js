@@ -1,107 +1,144 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { render } from "react-dom";
+import { connect } from 'react-redux'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { load } from '../store/actions/empresas'
 
-const EditarCuenta = ({ navigation }) => {
-	const [nombre, setNombre] = useState('')
+const EditarCuenta = ({ navigation, user, load }) => {
+	const [nombre, setNombre] = useState(user.nombre)
 	const [pass, setPass] = useState('')
 	const [correo, setCorreo] = useState('')
 	const [rut, setRut] = useState('')
 	const [telefono, setTelefono] = useState('')
 	const [showPass, setShowPass] = useState({ value: true })
+	const [editar, setEditar] = useState(false)
 
 	return (
 		<View style={styles.container} >
-			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
-				<Text style={styles.titulo}>Registro</Text>
-				<View style={styles.inputView}>
-					<View style={styles.icon}>
-						<Icon name="user" size={25} />
-					</View>
-					<TextInput
-						style={styles.inputText}
-						placeholder="Nombre"
-						placeholderTextColor="grey"
-						onChangeText={text => setNombre(text)}
-					/>
+			<Text style={styles.titulo}>Cuenta</Text>
+			<View style={styles.inputView}>
+				<View style={styles.icon}>
+					<Icon name="user" size={25} />
 				</View>
-				<View style={styles.inputView}>
-					<View style={styles.icon}>
-						<Icon name="lock" size={25} />
-					</View>
-					<TextInput
-						secureTextEntry={showPass.value}
-						style={styles.inputText}
-						placeholder="Contraseña"
-						placeholderTextColor="grey"
-						onChangeText={text => setPass(text)}
-					/>
-					<View style={styles.icon}>
-						<TouchableHighlight
-							underlayColor={'rgb(251, 91, 90)'}
-							onPress={() => {
-								setShowPass({ value: !showPass.value })
-							}}
-						>
-							<Icon name="eye" size={25} />
-						</TouchableHighlight>
-					</View>
+				<TextInput
+					editable={editar}
+					style={styles.inputText}
+					placeholder="Nombre"
+					value={nombre}
+					placeholderTextColor="grey"
+					onChangeText={text => setNombre(text)}
+					editable={editar}
+				/>
+			</View>
+			<View style={styles.inputView}>
+				<View style={styles.icon}>
+					<Icon name="lock" size={25} />
 				</View>
-				<View style={styles.inputView}>
-					<View style={styles.icon}>
-						<Icon name="id-card-o" size={25} />
-					</View>
-					<TextInput
-						style={styles.inputText}
-						placeholder="Rut"
-						placeholderTextColor="grey"
-						onChangeText={text => setRut(text)}
-					/>
+				<TextInput
+					editable={editar}
+					secureTextEntry={showPass.value}
+					style={styles.inputText}
+					placeholder="Contraseña"
+					placeholderTextColor="grey"
+					onChangeText={text => setPass(text)}
+				/>
+				<View style={styles.icon}>
+					<TouchableHighlight
+						underlayColor={'rgb(251, 91, 90)'}
+						onPress={() => {
+							setShowPass({ value: !showPass.value })
+						}}
+						disabled={!editar}
+					>
+						<Icon name="eye" size={25} />
+					</TouchableHighlight>
 				</View>
-				<View style={styles.inputView}>
-					<View style={styles.icon}>
-						<Icon name="envelope" size={25} />
-					</View>
-					<TextInput
-						style={styles.inputText}
-						placeholder="Email"
-						placeholderTextColor="grey"
-						onChangeText={text => setCorreo(text)}
-					/>
+			</View>
+			<View style={styles.inputView}>
+				<View style={styles.icon}>
+					<Icon name="id-card-o" size={25} />
 				</View>
-				<View style={styles.inputView}>
-					<View style={styles.icon}>
-						<Icon name="phone" size={25} />
-					</View>
-					<TextInput
-						style={styles.inputText}
-						placeholder="Telefono"
-						placeholderTextColor="grey"
-						onChangeText={text => setTelefono(text)}
-					/>
+				<TextInput
+					editable={editar}
+					style={styles.inputText}
+					placeholder="Rut"
+					placeholderTextColor="grey"
+					onChangeText={text => setRut(text)}
+				/>
+			</View>
+			<View style={styles.inputView}>
+				<View style={styles.icon}>
+					<Icon name="envelope" size={25} />
 				</View>
-				<TouchableOpacity
-					style={styles.button}
-					onPress={() => {
-						registro({
-							nombre,
-							pass,
-							correo,
-							rut,
-							telefono
-						}, navigation)
-					}}
-				>
-					<Text style={styles.textoBoton}>Registrarse</Text>
-				</TouchableOpacity>
-			</ImageBackground>
+				<TextInput
+					editable={editar}
+					style={styles.inputText}
+					placeholder="Email"
+					placeholderTextColor="grey"
+					onChangeText={text => setCorreo(text)}
+				/>
+			</View>
+			<View style={styles.inputView}>
+				<View style={styles.icon}>
+					<Icon name="phone" size={25} />
+				</View>
+				<TextInput
+					editable={editar}
+					style={styles.inputText}
+					placeholder="Telefono"
+					placeholderTextColor="grey"
+					onChangeText={text => setTelefono(text)}
+				/>
+			</View>
+			{isChanging(editar, setEditar, load)}
+			<TouchableOpacity
+				style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
+				onPress={() => {
+					logOut(navigation)
+				}}
+			>
+				<Text style={styles.textoBoton}>Cerrar Sesión</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
 
-const registro = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.0.16:3000/addPasajero', {
+
+const logOut = (navigation) => {
+	navigation.navigate('Home')
+}
+
+const isChanging = (editar, setEditar, load) => {
+	load()
+	return editar ? (
+		<TouchableOpacity
+			style={styles.button}
+			onPress={() => {
+				setEditar(false)
+
+				change({
+
+				})
+			}}
+		>
+			<Text style={styles.textoBoton}>Guardar</Text>
+		</TouchableOpacity>
+	) : (
+			<TouchableOpacity
+				style={styles.button}
+				onPress={() => {
+					setEditar(true)
+				}}
+			>
+				<Text style={styles.textoBoton}>Editar</Text>
+			</TouchableOpacity>
+		)
+}
+
+const change = async (usuario, navigation) => {
+	const res = await fetch('http://192.168.0.16:3000/changePasajero', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',
@@ -112,7 +149,6 @@ const registro = async (usuario, navigation) => {
 			telefono: usuario.telefono,
 			correo: usuario.correo,
 			pass: usuario.pass,
-
 		}),
 	})
 	const ans = await res.json()
@@ -160,8 +196,7 @@ const styles = StyleSheet.create({
 		height: 50,
 		alignItems: "center",
 		justifyContent: "center",
-		marginTop: 40,
-		marginBottom: 10
+		marginTop: 20,
 	},
 	icon: {
 		width: 28,
@@ -196,4 +231,12 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default EditarCuenta
+const mapStateToProps = state => {
+	console.log(state)
+	return state
+}
+const mapDispatchToProps = dispatch => ({
+	load: () => dispatch(load())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditarCuenta)

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from 'react-native';
+import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
@@ -160,4 +161,9 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Login
+const mapStateToProps = state => {
+	console.log(state)
+	return state
+}
+
+export default connect(mapStateToProps)(Login)
