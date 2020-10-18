@@ -1,1 +1,4 @@
-const LOAD = 'LOAD'
+export const empresasConstants = {
+    LOAD: 'LOAD',
+    ERROR: 'ERROR',
+}

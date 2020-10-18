@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from 'react-native';
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { inicioSesion } from '../store/actions/user'
 
-
-const Login = ({ navigation }) => {
+const Login = ({ navigation, inicioSesion, user }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
@@ -55,10 +55,10 @@ const Login = ({ navigation }) => {
 				<TouchableOpacity
 					style={styles.button}
 					onPress={() => {
-						login({
+						inicio({
 							email,
 							password,
-						}, navigation)
+						}, navigation, inicioSesion, user)
 
 					}}
 				>
@@ -69,7 +69,7 @@ const Login = ({ navigation }) => {
 	);
 }
 
-const login = async (usuario, navigation) => {
+const inicio = async (usuario, navigation, inicioSesion) => {
 	const res = await fetch('http://192.168.1.51:3000/', {
 		method: 'POST',
 		headers: {
@@ -82,6 +82,7 @@ const login = async (usuario, navigation) => {
 	})
 	const ans = await res.json()
 	if (ans.ok) {
+		await inicioSesion(ans.usuario)
 		Alert.alert(
 			"Bienvenido!",
 			ans.mensaje,
@@ -162,8 +163,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-	console.log(state)
 	return state
 }
 
-export default connect(mapStateToProps)(Login)
+const mapDispatchToProps = dispatch => ({
+	inicioSesion: (user) => dispatch(inicioSesion(user))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

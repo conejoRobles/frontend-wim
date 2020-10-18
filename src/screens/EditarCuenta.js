@@ -4,14 +4,15 @@ import { render } from "react-dom";
 import { connect } from 'react-redux'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { load } from '../store/actions/empresas'
+import { logout } from '../store/actions/user'
+import { user } from "../store/reducers";
 
-const EditarCuenta = ({ navigation, user, load }) => {
+const EditarCuenta = ({ navigation, user, load, logout }) => {
 	const [nombre, setNombre] = useState(user.nombre)
-	const [pass, setPass] = useState('')
-	const [correo, setCorreo] = useState('')
-	const [rut, setRut] = useState('')
-	const [telefono, setTelefono] = useState('')
+	const [pass, setPass] = useState(user.pass)
+	const [correo, setCorreo] = useState(user.correo)
+	const [rut, setRut] = useState(user.rut)
+	const [telefono, setTelefono] = useState(user.telefono)
 	const [showPass, setShowPass] = useState({ value: true })
 	const [editar, setEditar] = useState(false)
 
@@ -39,6 +40,7 @@ const EditarCuenta = ({ navigation, user, load }) => {
 				<TextInput
 					editable={editar}
 					secureTextEntry={showPass.value}
+					value={pass}
 					style={styles.inputText}
 					placeholder="Contraseña"
 					placeholderTextColor="grey"
@@ -62,6 +64,7 @@ const EditarCuenta = ({ navigation, user, load }) => {
 				</View>
 				<TextInput
 					editable={editar}
+					value={rut}
 					style={styles.inputText}
 					placeholder="Rut"
 					placeholderTextColor="grey"
@@ -75,6 +78,7 @@ const EditarCuenta = ({ navigation, user, load }) => {
 				<TextInput
 					editable={editar}
 					style={styles.inputText}
+					value={correo}
 					placeholder="Email"
 					placeholderTextColor="grey"
 					onChangeText={text => setCorreo(text)}
@@ -88,6 +92,7 @@ const EditarCuenta = ({ navigation, user, load }) => {
 					editable={editar}
 					style={styles.inputText}
 					placeholder="Telefono"
+					value={telefono}
 					placeholderTextColor="grey"
 					onChangeText={text => setTelefono(text)}
 				/>
@@ -96,7 +101,7 @@ const EditarCuenta = ({ navigation, user, load }) => {
 			<TouchableOpacity
 				style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
 				onPress={() => {
-					logOut(navigation)
+					logOut(navigation, user, logout)
 				}}
 			>
 				<Text style={styles.textoBoton}>Cerrar Sesión</Text>
@@ -106,21 +111,18 @@ const EditarCuenta = ({ navigation, user, load }) => {
 }
 
 
-const logOut = (navigation) => {
+const logOut = async (navigation, user, logout) => {
+	await logout()
+	console.log('estado de usuario:', user)
 	navigation.navigate('Home')
 }
 
-const isChanging = (editar, setEditar, load) => {
-	load()
+const isChanging = (editar, setEditar) => {
 	return editar ? (
 		<TouchableOpacity
 			style={styles.button}
 			onPress={() => {
 				setEditar(false)
-
-				change({
-
-				})
 			}}
 		>
 			<Text style={styles.textoBoton}>Guardar</Text>
@@ -135,42 +137,6 @@ const isChanging = (editar, setEditar, load) => {
 				<Text style={styles.textoBoton}>Editar</Text>
 			</TouchableOpacity>
 		)
-}
-
-const change = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.0.16:3000/changePasajero', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'Application/json',
-		},
-		body: JSON.stringify({
-			rut: usuario.rut,
-			nombre: usuario.nombre,
-			telefono: usuario.telefono,
-			correo: usuario.correo,
-			pass: usuario.pass,
-		}),
-	})
-	const ans = await res.json()
-	if (ans.ok) {
-		Alert.alert(
-			"Bienvenido!",
-			ans.mensaje,
-			[
-				{ text: "OK", onPress: () => navigation.navigate('LoginScreen') }
-			],
-			{ cancelable: false }
-		);
-	} else {
-		Alert.alert(
-			"Oh no! algo anda mal",
-			ans.mensaje,
-			[
-				{ text: "Volver a intentar" }
-			],
-			{ cancelable: false }
-		);
-	}
 }
 
 const styles = StyleSheet.create({
@@ -232,11 +198,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-	console.log(state)
+	console.log('ESTADO', state)
 	return state
 }
 const mapDispatchToProps = dispatch => ({
-	load: () => dispatch(load())
+	logout: () => dispatch(logout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditarCuenta)

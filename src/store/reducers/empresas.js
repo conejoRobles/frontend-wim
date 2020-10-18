@@ -1,15 +1,19 @@
+import { empresasConstants } from '../constants/empresas'
+
 const initialState = []
-
-const LOAD = 'LOAD'
-
-export const load = () => ({
-    type: LOAD,
-    payload: 'wena'
-})
-
 
 
 export default (state = initialState, action) => {
-    console.log(action)
-    return state
+    switch (action.type) {
+        case empresasConstants.LOAD: (state, payload) => ([
+            ...state,
+            payload
+        ])
+        case empresasConstants.ERROR: (state) => ([
+            ...state,
+        ])
+        default:
+            return { ...state }
+
+    }
 }
