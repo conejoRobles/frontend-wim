@@ -1,7 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { connect } from 'react-redux'
 import Logo from '../components/Logo'
+import { 
+	StyleSheet, 
+	Text, 
+	View, 
+	TouchableOpacity, 
+	ImageBackground, 
+	StatusBar 
+} from 'react-native';
 
 const Home = ({ navigation }) => {
 	// const fetchPrueba = async () => {
@@ -16,7 +23,8 @@ const Home = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
+			<StatusBar hidden/>
+			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
 				<Logo />
 				<TouchableOpacity
 					style={styles.button}
@@ -27,7 +35,7 @@ const Home = ({ navigation }) => {
 					<Text style={styles.textoBoton}>Registrarse</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
+					style={[styles.button, { backgroundColor: '#04254E' }]}
 					onPress={() => {
 						navigation.navigate('LoginScreen')
 					}}
@@ -57,7 +65,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: "65%",
-		backgroundColor: "#fb5b5a",
+		backgroundColor: "#e84c22",
 		borderRadius: 10,
 		height: 50,
 		alignItems: "center",

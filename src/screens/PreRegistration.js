@@ -1,13 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, StatusBar } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 const PreRegistro = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
-			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
+			<StatusBar backgroundColor="#e84c22"></StatusBar>
+			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
 				<Text style={styles.titulo}>Registrarse</Text>
 				<Text style={styles.titulo}>como:</Text>
 				<TouchableOpacity style={[styles.button, { backgroundColor: '#ff3d00' }]}
@@ -21,7 +21,7 @@ const PreRegistro = ({ navigation }) => {
 					<Text style={styles.texto2}>Si buscas un recorrido
 					para viajar, este es tu perfil</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.button, { backgroundColor: '#000051' }]}
+				<TouchableOpacity style={[styles.button, { backgroundColor: '#04254E' }]}
 					onPress={() => {
 						navigation.navigate('EmpresaRegistrationScreen')
 					}}

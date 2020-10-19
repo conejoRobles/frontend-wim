@@ -12,11 +12,16 @@ import PasajeroRegistration from './src/screens/PasajeroRegistration'
 import EmpresaRegistration from './src/screens/EmpresaRegistration'
 import PreRegistration from './src/screens/PreRegistration'
 import Bienvenida from './src/screens/Bienvenida'
-import Noticias from './src/screens/Noticias'
+import NoticiasPasajero from './src/screens/NoticiasPasajero'
+import NoticiasXRecorridoEmpresa from './src/screens/NoticiasXRecorridoEmpresa'
+import NoticiasXRecorridoPasajero from './src/screens/NoticiasXRecorridoPasajero'
+import NoticiaEmpresa from './src/screens/NoticiasEmpresa'
 import Perfil from './src/screens/Perfil'
 import { Provider, connect } from 'react-redux'
 import store from './src/store/store'
 import EditarCuenta from './src/screens/EditarCuenta'
+import agregarNoticia from './src/screens/agregarNoticia'
+import editarNoticia from './src/screens/editarNoticia'
 
 const AuthStack = createStackNavigator()
 const NoticiaStack = createStackNavigator()
@@ -49,28 +54,6 @@ const Drawer = createDrawerNavigator()
 
 // export default createAppContainer(AppNavigator)
 
-
-
-
-// function CustomHeader() {
-//   return (
-//     <View style = {styles.header}>
-//       <View style = {{flex: 1}}>
-//         <TouchableOpacity onPress= {() => navigation}>
-//           <Icon name="bars" size= {30} style= {styles.icon}/>
-//         </TouchableOpacity>
-//       </View>
-//       <View style = {{flex: 2}}>
-//         {/* <Text>HOLA</Text> */}
-//       </View> 
-//       <View style = {{flex: 1, alignContent: 'flex-end', alignItems: 'flex-end', marginRight:15 }}>
-//         <TouchableOpacity>
-//           <Icon name="info-circle" size= {30} style= {styles.icon}/>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   )
-// }
 
 function leftButton({ navigation }) {
 
@@ -117,7 +100,7 @@ function AuthStackScreen({ navigation }) {
               </TouchableOpacity>
             )
           },
-          headerStyle: { backgroundColor: '#ff6900' },
+          headerStyle: { backgroundColor: '#e84c22' },
           headerTitleStyle: { color: 'white' },
           headerRight: rightButton
 
@@ -127,11 +110,22 @@ function AuthStackScreen({ navigation }) {
   );
 }
 
-function NoticiaStackScreen() {
+function NoticiaPasajeroStackScreen() {
   return (
     <NoticiaStack.Navigator>
-      <NoticiaStack.Screen name="Noticias" component={Noticias} />
-      {/* <NoticiaStack.Screen name="NoticiasxEmpresa" component={Noticia} /> */}
+      <NoticiaStack.Screen name="Noticias" component={NoticiasPasajero} />
+      <NoticiaStack.Screen name="NoticiasXRecorridoPasajero" component={NoticiasXRecorridoPasajero} />
+    </NoticiaStack.Navigator>
+  )
+}
+
+function NoticiaEmpresaStackScreen() {
+  return (
+    <NoticiaStack.Navigator>
+      <NoticiaStack.Screen name="Noticias" component={NoticiaEmpresa} />
+      <NoticiaStack.Screen name="AgregarNoticias" component={agregarNoticia} />
+      <NoticiaStack.Screen name="EditarNoticia" component={editarNoticia} />
+      <NoticiaStack.Screen name="NoticiasxRecorridoEmpresa" component={NoticiasXRecorridoEmpresa} />
     </NoticiaStack.Navigator>
   )
 }
@@ -140,7 +134,7 @@ function NoticiaStackScreen() {
 function BuscarStackScreen() {
   return (
     <BuscarStack.Navigator>
-      <BuscarStack.Screen name="Buscar" component={Noticias} />
+      <BuscarStack.Screen name="Buscar" component={NoticiasPasajero} />
       {/* <NoticiaStack.Screen name="MostrarRecorrido" component={} /> */}
     </BuscarStack.Navigator>
   )
@@ -159,7 +153,7 @@ function TabPasajero() {
     <Tab.Navigator
       initialRouteName="Bienvenida"
       tabBarOptions={{
-        activeTintColor: '#ff6900',
+        activeTintColor: '#e84c22',
         showLabel: false,
       }}
     >
@@ -188,8 +182,59 @@ function TabPasajero() {
           ),
         }} />
       <Tab.Screen
-        name="Noticia"
-        component={NoticiaStackScreen}
+        name="NoticiaPasajero"
+        component={NoticiaPasajeroStackScreen}
+        options={{
+          tabBarBadge: 3,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5
+              name={'bell'}
+              solid
+              size={35}
+              color={color}
+            />
+          ),
+        }} />
+    </Tab.Navigator>
+  )
+}
+
+function TabEmpresa() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Bienvenida"
+      tabBarOptions={{
+        activeTintColor: '#e84c22',
+        showLabel: false,
+      }}
+    >
+      {/* <Tab.Screen
+        name="HomePage"
+        component={BuscarStackScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5
+              name={'search'}
+              color={color}
+              size={35}
+            />
+          ),
+        }} /> */}
+      <Tab.Screen
+        name="Bienvenida"
+        component={RutasStackScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5
+              name={'route'}
+              size={35}
+              color={color}
+            />
+          ),
+        }} />
+      <Tab.Screen
+        name="NoticiaEmpresa"
+        component={NoticiaEmpresaStackScreen}
         options={{
           tabBarBadge: 3,
           tabBarIcon: ({ color }) => (
@@ -207,13 +252,10 @@ function TabPasajero() {
 
 function PrincipalDrawer() {
   return (
-    <Drawer.Navigator
-    // drawerContent={({navigation}) => (
-    // <DrawerComponent navigation={navigation} />)}
-    >
-      <Drawer.Screen options={{}} name="Inicio" component={TabPasajero} />
+    <Drawer.Navigator>
+      <Drawer.Screen options={{}} name="HomeEmpresa" component={TabEmpresa} />
+      {/* <Drawer.Screen options={{}} name="Inicio" component={TabPasajero} /> */}
       <Drawer.Screen options={{}} name="Cuenta" component={EditarCuenta} />
-
     </Drawer.Navigator>
   )
 }
@@ -235,7 +277,7 @@ const styles = StyleSheet.create({
     height: 50,
     // flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#ff6900',
+    backgroundColor: '#e84c22',
     paddingLeft: 20,
     alignItems: 'center',
     // justifyContent: 'center',

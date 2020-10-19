@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
+import React, {useState} from 'react'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { Badge } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Constants from 'expo-constants'
@@ -78,27 +78,30 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function Noticia() {
-    const [selectedId, setSelectedId] = useState(null)
-    const renderItem = ({ item }) => {
-        const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
+function NoticiaPasajero({navigation}) {
+    const [selectedId,setSelectedId] = useState(null)
+    const renderItem = ({item}) => {
+    const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
-            <Item
-                item={item}
-                onPress={() => setSelectedId(item.id)}
-                style={{ backgroundColor }}
+            <Item 
+                item = {item}
+                onPress = {() => {
+                    navigation.navigate('NoticiasXRecorridoPasajero')
+                    setSelectedId(item.id)}}
+                style = {{backgroundColor}}
             />
         )
     }
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={DATA}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                extraData={selectedId}
-            />
-        </View>
+    <View style={styles.container}>
+        <StatusBar backgroundColor="#e84c22"></StatusBar>
+        <FlatList 
+            data = {DATA}
+            renderItem = {renderItem}
+            keyExtractor = {(item) => item.id}
+            extraData = {selectedId}
+        />
+    </View>
     );
 }
 
@@ -135,8 +138,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         zIndex: 1,
     },
-    foto: {
-        backgroundColor: 'orange',
+    foto : {
+        backgroundColor: '#e84c22',
         borderRadius: 50,
         height: 70,
         maxHeight: 70,
@@ -153,4 +156,4 @@ const mapStateToProps = state => {
     return state
 }
 
-export default connect(mapStateToProps)(Noticia)
+export default connect(mapStateToProps)(NoticiaPasajero)

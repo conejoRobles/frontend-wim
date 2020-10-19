@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
@@ -14,7 +13,8 @@ const PasajeroRegistration = ({ navigation }) => {
 
 	return (
 		<View style={styles.container} >
-			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
+			<StatusBar backgroundColor="#e84c22"></StatusBar>
+			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
 				<Text style={styles.titulo}>Registro</Text>
 				<View style={styles.inputView}>
 					<View style={styles.icon}>
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: "65%",
-		backgroundColor: "#fb5b5a",
+		backgroundColor: "#e84c22",
 		borderRadius: 10,
 		height: 50,
 		alignItems: "center",

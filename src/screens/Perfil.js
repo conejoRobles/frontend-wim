@@ -1,12 +1,12 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 const Perfil = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
+			<StatusBar backgroundColor="#e84c22"></StatusBar>
 			<Text style={styles.titulo}> Registrarse como:</Text>
 			<TouchableOpacity style={[styles.button, { backgroundColor: '#ff3d00' }]}
 				onPress={() => {

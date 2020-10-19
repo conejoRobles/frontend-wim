@@ -1,8 +1,7 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { connect } from 'react-redux'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { logout } from '../store/actions/user'
 import { user } from "../store/reducers";
@@ -18,11 +17,12 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 
 	return (
 		<View style={styles.container} >
-			<Text style={styles.titulo}>Cuenta</Text>
-			<View style={styles.inputView}>
-				<View style={styles.icon}>
-					<Icon name="user" size={25} />
-				</View>
+			<StatusBar backgroundColor="#e84c22"/>
+				<Text style={styles.titulo}>Cuenta</Text>
+				<View style={styles.inputView}>
+					<View style={styles.icon}>
+						<Icon name="user" size={25} />
+					</View>
 				<TextInput
 					editable={editar}
 					style={styles.inputText}
@@ -33,6 +33,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 					editable={editar}
 				/>
 			</View>
+
 			<View style={styles.inputView}>
 				<View style={styles.icon}>
 					<Icon name="lock" size={25} />
@@ -58,6 +59,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 					</TouchableHighlight>
 				</View>
 			</View>
+
 			<View style={styles.inputView}>
 				<View style={styles.icon}>
 					<Icon name="id-card-o" size={25} />
@@ -71,6 +73,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 					onChangeText={text => setRut(text)}
 				/>
 			</View>
+
 			<View style={styles.inputView}>
 				<View style={styles.icon}>
 					<Icon name="envelope" size={25} />
@@ -84,6 +87,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 					onChangeText={text => setCorreo(text)}
 				/>
 			</View>
+
 			<View style={styles.inputView}>
 				<View style={styles.icon}>
 					<Icon name="phone" size={25} />
@@ -107,7 +111,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 				<Text style={styles.textoBoton}>Cerrar Sesión</Text>
 			</TouchableOpacity>
 		</View>
-	);
+	)
 }
 
 
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: "65%",
-		backgroundColor: "#fb5b5a",
+		backgroundColor: "#e84c22",
 		borderRadius: 10,
 		height: 50,
 		alignItems: "center",
@@ -265,6 +269,7 @@ const mapStateToProps = state => {
 	console.log('ESTADO', state)
 	return state
 }
+
 const mapDispatchToProps = dispatch => ({
 	logout: () => dispatch(logout())
 })
