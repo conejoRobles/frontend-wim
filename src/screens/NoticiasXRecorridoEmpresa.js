@@ -1,51 +1,38 @@
 import React, {useState} from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Constants from 'expo-constants'
 import { LinearGradient } from 'expo-linear-gradient';
 
 const DATA = [
     {
         id:"0",
-        origen:'Chillán',
-        destino: 'San Carlos'
+        titulo:'Bus en Mantención',
+        descripcion: 'En bus se puso triste :C'
     },
     {
         id:"1",
-        origen:'San Carlos',
-        destino: 'Chillán'
+        titulo:'Bus Enfermito',
+        descripcion: 'Al bus le duele la guatita'
     },
     {
         id:"2",
-        origen:'Chillán',
-        destino: 'Pinto'
+        titulo:'Bus con su periodo',
+        descripcion: 'Al bus le llego la regla y esta con colicos :c'
     },
     {
         id:"3",
-        origen:'Pinto',
-        destino: 'Chillán'
-    },
-    {
-        id:"4",
-        origen:'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id:"5",
-        origen:'Chillán',
-        destino: 'San Carlos'
-    },
+        titulo:'Bus con su periodo',
+        descripcion: 'Al bus le llego la regla y esta con colicos :c'
+    }
 ]
 
 const Item = ({item, onPress, style}) =>(
     <TouchableOpacity onPress = {onPress} style={[styles.button, styles.bordes, style]}>
-        <Text style = {styles.texto}>{item.origen}</Text>
-        <Text style = {styles.texto}>-</Text>
-        <Text style = {styles.texto}>{item.destino}</Text>
+        <Text style = {styles.texto}>{item.titulo}</Text>
+        <Text style = {styles.texto3}>{item.descripcion}</Text>
     </TouchableOpacity>
 )
 
-export default function Bienvenida() {
+export default function NoticiasEmpresa({navigation}) {
     const [selectedId,setSelectedId] = useState(null)
     const renderItem = ({item}) => {
     const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -60,14 +47,13 @@ export default function Bienvenida() {
     return (
     <View style={[styles.container]}>
         <StatusBar backgroundColor="#e84c22"></StatusBar>
-        {/* <LinearGradient
-         colors={["#0033ff","#6bc1ff"]}
-         style={{height:"20%"}}
-         /> */}
-        <View style = {[styles.button, styles.bordes, {backgroundColor: 'white', zIndex:1}]}>
-                <Text style = {styles.texto2}>Bienvenido</Text>
-                <Text style = {styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>
-        </View>
+        <TouchableOpacity 
+        onPress=  {() => {
+            navigation.navigate('AgregarNoticias') 
+        }}
+        style={[styles.button2]}>
+            <Text style = {styles.texto2}>Agregar Noticia</Text>
+        </TouchableOpacity>
         <FlatList 
             data = {DATA}
             renderItem = {renderItem}
@@ -79,16 +65,6 @@ export default function Bienvenida() {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        height: 50,
-        // flex: 1,
-        flexDirection:'row',
-        backgroundColor: '#e84c22',
-        paddingLeft: 20,
-        alignItems: 'center',
-        // justifyContent: 'center',
-    },
     headerText: {
         fontWeight: 'bold',
         fontSize: 10,
@@ -97,44 +73,52 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        // marginTop: Constants.statusBarHeight,
     },
     button: {
         marginHorizontal: 40,
-        borderRadius: 30,
-        height:150,
+        borderRadius: 50,
+        height:200,
         alignItems:"center",
-        justifyContent:"center",
         marginVertical: 15,
     },
+    button2: {
+        backgroundColor:'rgba(232,76,34,0.3)',
+        // opacity: 0.3,
+        // borderRadius: 50,
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        height:45,
+        justifyContent: 'center',
+    },
     contenedor: {
-        // flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        // height: screenHeight,
-        // justifyContent: 'center',
-        // marginTop: Constants.statusBarHeight,
     },
     texto: {
         fontSize: 25,
+        width: '75%',
+        marginVertical: 10,
+        textAlign: 'center',
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
+        borderBottomWidth: 2,
+        borderBottomColor: 'white'
     },
     icon : {
         width: 50,
         color: 'white'
     },
-    texto2: {
+    texto2:{
         color: '#e84c22',
-        fontSize: 30,
-        fontWeight: 'bold'
-    },
-    texto3: {
-        color: 'black',
         textAlign: 'center',
         fontSize: 20,
     },
-    // ff3d00
+    texto3: {
+        color: 'white',
+        textAlign: 'center',
+        marginHorizontal: 10,
+        fontSize: 20,
+    },
     bordes: {
         borderWidth: 1,
         borderBottomWidth: 5,

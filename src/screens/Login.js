@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
@@ -9,6 +9,7 @@ const Login = ({ navigation }) => {
 	const [showPass, setShowPass] = useState(true);
 	return (
 		<View style={styles.container}>
+			<StatusBar backgroundColor="#e84c22"></StatusBar>
 			<ImageBackground source={require('../../assets/login_register.png')} style={styles.image} resizeMode='cover'>
 				<Text style={styles.titulo}>
 					Inicio de sesión
@@ -69,7 +70,7 @@ const Login = ({ navigation }) => {
 }
 
 const login = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.1.51:3000/', {
+	const res = await fetch('http://192.168.0.16:3000/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: "65%",
-		backgroundColor: "#fb5b5a",
+		backgroundColor: "#e84c22",
 		borderRadius: 10,
 		height: 50,
 		alignItems: "center",

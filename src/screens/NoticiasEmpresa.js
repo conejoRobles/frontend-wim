@@ -45,38 +45,34 @@ const Item = ({item, onPress, style}) =>(
     </TouchableOpacity>
 )
 
-export default function Bienvenida() {
+export default function NoticiasEmpresa({navigation}) {
     const [selectedId,setSelectedId] = useState(null)
     const renderItem = ({item}) => {
     const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
         return (
             <Item 
                 item = {item}
-                onPress = {() => setSelectedId(item.id)}
+                onPress = {() => {
+                    setSelectedId(item.id)
+                    navigation.navigate('NoticiasxRecorridoEmpresa') 
+                }}
                 style = {{backgroundColor}}
             />
         )
     }
     return (
-    <View style={[styles.container]}>
-        <StatusBar backgroundColor="#e84c22"></StatusBar>
-        {/* <LinearGradient
-         colors={["#0033ff","#6bc1ff"]}
-         style={{height:"20%"}}
-         /> */}
-        <View style = {[styles.button, styles.bordes, {backgroundColor: 'white', zIndex:1}]}>
-                <Text style = {styles.texto2}>Bienvenido</Text>
-                <Text style = {styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>
+        <View style={[styles.container]}>
+            <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <FlatList 
+                data = {DATA}
+                renderItem = {renderItem}
+                keyExtractor = {(item) => item.id}
+                extraData = {selectedId}
+            />
         </View>
-        <FlatList 
-            data = {DATA}
-            renderItem = {renderItem}
-            keyExtractor = {(item) => item.id}
-            extraData = {selectedId}
-        />
-    </View>
-    );
+        );
 }
+
 
 const styles = StyleSheet.create({
     header: {
@@ -142,4 +138,3 @@ const styles = StyleSheet.create({
         borderColor: '#ff4b00'
     }
 });
-

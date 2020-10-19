@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
 import Logo from '../components/Logo';
 
 const Home = ({ navigation }) => {
@@ -15,6 +15,7 @@ const Home = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
+			<StatusBar backgroundColor="#e84c22"></StatusBar>
 			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
 				<Logo />
 				<TouchableOpacity
@@ -26,7 +27,7 @@ const Home = ({ navigation }) => {
 					<Text style={styles.textoBoton}>Registrarse</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
+					style={[styles.button, { backgroundColor: '#04254E' }]}
 					onPress={() => {
 						navigation.navigate('LoginScreen')
 					}}
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: "65%",
-		backgroundColor: "#fb5b5a",
+		backgroundColor: "#e84c22",
 		borderRadius: 10,
 		height: 50,
 		alignItems: "center",

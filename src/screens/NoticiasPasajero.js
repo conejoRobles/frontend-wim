@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { Badge } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Constants from 'expo-constants'
@@ -91,6 +91,7 @@ export default function Noticia() {
     }
     return (
     <View style={styles.container}>
+        <StatusBar backgroundColor="#e84c22"></StatusBar>
         <FlatList 
             data = {DATA}
             renderItem = {renderItem}
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     foto : {
-        backgroundColor: 'orange',
+        backgroundColor: '#e84c22',
         borderRadius: 50,
         height: 70,
         maxHeight: 70,
