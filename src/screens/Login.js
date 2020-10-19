@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
+import { noticiasLoad } from '../store/actions/noticias'
+import { AppLoading } from 'expo';
 
-const Login = ({ navigation, inicioSesion, user }) => {
+const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
@@ -59,7 +61,7 @@ const Login = ({ navigation, inicioSesion, user }) => {
 						inicio({
 							email,
 							password,
-						}, navigation, inicioSesion, user)
+						}, navigation, inicioSesion, noticiasLoad, user)
 
 					}}
 				>
@@ -70,7 +72,7 @@ const Login = ({ navigation, inicioSesion, user }) => {
 	);
 }
 
-const inicio = async (usuario, navigation, inicioSesion) => {
+const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => {
 	const res = await fetch('http://192.168.1.51:3000/', {
 		method: 'POST',
 		headers: {
@@ -83,10 +85,16 @@ const inicio = async (usuario, navigation, inicioSesion) => {
 	})
 	const ans = await res.json()
 	if (ans.ok) {
+		let res2 = await fetch('http://192.168.1.51:3000/Noticias?rut=801234567&recorrido=0')
+		let ans2 = await res2.json()
+		if (ans2.ok) {
+			let noti = ans2.noticias
+			await noticiasLoad(noti)
+		}
 		await inicioSesion(ans.usuario)
 		Alert.alert(
 			"Bienvenido!",
-			'',
+			user.nombre,
 			[
 				{
 					text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
@@ -172,7 +180,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	inicioSesion: (user) => dispatch(inicioSesion(user))
+	inicioSesion: (user) => dispatch(inicioSesion(user)),
+	noticiasLoad: (noticias) => dispatch(noticiasLoad(noticias))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -6,7 +6,6 @@ import { Picker } from '@react-native-community/picker'
 function agregarNoticia({ navigation }) {
     const [selectedValue, setSelectedValue] = useState("");
     const [selectedValue1, setSelectedValue1] = useState("");
-    prueba()
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>

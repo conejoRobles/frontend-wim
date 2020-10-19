@@ -1,9 +1,10 @@
+import { AppLoading } from 'expo'
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 
 
-const DATA = [
+let DATA = [
     {
         id: "0",
         titulo: 'Bus en Mantención',
@@ -33,7 +34,7 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function NoticiasXRecorridoPasajero({ navigation }) {
+function NoticiasXRecorridoPasajero({ navigation, noticias }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -48,7 +49,7 @@ function NoticiasXRecorridoPasajero({ navigation }) {
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <FlatList
-                data={DATA}
+                data={noticias.data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}
