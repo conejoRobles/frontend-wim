@@ -13,7 +13,6 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case userConstants.LOGIN:
             let user = action.user
-            console.log('LOGIN: ', state)
             return ({
                 ...state,
                 nombre: user.nombre,
@@ -27,7 +26,6 @@ export default (state = initialState, action) => {
             })
             break
         case userConstants.LOGOUT:
-            console.log('LOGOUT')
             return ({
                 ...state,
                 nombre: '',
@@ -41,7 +39,6 @@ export default (state = initialState, action) => {
             })
             break
         case userConstants.ERROR:
-            console.log('ERROR')
             return ({
                 ...state
             })

@@ -254,7 +254,6 @@ function TabEmpresa() {
 
 function PrincipalDrawer({ route, navigation }) {
   const { rol } = route.params
-  console.log(rol)
   return (
     <Drawer.Navigator>
       { rol == 'empresa' ? (

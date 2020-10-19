@@ -46,7 +46,7 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function Bienvenida() {
+function Bienvenida({ user }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -67,7 +67,9 @@ function Bienvenida() {
          /> */}
             <View style={[styles.button, styles.bordes, { backgroundColor: 'white', zIndex: 1 }]}>
                 <Text style={styles.texto2}>Bienvenido</Text>
-                <Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>
+                {
+                    user.rol == 'empresa' ? (<Text style={styles.texto3}>Aqui tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>)
+                }
             </View>
             <FlatList
                 data={DATA}
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 50,
         // flex: 1,
-        flexDirection:'row',
+        flexDirection: 'row',
         backgroundColor: '#e84c22',
         paddingLeft: 20,
         alignItems: 'center',
