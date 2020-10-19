@@ -38,7 +38,7 @@ const DATA = [
 ]
 
 const Item = ({item, onPress, style}) =>(
-    <TouchableOpacity onPress = {onPress} style={[styles.button, styles.bordes, style]}>
+    <TouchableOpacity onPress = {onPress} style={[styles.button, style]}>
         <Text style = {styles.texto}>{item.origen}</Text>
         <Text style = {styles.texto}>-</Text>
         <Text style = {styles.texto}>{item.destino}</Text>
@@ -48,7 +48,7 @@ const Item = ({item, onPress, style}) =>(
 export default function NoticiasEmpresa({navigation}) {
     const [selectedId,setSelectedId] = useState(null)
     const renderItem = ({item}) => {
-    const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
+    // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
         return (
             <Item 
                 item = {item}
@@ -56,7 +56,7 @@ export default function NoticiasEmpresa({navigation}) {
                     setSelectedId(item.id)
                     navigation.navigate('NoticiasxRecorridoEmpresa') 
                 }}
-                style = {{backgroundColor}}
+                style = {{backgroundColor: '#e84c22'}}
             />
         )
     }

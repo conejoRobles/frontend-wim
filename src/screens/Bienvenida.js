@@ -38,7 +38,7 @@ const DATA = [
 ]
 
 const Item = ({item, onPress, style}) =>(
-    <TouchableOpacity onPress = {onPress} style={[styles.button, styles.bordes, style]}>
+    <TouchableOpacity onPress = {onPress} style={[styles.button, style]}>
         <Text style = {styles.texto}>{item.origen}</Text>
         <Text style = {styles.texto}>-</Text>
         <Text style = {styles.texto}>{item.destino}</Text>

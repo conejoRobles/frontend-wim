@@ -19,6 +19,7 @@ import Perfil from './src/screens/Perfil'
 import { Provider } from 'react-redux'
 import store from './src/store/index'
 import agregarNoticia from './src/screens/agregarNoticia'
+import editarNoticia from './src/screens/editarNoticia'
 
 const AuthStack = createStackNavigator()
 const NoticiaStack = createStackNavigator()
@@ -120,6 +121,7 @@ function NoticiaEmpresaStackScreen() {
     <NoticiaStack.Navigator>
       <NoticiaStack.Screen name="Noticias" component={NoticiaEmpresa} />
       <NoticiaStack.Screen name="AgregarNoticias" component={agregarNoticia} />
+      <NoticiaStack.Screen name="EditarNoticia" component={editarNoticia} />
       <NoticiaStack.Screen name="NoticiasxRecorridoEmpresa" component={NoticiasXRecorridoEmpresa} />
     </NoticiaStack.Navigator>
   )

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput } from '
 import { Picker } from '@react-native-community/picker'
 
 
-export default function agregarNoticia({navigation}) {
+export default function editarNoticia({navigation}) {
     const [selectedValue, setSelectedValue] = useState("");
     const [selectedValue1, setSelectedValue1] = useState("");
     return (
@@ -66,9 +66,15 @@ export default function agregarNoticia({navigation}) {
                 </Picker>
             </View>
         </View>
-        <TouchableOpacity  style={[styles.button]}>
-            <Text style = {[styles.texto, {color:'white', marginBottom: 0}]}>Publicar</Text>
-        </TouchableOpacity>
+        <View style = {{flex:1, flexDirection:'row', marginHorizontal:20}}>
+            <TouchableOpacity  style={[styles.button, {flex:1, backgroundColor:'#04254E', marginHorizontal:10}]}>
+                <Text style = {[styles.texto, {color:'white', marginBottom:0}]}>Eliminar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity  style={[styles.button, {flex:1, marginHorizontal:10}]}>
+                <Text style = {[styles.texto, {color:'white', marginBottom:0}]}>Publicar</Text>
+            </TouchableOpacity>
+        </View>
+
     </View>
     );
 }
@@ -87,7 +93,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginTop: 25,
         marginBottom: 10,
-        alignContent:'center'
     },
     contenedor: {
         backgroundColor: 'white',
