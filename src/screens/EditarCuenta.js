@@ -97,7 +97,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 					onChangeText={text => setTelefono(text)}
 				/>
 			</View>
-			{isChanging(editar, setEditar, load)}
+			{isChanging(editar, setEditar, load,nombre,pass,correo,rut,telefono)}
 			<TouchableOpacity
 				style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
 				onPress={() => {
@@ -117,12 +117,19 @@ const logOut = async (navigation, user, logout) => {
 	navigation.navigate('Home')
 }
 
-const isChanging = (editar, setEditar) => {
+const isChanging = (editar, setEditar, load,nombre,pass,correo,rut,telefono) => {
 	return editar ? (
 		<TouchableOpacity
 			style={styles.button}
 			onPress={() => {
 				setEditar(false)
+				guardar({
+					nombre,
+					pass,
+					correo,
+					rut,
+					telefono,
+				})
 			}}
 		>
 			<Text style={styles.textoBoton}>Guardar</Text>
@@ -138,6 +145,63 @@ const isChanging = (editar, setEditar) => {
 			</TouchableOpacity>
 		)
 }
+
+const guardar = async (usuario) => {
+	const res = usuario.rol == 'empresa'?(
+	await fetch('http://192.168.1.51:3000/editEmpresa', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'Application/json',
+		},
+		body: JSON.stringify({
+			rut: usuario.rut,
+			nombre: usuario.nombre,
+			telefono: usuario.telefono,
+			correo: usuario.correo,
+			pass: usuario.pass,
+			recorridos : [],
+			rol: 'empresa',
+		}),
+	})):(
+		await fetch('http://192.168.1.51:3000/editPasajero', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'Application/json',
+		},
+		body: JSON.stringify({
+			rut: usuario.rut,
+			nombre: usuario.nombre,
+			telefono: usuario.telefono,
+			correo: usuario.correo,
+			pass: usuario.pass,
+			recorridos : [],
+			rol: 'pasajero',
+		}),
+	}))
+	
+	const ans = await res.json()
+	if (ans.ok) {
+
+		Alert.alert(
+			"Genial!",
+			'Hemos actualizado tus datos!',
+			[
+				{ text: "OK", onPress: () => ''}
+			],
+			{ cancelable: false }
+		);
+	} else {
+		Alert.alert(
+			"Oh no! algo anda mal",
+			ans.mensaje,
+			[
+				{ text: "Volver a intentar" }
+			],
+			{ cancelable: false }
+		);
+	}
+}
+
 
 const styles = StyleSheet.create({
 	container: {

@@ -85,7 +85,7 @@ const inicio = async (usuario, navigation, inicioSesion) => {
 		await inicioSesion(ans.usuario)
 		Alert.alert(
 			"Bienvenido!",
-			ans.mensaje,
+			'',
 			[
 				{ text: "OK", onPress: () => navigation.navigate('PrincipalDrawer') }
 			],

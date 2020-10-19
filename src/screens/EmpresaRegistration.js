@@ -113,7 +113,8 @@ const registro = async (usuario, navigation) => {
 			telefono: usuario.telefono,
 			correo: usuario.correo,
 			pass: usuario.pass,
-
+			recorridos : [],
+			rol: 'empresa',
 		}),
 	})
 	const ans = await res.json()
