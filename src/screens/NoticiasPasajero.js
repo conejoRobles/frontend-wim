@@ -77,14 +77,16 @@ const Item = ({item, onPress, style}) =>(
     </TouchableOpacity>
 )
 
-export default function Noticia() {
+export default function NoticiaPasajero({navigation}) {
     const [selectedId,setSelectedId] = useState(null)
     const renderItem = ({item}) => {
     const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
             <Item 
                 item = {item}
-                onPress = {() => setSelectedId(item.id)}
+                onPress = {() => {
+                    navigation.navigate('NoticiasXRecorridoPasajero')
+                    setSelectedId(item.id)}}
                 style = {{backgroundColor}}
             />
         )

@@ -14,6 +14,7 @@ import PreRegistration from './src/screens/PreRegistration'
 import Bienvenida from './src/screens/Bienvenida'
 import NoticiasPasajero from './src/screens/NoticiasPasajero'
 import NoticiasXRecorridoEmpresa from './src/screens/NoticiasXRecorridoEmpresa'
+import NoticiasXRecorridoPasajero from './src/screens/NoticiasXRecorridoPasajero'
 import NoticiaEmpresa from './src/screens/NoticiasEmpresa'
 import Perfil from './src/screens/Perfil'
 import { Provider } from 'react-redux'
@@ -111,7 +112,7 @@ function NoticiaPasajeroStackScreen() {
   return (
     <NoticiaStack.Navigator>
       <NoticiaStack.Screen name="Noticias" component={NoticiasPasajero} />
-      {/* <NoticiaStack.Screen name="NoticiasxEmpresa" component={Noticia} /> */}
+      <NoticiaStack.Screen name="NoticiasXRecorridoPasajero" component={NoticiasXRecorridoPasajero} />
     </NoticiaStack.Navigator>
   )
 }
@@ -131,7 +132,7 @@ function NoticiaEmpresaStackScreen() {
 function BuscarStackScreen() {
   return (
     <BuscarStack.Navigator>
-      <BuscarStack.Screen name="Buscar" component={Noticias} />
+      <BuscarStack.Screen name="Buscar" component={NoticiasPasajero} />
       {/* <NoticiaStack.Screen name="MostrarRecorrido" component={} /> */}
     </BuscarStack.Navigator>
   )
@@ -250,8 +251,8 @@ function TabEmpresa() {
 function PrincipalDrawer() {
   return (
     <Drawer.Navigator>
-      {/* <Drawer.Screen options={{}} name="HomePasajero" component={TabPasajero} /> */}
-      <Drawer.Screen options={{}} name="HomeEmpresa" component={TabEmpresa} />
+      <Drawer.Screen options={{}} name="HomePasajero" component={TabPasajero} />
+      {/* <Drawer.Screen options={{}} name="HomeEmpresa" component={TabEmpresa} /> */}
       <Drawer.Screen name="Profile" component={Perfil} />
     </Drawer.Navigator>
   )
