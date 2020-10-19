@@ -14,15 +14,16 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 	const [telefono, setTelefono] = useState(user.telefono)
 	const [showPass, setShowPass] = useState({ value: true })
 	const [editar, setEditar] = useState(false)
+	const [rol, setRol] = useState(user.rol)
 
 	return (
 		<View style={styles.container} >
-			<StatusBar backgroundColor="#e84c22"/>
-				<Text style={styles.titulo}>Cuenta</Text>
-				<View style={styles.inputView}>
-					<View style={styles.icon}>
-						<Icon name="user" size={25} />
-					</View>
+			<StatusBar backgroundColor="#e84c22" />
+			<Text style={styles.titulo}>Cuenta</Text>
+			<View style={styles.inputView}>
+				<View style={styles.icon}>
+					<Icon name="user" size={25} />
+				</View>
 				<TextInput
 					editable={editar}
 					style={styles.inputText}
@@ -101,7 +102,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 					onChangeText={text => setTelefono(text)}
 				/>
 			</View>
-			{isChanging(editar, setEditar, load,nombre,pass,correo,rut,telefono)}
+			{isChanging(editar, setEditar, load, nombre, pass, correo, rut, telefono, rol)}
 			<TouchableOpacity
 				style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
 				onPress={() => {
@@ -117,11 +118,10 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 
 const logOut = async (navigation, user, logout) => {
 	await logout()
-	console.log('estado de usuario:', user)
 	navigation.navigate('Home')
 }
 
-const isChanging = (editar, setEditar, load,nombre,pass,correo,rut,telefono) => {
+const isChanging = (editar, setEditar, load, nombre, pass, correo, rut, telefono, rol) => {
 	return editar ? (
 		<TouchableOpacity
 			style={styles.button}
@@ -133,6 +133,7 @@ const isChanging = (editar, setEditar, load,nombre,pass,correo,rut,telefono) => 
 					correo,
 					rut,
 					telefono,
+					rol
 				})
 			}}
 		>
@@ -151,38 +152,38 @@ const isChanging = (editar, setEditar, load,nombre,pass,correo,rut,telefono) => 
 }
 
 const guardar = async (usuario) => {
-	const res = usuario.rol == 'empresa'?(
-	await fetch('http://192.168.1.51:3000/editEmpresa', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'Application/json',
-		},
-		body: JSON.stringify({
-			rut: usuario.rut,
-			nombre: usuario.nombre,
-			telefono: usuario.telefono,
-			correo: usuario.correo,
-			pass: usuario.pass,
-			recorridos : [],
-			rol: 'empresa',
-		}),
-	})):(
-		await fetch('http://192.168.1.51:3000/editPasajero', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'Application/json',
-		},
-		body: JSON.stringify({
-			rut: usuario.rut,
-			nombre: usuario.nombre,
-			telefono: usuario.telefono,
-			correo: usuario.correo,
-			pass: usuario.pass,
-			recorridos : [],
-			rol: 'pasajero',
-		}),
-	}))
-	
+	const res = usuario.rol == 'empresa' ? (
+		await fetch('http://192.168.1.51:3000/editEmpresa', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'Application/json',
+			},
+			body: JSON.stringify({
+				rut: usuario.rut,
+				nombre: usuario.nombre,
+				telefono: usuario.telefono,
+				correo: usuario.correo,
+				pass: usuario.pass,
+				recorridos: [],
+				rol: 'empresa',
+			}),
+		})) : (
+			await fetch('http://192.168.1.51:3000/editPasajero', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'Application/json',
+				},
+				body: JSON.stringify({
+					rut: usuario.rut,
+					nombre: usuario.nombre,
+					telefono: usuario.telefono,
+					correo: usuario.correo,
+					pass: usuario.pass,
+					recorridos: [],
+					rol: 'pasajero',
+				}),
+			}))
+
 	const ans = await res.json()
 	if (ans.ok) {
 
@@ -190,7 +191,7 @@ const guardar = async (usuario) => {
 			"Genial!",
 			'Hemos actualizado tus datos!',
 			[
-				{ text: "OK", onPress: () => ''}
+				{ text: "OK", onPress: () => '' }
 			],
 			{ cancelable: false }
 		);
@@ -266,7 +267,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-	console.log('ESTADO', state)
 	return state
 }
 
