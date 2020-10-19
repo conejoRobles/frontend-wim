@@ -1,76 +1,74 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Constants from 'expo-constants'
-import { LinearGradient } from 'expo-linear-gradient';
+import { connect } from 'react-redux'
 
 const DATA = [
     {
-        id:"0",
-        origen:'Chillán',
+        id: "0",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"1",
-        origen:'San Carlos',
+        id: "1",
+        origen: 'San Carlos',
         destino: 'Chillán'
     },
     {
-        id:"2",
-        origen:'Chillán',
+        id: "2",
+        origen: 'Chillán',
         destino: 'Pinto'
     },
     {
-        id:"3",
-        origen:'Pinto',
+        id: "3",
+        origen: 'Pinto',
         destino: 'Chillán'
     },
     {
-        id:"4",
-        origen:'Chillán',
+        id: "4",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
     {
-        id:"5",
-        origen:'Chillán',
+        id: "5",
+        origen: 'Chillán',
         destino: 'San Carlos'
     },
 ]
 
-const Item = ({item, onPress, style}) =>(
-    <TouchableOpacity onPress = {onPress} style={[styles.button, style]}>
-        <Text style = {styles.texto}>{item.origen}</Text>
-        <Text style = {styles.texto}>-</Text>
-        <Text style = {styles.texto}>{item.destino}</Text>
+const Item = ({ item, onPress, style }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+        <Text style={styles.texto}>{item.origen}</Text>
+        <Text style={styles.texto}>-</Text>
+        <Text style={styles.texto}>{item.destino}</Text>
     </TouchableOpacity>
 )
 
-export default function NoticiasEmpresa({navigation}) {
-    const [selectedId,setSelectedId] = useState(null)
-    const renderItem = ({item}) => {
-    // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
+function NoticiasEmpresa({ navigation }) {
+    const [selectedId, setSelectedId] = useState(null)
+    const renderItem = ({ item }) => {
+        // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
         return (
-            <Item 
-                item = {item}
-                onPress = {() => {
+            <Item
+                item={item}
+                onPress={() => {
                     setSelectedId(item.id)
-                    navigation.navigate('NoticiasxRecorridoEmpresa') 
+                    navigation.navigate('NoticiasxRecorridoEmpresa')
                 }}
-                style = {{backgroundColor: '#e84c22'}}
+                style={{ backgroundColor: '#e84c22' }}
             />
         )
     }
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <FlatList 
-                data = {DATA}
-                renderItem = {renderItem}
-                keyExtractor = {(item) => item.id}
-                extraData = {selectedId}
+            <FlatList
+                data={DATA}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                extraData={selectedId}
             />
         </View>
-        );
+    );
 }
 
 
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 50,
         // flex: 1,
-        flexDirection:'row',
+        flexDirection: 'row',
         backgroundColor: '#e84c22',
         paddingLeft: 20,
         alignItems: 'center',
@@ -98,9 +96,9 @@ const styles = StyleSheet.create({
     button: {
         marginHorizontal: 40,
         borderRadius: 30,
-        height:150,
-        alignItems:"center",
-        justifyContent:"center",
+        height: 150,
+        alignItems: "center",
+        justifyContent: "center",
         marginVertical: 15,
     },
     contenedor: {
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white'
     },
-    icon : {
+    icon: {
         width: 50,
         color: 'white'
     },
@@ -134,7 +132,13 @@ const styles = StyleSheet.create({
     bordes: {
         borderWidth: 1,
         borderBottomWidth: 5,
-        borderTopWidth:0,
+        borderTopWidth: 0,
         borderColor: '#ff4b00'
     }
 });
+
+const mapStateToProps = state => {
+    return state
+}
+
+export default connect(mapStateToProps)(NoticiasEmpresa)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -16,7 +16,7 @@ import NoticiasPasajero from './src/screens/NoticiasPasajero'
 import NoticiasXRecorridoEmpresa from './src/screens/NoticiasXRecorridoEmpresa'
 import NoticiasXRecorridoPasajero from './src/screens/NoticiasXRecorridoPasajero'
 import NoticiaEmpresa from './src/screens/NoticiasEmpresa'
-import Perfil from './src/screens/Perfil'
+
 import { Provider, connect } from 'react-redux'
 import store from './src/store/store'
 import EditarCuenta from './src/screens/EditarCuenta'
@@ -86,7 +86,6 @@ function AuthStackScreen({ navigation }) {
       <AuthStack.Screen name="PreRegistrationScreen" component={PreRegistration} />
       <AuthStack.Screen name="EmpresaRegistrationScreen" component={EmpresaRegistration} />
       <AuthStack.Screen name="PasajeroRegistrationScreen" component={PasajeroRegistration} />
-      <AuthStack.Screen name="EditarCuentaScreen" component={EditarCuenta} />
       <AuthStack.Screen name="PrincipalDrawer"
         component={PrincipalDrawer}
         options={({ navigation }) => ({
@@ -107,8 +106,11 @@ function AuthStackScreen({ navigation }) {
         })}
       />
     </AuthStack.Navigator>
-  );
+  )
 }
+
+
+
 
 function NoticiaPasajeroStackScreen() {
   return (
@@ -250,11 +252,17 @@ function TabEmpresa() {
   )
 }
 
-function PrincipalDrawer() {
+function PrincipalDrawer({ route, navigation }) {
+  const { rol } = route.params
+  console.log(rol)
   return (
     <Drawer.Navigator>
-      <Drawer.Screen options={{}} name="HomeEmpresa" component={TabEmpresa} />
-      {/* <Drawer.Screen options={{}} name="Inicio" component={TabPasajero} /> */}
+      { rol == 'empresa' ? (
+        <Drawer.Screen options={{}} name="Inicio" component={TabEmpresa} />
+      ) : (
+          <Drawer.Screen options={{}} name="Inicio" component={TabPasajero} />
+        )
+      }
       <Drawer.Screen options={{}} name="Cuenta" component={EditarCuenta} />
     </Drawer.Navigator>
   )

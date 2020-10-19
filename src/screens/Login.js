@@ -10,7 +10,7 @@ const Login = ({ navigation, inicioSesion, user }) => {
 	const [showPass, setShowPass] = useState(true);
 	return (
 		<View style={styles.container}>
-			<StatusBar hidden/>
+			<StatusBar hidden />
 			<ImageBackground source={require('../../assets/login_register.png')} style={styles.image} resizeMode='cover'>
 				<Text style={styles.titulo}>
 					Inicio de sesión
@@ -88,7 +88,11 @@ const inicio = async (usuario, navigation, inicioSesion) => {
 			"Bienvenido!",
 			'',
 			[
-				{ text: "OK", onPress: () => navigation.navigate('PrincipalDrawer') }
+				{
+					text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
+						rol: ans.usuario.rol
+					})
+				}
 			],
 			{ cancelable: false }
 		);

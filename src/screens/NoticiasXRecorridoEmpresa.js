@@ -1,68 +1,69 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient';
+import { connect } from 'react-redux'
 
 const DATA = [
     {
-        id:"0",
-        titulo:'Bus en Mantención',
+        id: "0",
+        titulo: 'Bus en Mantención',
         descripcion: 'En bus se puso triste :C'
     },
     {
-        id:"1",
-        titulo:'Bus Enfermito',
+        id: "1",
+        titulo: 'Bus Enfermito',
         descripcion: 'Al bus le duele la guatita'
     },
     {
-        id:"2",
-        titulo:'Bus con su periodo',
+        id: "2",
+        titulo: 'Bus con su periodo',
         descripcion: 'Al bus le llego la regla y esta con colicos :c'
     },
     {
-        id:"3",
-        titulo:'Bus con su periodo',
+        id: "3",
+        titulo: 'Bus con su periodo',
         descripcion: 'Al bus le llego la regla y esta con colicos :c'
     }
 ]
 
-const Item = ({item, onPress, style}) =>(
-    <TouchableOpacity onPress = {onPress} style={[styles.button, style]}>
-        <Text style = {styles.texto}>{item.titulo}</Text>
-        <Text style = {styles.texto3}>{item.descripcion}</Text>
+const Item = ({ item, onPress, style }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+        <Text style={styles.texto}>{item.titulo}</Text>
+        <Text style={styles.texto3}>{item.descripcion}</Text>
     </TouchableOpacity>
 )
 
-export default function NoticiasEmpresa({navigation}) {
-    const [selectedId,setSelectedId] = useState(null)
-    const renderItem = ({item}) => {
-    // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
+function NoticiasXRecorridoEmpresa({ navigation }) {
+    const [selectedId, setSelectedId] = useState(null)
+    const renderItem = ({ item }) => {
+        // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
         return (
-            <Item 
-                item = {item}
-                onPress = {() => {
+            <Item
+                item={item}
+                onPress={() => {
                     navigation.navigate('EditarNoticia')
-                    setSelectedId(item.id)}}
-                style = {{backgroundColor: '#e84c22'}}
+                    setSelectedId(item.id)
+                }}
+                style={{ backgroundColor: '#e84c22' }}
             />
         )
     }
     return (
-    <View style={[styles.container]}>
-        <StatusBar backgroundColor="#e84c22"></StatusBar>
-        <TouchableOpacity 
-        onPress=  {() => {
-            navigation.navigate('AgregarNoticias') 
-        }}
-        style={[styles.button2]}>
-            <Text style = {styles.texto2}>Agregar Noticia</Text>
-        </TouchableOpacity>
-        <FlatList 
-            data = {DATA}
-            renderItem = {renderItem}
-            keyExtractor = {(item) => item.id}
-            extraData = {selectedId}
-        />
-    </View>
+        <View style={[styles.container]}>
+            <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('AgregarNoticias')
+                }}
+                style={[styles.button2]}>
+                <Text style={styles.texto2}>Agregar Noticia</Text>
+            </TouchableOpacity>
+            <FlatList
+                data={DATA}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                extraData={selectedId}
+            />
+        </View>
     );
 }
 
@@ -79,17 +80,17 @@ const styles = StyleSheet.create({
     button: {
         marginHorizontal: 40,
         borderRadius: 50,
-        height:200,
-        alignItems:"center",
+        height: 200,
+        alignItems: "center",
         marginVertical: 15,
     },
     button2: {
-        backgroundColor:'rgba(232,76,34,0.3)',
+        backgroundColor: 'rgba(232,76,34,0.3)',
         // opacity: 0.3,
         // borderRadius: 50,
         borderBottomRightRadius: 50,
         borderBottomLeftRadius: 50,
-        height:45,
+        height: 45,
         justifyContent: 'center',
     },
     contenedor: {
@@ -106,11 +107,11 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: 'white'
     },
-    icon : {
+    icon: {
         width: 50,
         color: 'white'
     },
-    texto2:{
+    texto2: {
         color: '#e84c22',
         textAlign: 'center',
         fontSize: 20,
@@ -124,8 +125,13 @@ const styles = StyleSheet.create({
     bordes: {
         borderWidth: 1,
         borderBottomWidth: 5,
-        borderTopWidth:0,
+        borderTopWidth: 0,
         borderColor: '#ff4b00'
     }
 });
 
+const mapStateToProps = state => {
+    return state
+}
+
+export default connect(mapStateToProps)(NoticiasXRecorridoEmpresa)
