@@ -102,7 +102,8 @@ const PasajeroRegistration = ({ navigation }) => {
 }
 
 const registro = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.1.51:3000/addPasajero', {
+	// const res = await fetch('http://192.168.1.51:3000/addPasajero', {
+	const res = await fetch('http://192.168.0.16:3000/addPasajero', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',

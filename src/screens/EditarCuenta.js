@@ -153,7 +153,8 @@ const isChanging = (editar, setEditar, load, nombre, pass, correo, rut, telefono
 
 const guardar = async (usuario) => {
 	const res = usuario.rol == 'empresa' ? (
-		await fetch('http://192.168.1.51:3000/editEmpresa', {
+		// await fetch('http://192.168.1.51:3000/editEmpresa', {
+		await fetch('http://192.168.0.16:3000/editEmpresa', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'Application/json',
@@ -168,7 +169,8 @@ const guardar = async (usuario) => {
 				rol: 'empresa',
 			}),
 		})) : (
-			await fetch('http://192.168.1.51:3000/editPasajero', {
+			// await fetch('http://192.168.1.51:3000/editPasajero', {
+			await fetch('http://192.168.0.16:3000/editPasajero', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'Application/json',

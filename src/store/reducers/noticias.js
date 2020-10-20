@@ -19,11 +19,9 @@ export default (state = initialState, action) => {
 			break
 		case noticiasConstants.EDIT:
 			let arr = [...state.data]
-			console.log('noticia Editada', action.noticia)
 			return ({
 				...state,
 				data: arr.map(x => {
-					console.log('noticia Editada', action.noticia)
 					return x.id == action.noticia.id ? (
 						{ ...x, ...action.noticia }
 					) : (

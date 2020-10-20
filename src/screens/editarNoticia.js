@@ -72,9 +72,10 @@ function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia })
                         })}
                     >
                         <Picker.Item label="Seleccione" value="" />
-                        <Picker.Item label='Dia' value="1" />
-                        <Picker.Item label='Semana' value="2" />
-                        <Picker.Item label='Mes' value="3" />
+                        <Picker.Item label='Hora' value="1" />
+                        <Picker.Item label='Dia' value="2" />
+                        <Picker.Item label='Semana' value="3" />
+                        <Picker.Item label='Mes' value="4" />
                     </Picker>
                 </View>
             </View>
@@ -93,7 +94,25 @@ function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia })
 
 
 const publicar = async (noticia, editar, navigation) => {
-    let res = await fetch('http://192.168.1.51:3000/editNoticia', {
+    let hoy = new Date(noticia.fechaPublicacion)
+    console.log("CACA", hoy.toString())
+    let termino = new Date()
+    if(noticia.duracion.unidad == "2"){
+        hoy.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad))
+        termino = hoy
+    }else if(noticia.duracion.unidad == "3"){
+        hoy.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad)*7)
+        termino = hoy
+    }else if(noticia.duracion.unidad == "4"){
+        hoy.setMonth(hoy.getMonth() + parseInt(noticia.duracion.cantidad))
+        termino = hoy
+    }else if(noticia.duracion.unidad == "1"){
+        let addTime =  parseInt(noticia.duracion.cantidad) * 3600;
+        hoy.setSeconds(addTime)
+        termino = hoy
+    }
+    // let res = await fetch('http://192.168.1.51:3000/editNoticia', {
+    let res = await fetch('http://192.168.0.16:3000/editNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
@@ -104,7 +123,7 @@ const publicar = async (noticia, editar, navigation) => {
             id: noticia.id,
             descripcion: noticia.descripcion,
             titulo: noticia.titulo,
-            fechaTermino: noticia.fechaTermino,
+            fechaTermino: termino.toString(),
             duracion: noticia.duracion,
             fechaPublicacion: noticia.fechaPublicacion,
         }),
@@ -134,7 +153,8 @@ const publicar = async (noticia, editar, navigation) => {
 
 const eliminar = async (item, eliminarNoticia, navigation) => {
 
-    let res = await fetch('http://192.168.1.51:3000/removeNoticia', {
+    // let res = await fetch('http://192.168.1.51:3000/removeNoticia', {
+    let res = await fetch('http://192.168.0.16:3000/removeNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
