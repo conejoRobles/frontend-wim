@@ -103,7 +103,8 @@ const EmpresaRegistration = ({ navigation }) => {
 }
 
 const registro = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.1.51:3000/addEmpresa', {
+	// const res = await fetch('http://192.168.1.51:3000/addEmpresa', {
+	const res = await fetch('http://192.168.0.16:3000/addEmpresa', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',

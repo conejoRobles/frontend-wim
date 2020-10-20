@@ -68,6 +68,17 @@ function agregarNoticia({ navigation, agregar, noticias, }) {
                         <Picker.Item label='10' value="10" />
                         <Picker.Item label='11' value="11" />
                         <Picker.Item label='12' value="12" />
+                        <Picker.Item label='13' value="13" />
+                        <Picker.Item label='14' value="14" />
+                        <Picker.Item label='15' value="15" />
+                        <Picker.Item label='16' value="16" />
+                        <Picker.Item label='17' value="17" />
+                        <Picker.Item label='18' value="18" />
+                        <Picker.Item label='19' value="19" />
+                        <Picker.Item label='20' value="20" />
+                        <Picker.Item label='21' value="21" />
+                        <Picker.Item label='22' value="22" />
+                        <Picker.Item label='23' value="23" />
                     </Picker>
                 </View>
                 <View style={[styles.inputView, { flex: 1, marginHorizontal: 10 }]}>
@@ -80,9 +91,10 @@ function agregarNoticia({ navigation, agregar, noticias, }) {
                             return ({ ...noticia, duracion })
                         })}
                     >
-                        <Picker.Item label='Dia' value="1" />
-                        <Picker.Item label='Semana' value="2" />
-                        <Picker.Item label='Mes' value="3" />
+                        <Picker.Item label='Hora' value="1" />
+                        <Picker.Item label='Dia' value="2" />
+                        <Picker.Item label='Semana' value="3" />
+                        <Picker.Item label='Mes' value="4" />
                     </Picker>
                 </View>
 
@@ -98,7 +110,22 @@ function agregarNoticia({ navigation, agregar, noticias, }) {
 
 
 const publicar = async (noticia, agregar, navigation) => {
-    let res = await fetch('http://192.168.1.51:3000/addNoticia', {
+    let hoy = new Date()
+    let termino = new Date()
+    
+    if(noticia.duracion.unidad == "2"){
+        termino.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad))
+    }else if(noticia.duracion.unidad == "3"){
+        termino.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad)*7)
+    }else if(noticia.duracion.unidad == "4"){
+        termino.setMonth(hoy.getMonth() + parseInt(noticia.duracion.cantidad))
+    }else if(noticia.duracion.unidad == "1"){
+        let addTime =  parseInt(noticia.duracion.cantidad) * 3600;
+        termino.setSeconds(addTime)
+    }
+
+    // let res = await fetch('http://192.168.1.51:3000/addNoticia', {
+    let res = await fetch('http://192.168.0.16:3000/addNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
@@ -109,9 +136,9 @@ const publicar = async (noticia, agregar, navigation) => {
             id: noticia.id,
             descripcion: noticia.descripcion,
             titulo: noticia.titulo,
-            fechaTermino: noticia.fechaTermino,
+            fechaTermino: termino.toString(),
             duracion: noticia.duracion,
-            fechaPublicacion: noticia.fechaPublicacion,
+            fechaPublicacion: hoy.toString(),
         }),
     })
     res = await res.json()
