@@ -8,7 +8,8 @@ const initialState = {
 export default (state = initialState, action) => {
 	switch (action.type) {
 		case noticiasConstants.LOAD:
-			let noticias = action.noticias
+
+			let noticias = Object.values(action.noticias)
 			return ({
 				...state,
 				data: noticias

@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native'
 import { Picker } from '@react-native-community/picker'
 import { agregar } from '../store/actions/noticias'
+import uuid from 'uuid/v4'
 
-function agregarNoticia({ navigation, agregar, noticias }) {
+
+function agregarNoticia({ navigation, agregar, noticias, }) {
     const [noticia, setNoticia] = useState({
-        id: '' + noticias.data.length,
+        id: uuid(),
         descripcion: '',
         titulo: '',
         fechaTermino: '',

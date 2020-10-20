@@ -16,7 +16,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 	const [editar, setEditar] = useState(false)
 	const [rol, setRol] = useState(user.rol)
 
-	return (
+	return editar ? (
 		<View style={styles.container} >
 			<StatusBar backgroundColor="#e84c22" />
 			<Text style={styles.titulo}>Cuenta</Text>
@@ -112,7 +112,92 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 				<Text style={styles.textoBoton}>Cerrar Sesión</Text>
 			</TouchableOpacity>
 		</View>
-	)
+	) : (
+			<View style={styles.container} >
+				<StatusBar backgroundColor="#e84c22" />
+				<Text style={styles.titulo}>Cuenta</Text>
+				<View style={[styles.inputView, { backgroundColor: 'white' }]}>
+					<View style={styles.icon}>
+						<Icon name="user" size={25} />
+					</View>
+					<TextInput
+						editable={editar}
+						style={styles.inputText}
+						placeholder="Nombre"
+						value={nombre}
+						placeholderTextColor="grey"
+						onChangeText={text => setNombre(text)}
+						editable={editar}
+					/>
+				</View>
+
+				<View style={[styles.inputView, { backgroundColor: 'white' }]}>
+					<View style={styles.icon}>
+						<Icon name="lock" size={25} />
+					</View>
+					<TextInput
+						editable={editar}
+						secureTextEntry={showPass.value}
+						value={pass}
+						style={styles.inputText}
+						placeholder="Contraseña"
+						placeholderTextColor="grey"
+						onChangeText={text => setPass(text)}
+					/>
+				</View>
+
+				<View style={[styles.inputView, { backgroundColor: 'white' }]}>
+					<View style={styles.icon}>
+						<Icon name="id-card-o" size={25} />
+					</View>
+					<TextInput
+						editable={editar}
+						value={rut}
+						style={styles.inputText}
+						placeholder="Rut"
+						placeholderTextColor="grey"
+						onChangeText={text => setRut(text)}
+					/>
+				</View>
+
+				<View style={[styles.inputView, { backgroundColor: 'white' }]}>
+					<View style={styles.icon}>
+						<Icon name="envelope" size={25} />
+					</View>
+					<TextInput
+						editable={editar}
+						style={styles.inputText}
+						value={correo}
+						placeholder="Email"
+						placeholderTextColor="grey"
+						onChangeText={text => setCorreo(text)}
+					/>
+				</View>
+
+				<View style={[styles.inputView, { backgroundColor: 'white' }]}>
+					<View style={styles.icon}>
+						<Icon name="phone" size={25} />
+					</View>
+					<TextInput
+						editable={editar}
+						style={styles.inputText}
+						placeholder="Telefono"
+						value={telefono}
+						placeholderTextColor="grey"
+						onChangeText={text => setTelefono(text)}
+					/>
+				</View>
+				{isChanging(editar, setEditar, load, nombre, pass, correo, rut, telefono, rol)}
+				<TouchableOpacity
+					style={[styles.button, { backgroundColor: 'rgb(4, 37, 78)' }]}
+					onPress={() => {
+						logOut(navigation, user, logout)
+					}}
+				>
+					<Text style={styles.textoBoton}>Cerrar Sesión</Text>
+				</TouchableOpacity>
+			</View>
+		)
 }
 
 
