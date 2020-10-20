@@ -17,6 +17,27 @@ export default (state = initialState, action) => {
 		case noticiasConstants.ERROR:
 			return state
 			break
+		case noticiasConstants.EDIT:
+			let arr = [...state.data]
+			console.log('noticia Editada', action.noticia)
+			return ({
+				...state,
+				data: arr.map(x => {
+					console.log('noticia Editada', action.noticia)
+					return x.id == action.noticia.id ? (
+						{ ...x, ...action.noticia }
+					) : (
+							x
+						)
+				})
+			})
+			break
+		case noticiasConstants.ADD: {
+			let arr = [...state.data]
+			arr = [...arr, action.noticia]
+			return { ...state, data: arr }
+		}
+			break
 		case noticiasConstants.REMOVE:
 			return ({
 				...state,

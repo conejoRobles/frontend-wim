@@ -1,11 +1,21 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native'
 import { Picker } from '@react-native-community/picker'
+import { agregar } from '../store/actions/noticias'
 
-function agregarNoticia({ navigation }) {
-    const [selectedValue, setSelectedValue] = useState("");
-    const [selectedValue1, setSelectedValue1] = useState("");
+function agregarNoticia({ navigation, agregar, noticias }) {
+    const [noticia, setNoticia] = useState({
+        id: '' + noticias.data.length,
+        descripcion: '',
+        titulo: '',
+        fechaTermino: '',
+        duracion: {
+            cantidad: '1',
+            unidad: '1'
+        },
+        fechaPublicacion: '',
+    })
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
@@ -13,7 +23,8 @@ function agregarNoticia({ navigation }) {
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.inputText}
-                // placeholder="Rut"
+                    value={noticia.titulo}
+                    onChangeText={text => setNoticia({ ...noticia, titulo: text })}
                 // placeholderTextColor="grey"
                 // onChangeText={text => setRut(text)}
                 />
@@ -25,9 +36,10 @@ function agregarNoticia({ navigation }) {
                     numberOfLines={13}
                     maxLength={330}
                     style={styles.inputText}
-                // placeholder="Rut"
-                // placeholderTextColor="grey"
-                // onChangeText={text => setRut(text)}
+                    value={noticia.descripcion}
+                    // placeholder="Rut"
+                    // placeholderTextColor="grey"
+                    onChangeText={text => setNoticia({ ...noticia, descripcion: text })}
                 />
             </View>
             <Text style={styles.texto}>Duración:</Text>
@@ -35,8 +47,12 @@ function agregarNoticia({ navigation }) {
                 <View style={[styles.inputView, { flex: 1, marginHorizontal: 10 }]}>
                     <Picker style={{ width: '100%', color: 'black' }}
                         itemStyle={{ borderRadius: 4, borderColor: 'blue' }}
-                        selectedValue={selectedValue}
-                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                        selectedValue={noticia.duracion.cantidad}
+                        onValueChange={(itemValue) => setNoticia(() => {
+                            let duracion = noticia.duracion
+                            duracion = { ...duracion, cantidad: itemValue }
+                            return ({ ...noticia, duracion })
+                        })}
                     >
                         <Picker.Item label='1' value="1" />
                         <Picker.Item label='2' value="2" />
@@ -55,21 +71,68 @@ function agregarNoticia({ navigation }) {
                 <View style={[styles.inputView, { flex: 1, marginHorizontal: 10 }]}>
                     <Picker style={{ width: '100%', color: 'black' }}
                         itemStyle={{ borderRadius: 4, borderColor: 'blue' }}
-                        selectedValue={selectedValue1}
-                        onValueChange={(itemValue, itemIndex) => setSelectedValue1(itemValue)}
+                        selectedValue={noticia.duracion.unidad}
+                        onValueChange={(itemValue) => setNoticia(() => {
+                            let duracion = noticia.duracion
+                            duracion = { ...duracion, unidad: itemValue }
+                            return ({ ...noticia, duracion })
+                        })}
                     >
-                        <Picker.Item label='Hora' value="1" />
-                        <Picker.Item label='Dia' value="2" />
-                        <Picker.Item label='Semana' value="3" />
-                        <Picker.Item label='Mes' value="4" />
+                        <Picker.Item label='Dia' value="1" />
+                        <Picker.Item label='Semana' value="2" />
+                        <Picker.Item label='Mes' value="3" />
                     </Picker>
                 </View>
+
             </View>
-            <TouchableOpacity style={[styles.button]}>
+
+            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation) }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
             </TouchableOpacity>
+
         </View>
     );
+}
+
+
+const publicar = async (noticia, agregar, navigation) => {
+    let res = await fetch('http://192.168.1.51:3000/addNoticia', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify({
+            rut: '801234567',
+            recorrido: '0',
+            id: noticia.id,
+            descripcion: noticia.descripcion,
+            titulo: noticia.titulo,
+            fechaTermino: noticia.fechaTermino,
+            duracion: noticia.duracion,
+            fechaPublicacion: noticia.fechaPublicacion,
+        }),
+    })
+    res = await res.json()
+    if (res.ok) {
+        await agregar(noticia)
+        Alert.alert(
+            "Genial!",
+            'Se ha editado su noticia!',
+            [
+                { text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa') }
+            ],
+            { cancelable: false }
+        );
+    } else {
+        Alert.alert(
+            "Oh no! algo anda mal",
+            'No se ha podido agregar su noticia',
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -125,5 +188,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return state
 }
-
-export default connect(mapStateToProps)(agregarNoticia)
+const mapDispatchToProps = dispatch => ({
+    agregar: (item) => dispatch(agregar(item)),
+})
+export default connect(mapStateToProps, mapDispatchToProps)(agregarNoticia)

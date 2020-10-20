@@ -7,12 +7,17 @@ export const noticiasLoad = (noticias) => ({
 	noticias
 })
 
-export const noticiasAdd = (noticia) => ({
+export const agregar = (noticia) => ({
 	type: noticiasConstants.ADD,
 	noticia
 })
 
 export const eliminarNoticia = (noticia) => ({
 	type: noticiasConstants.REMOVE,
+	noticia
+})
+
+export const editar = (noticia) => ({
+	type: noticiasConstants.EDIT,
 	noticia
 })

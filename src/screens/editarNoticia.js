@@ -2,14 +2,12 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { Picker } from '@react-native-community/picker'
-import { eliminarNoticia, noticiasLoad } from '../store/actions/noticias'
+import { eliminarNoticia, editar, noticiasLoad } from '../store/actions/noticias'
 
 
-function editarNoticia({ navigation, noticias, route, eliminarNoticia }) {
+function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia }) {
     const { item } = route.params
-    const [noticia, setNoticia] = useState({ item })
-    const [selectedValue, setSelectedValue] = useState(item.duracion.cantidad)
-    const [selectedValue1, setSelectedValue1] = useState(item.duracion.unidad)
+    const [noticia, setNoticia] = useState({ ...item })
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
@@ -17,7 +15,8 @@ function editarNoticia({ navigation, noticias, route, eliminarNoticia }) {
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.inputText}
-                    value={item.titulo}
+                    value={noticia.titulo}
+                    onChangeText={text => setNoticia({ ...noticia, titulo: text })}
                 // placeholderTextColor="grey"
                 // onChangeText={text => setRut(text)}
                 />
@@ -29,10 +28,10 @@ function editarNoticia({ navigation, noticias, route, eliminarNoticia }) {
                     numberOfLines={13}
                     maxLength={330}
                     style={styles.inputText}
-                    value={item.descripcion}
-                // placeholder="Rut"
-                // placeholderTextColor="grey"
-                // onChangeText={text => setRut(text)}
+                    value={noticia.descripcion}
+                    // placeholder="Rut"
+                    // placeholderTextColor="grey"
+                    onChangeText={text => setNoticia({ ...noticia, descripcion: text })}
                 />
             </View>
             <Text style={styles.texto}>Duración:</Text>
@@ -40,8 +39,12 @@ function editarNoticia({ navigation, noticias, route, eliminarNoticia }) {
                 <View style={[styles.inputView, { flex: 1, marginHorizontal: 10 }]}>
                     <Picker style={{ width: '100%', color: 'black' }}
                         itemStyle={{ borderRadius: 4, borderColor: 'blue' }}
-                        selectedValue={selectedValue}
-                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                        selectedValue={noticia.duracion.cantidad}
+                        onValueChange={(itemValue) => setNoticia(() => {
+                            let duracion = noticia.duracion
+                            duracion = { ...duracion, cantidad: itemValue }
+                            return ({ ...noticia, duracion })
+                        })}
                     >
                         <Picker.Item label="Seleccione" value="" />
                         <Picker.Item label='1' value="1" />
@@ -61,8 +64,12 @@ function editarNoticia({ navigation, noticias, route, eliminarNoticia }) {
                 <View style={[styles.inputView, { flex: 1, marginHorizontal: 10 }]}>
                     <Picker style={{ width: '100%', color: 'black' }}
                         itemStyle={{ borderRadius: 4, borderColor: 'blue' }}
-                        selectedValue={selectedValue1}
-                        onValueChange={(itemValue, itemIndex) => setSelectedValue1(itemValue)}
+                        selectedValue={noticia.duracion.unidad}
+                        onValueChange={(itemValue) => setNoticia(() => {
+                            let duracion = noticia.duracion
+                            duracion = { ...duracion, unidad: itemValue }
+                            return ({ ...noticia, duracion })
+                        })}
                     >
                         <Picker.Item label="Seleccione" value="" />
                         <Picker.Item label='Dia' value="1" />
@@ -75,13 +82,54 @@ function editarNoticia({ navigation, noticias, route, eliminarNoticia }) {
                 <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Eliminar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]}>
+                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, navigation) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
                 </TouchableOpacity>
             </View>
 
         </View>
     );
+}
+
+
+const publicar = async (noticia, editar, navigation) => {
+    let res = await fetch('http://192.168.1.51:3000/editNoticia', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify({
+            rut: '801234567',
+            recorrido: '0',
+            id: noticia.id,
+            descripcion: noticia.descripcion,
+            titulo: noticia.titulo,
+            fechaTermino: noticia.fechaTermino,
+            duracion: noticia.duracion,
+            fechaPublicacion: noticia.fechaPublicacion,
+        }),
+    })
+    res = await res.json()
+    if (res.ok) {
+        await editar(noticia)
+        Alert.alert(
+            "Genial!",
+            'Se ha editado su noticia!',
+            [
+                { text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa') }
+            ],
+            { cancelable: false }
+        );
+    } else {
+        Alert.alert(
+            "Oh no! algo anda mal",
+            'No se ha podido editar su noticia',
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+    }
 }
 
 const eliminar = async (item, eliminarNoticia, navigation) => {
@@ -118,12 +166,6 @@ const eliminar = async (item, eliminarNoticia, navigation) => {
             { cancelable: false }
         );
     }
-    // let res2 = await fetch('http://192.168.1.51:3000/Noticias?rut=801234567&recorrido=0')
-    // let ans2 = await res2.json()
-    // if (ans2.ok) {
-    //     let noti = ans2.noticias
-    //     await noticiasLoad(noti)
-    // }
 }
 
 const styles = StyleSheet.create({
@@ -180,6 +222,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => ({
     eliminarNoticia: (item) => dispatch(eliminarNoticia(item)),
+    editar: (item) => dispatch(editar(item)),
     // noticiasLoad: (noticias) => dispatch(noticiasLoad(noticias))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(editarNoticia)
