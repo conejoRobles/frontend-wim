@@ -1,30 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Logo from '../components/Logo'
-import { 
-	StyleSheet, 
-	Text, 
-	View, 
-	TouchableOpacity, 
-	ImageBackground, 
-	StatusBar 
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	ImageBackground,
+	StatusBar
 } from 'react-native';
 
 const Home = ({ navigation }) => {
-	// const fetchPrueba = async () => {
-	// 	const res = await fetch('http://192.168.1.51:3000/')
-	// 	const json = await res.json()
-	// 	console.log(Object.values(json.payload)[0])
-	// }
-
-	// useEffect(() => {
-	// 	fetchPrueba()
-	// }, [])
 
 	return (
 		<View style={styles.container}>
-			<StatusBar hidden/>
-			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
+			<StatusBar hidden />
+			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
 				<Logo />
 				<TouchableOpacity
 					style={styles.button}

@@ -20,6 +20,7 @@ export default (state = initialState, action) => {
 			break
 		case noticiasConstants.EDIT:
 			let arr = [...state.data]
+			console.log('EDIT', arr)
 			return ({
 				...state,
 				data: arr.map(x => {
@@ -33,7 +34,8 @@ export default (state = initialState, action) => {
 			break
 		case noticiasConstants.ADD: {
 			let arr = [...state.data]
-			arr = [...arr, action.noticia]
+			arr.push(action.noticia)
+			console.log('noticia', action.noticia)
 			return { ...state, data: arr }
 		}
 			break

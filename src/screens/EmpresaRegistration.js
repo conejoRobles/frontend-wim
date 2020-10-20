@@ -15,7 +15,7 @@ const EmpresaRegistration = ({ navigation }) => {
 	return (
 		<View style={styles.container} >
 			<StatusBar backgroundColor="#e84c22"></StatusBar>
-			<ImageBackground source = {require('../../assets/home.png')} style = {styles.image} resizeMode= 'cover'>
+			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
 				<Text style={styles.titulo}>Registro</Text>
 				<View style={styles.inputView}>
 					<View style={styles.icon}>
@@ -103,8 +103,8 @@ const EmpresaRegistration = ({ navigation }) => {
 }
 
 const registro = async (usuario, navigation) => {
-	// const res = await fetch('http://192.168.1.51:3000/addEmpresa', {
-	const res = await fetch('http://192.168.0.16:3000/addEmpresa', {
+	const res = await fetch('http://192.168.1.51:3000/addEmpresa', {
+		// const res = await fetch('http://192.168.0.16:3000/addEmpresa', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',
@@ -115,7 +115,7 @@ const registro = async (usuario, navigation) => {
 			telefono: usuario.telefono,
 			correo: usuario.correo,
 			pass: usuario.pass,
-			recorridos : [],
+			recorridos: [],
 			rol: 'empresa',
 		}),
 	})

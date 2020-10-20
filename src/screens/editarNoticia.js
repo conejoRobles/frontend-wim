@@ -95,24 +95,23 @@ function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia })
 
 const publicar = async (noticia, editar, navigation) => {
     let hoy = new Date(noticia.fechaPublicacion)
-    console.log("CACA", hoy.toString())
     let termino = new Date()
-    if(noticia.duracion.unidad == "2"){
-        hoy.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad))
+    if (noticia.duracion.unidad == "2") {
+        hoy.setDate(hoy.getDate() + parseInt(noticia.duracion.cantidad))
         termino = hoy
-    }else if(noticia.duracion.unidad == "3"){
-        hoy.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad)*7)
+    } else if (noticia.duracion.unidad == "3") {
+        hoy.setDate(hoy.getDate() + parseInt(noticia.duracion.cantidad) * 7)
         termino = hoy
-    }else if(noticia.duracion.unidad == "4"){
+    } else if (noticia.duracion.unidad == "4") {
         hoy.setMonth(hoy.getMonth() + parseInt(noticia.duracion.cantidad))
         termino = hoy
-    }else if(noticia.duracion.unidad == "1"){
-        let addTime =  parseInt(noticia.duracion.cantidad) * 3600;
+    } else if (noticia.duracion.unidad == "1") {
+        let addTime = parseInt(noticia.duracion.cantidad) * 3600;
         hoy.setSeconds(addTime)
         termino = hoy
     }
-    // let res = await fetch('http://192.168.1.51:3000/editNoticia', {
-    let res = await fetch('http://192.168.0.16:3000/editNoticia', {
+    let res = await fetch('http://192.168.1.51:3000/editNoticia', {
+        // let res = await fetch('http://192.168.0.16:3000/editNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
@@ -153,8 +152,8 @@ const publicar = async (noticia, editar, navigation) => {
 
 const eliminar = async (item, eliminarNoticia, navigation) => {
 
-    // let res = await fetch('http://192.168.1.51:3000/removeNoticia', {
-    let res = await fetch('http://192.168.0.16:3000/removeNoticia', {
+    let res = await fetch('http://192.168.1.51:3000/removeNoticia', {
+        // let res = await fetch('http://192.168.0.16:3000/removeNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',

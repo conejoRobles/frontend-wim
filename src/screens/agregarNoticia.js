@@ -112,20 +112,20 @@ function agregarNoticia({ navigation, agregar, noticias, }) {
 const publicar = async (noticia, agregar, navigation) => {
     let hoy = new Date()
     let termino = new Date()
-    
-    if(noticia.duracion.unidad == "2"){
-        termino.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad))
-    }else if(noticia.duracion.unidad == "3"){
-        termino.setDate(hoy.getDate()+ parseInt(noticia.duracion.cantidad)*7)
-    }else if(noticia.duracion.unidad == "4"){
+
+    if (noticia.duracion.unidad == "2") {
+        termino.setDate(hoy.getDate() + parseInt(noticia.duracion.cantidad))
+    } else if (noticia.duracion.unidad == "3") {
+        termino.setDate(hoy.getDate() + parseInt(noticia.duracion.cantidad) * 7)
+    } else if (noticia.duracion.unidad == "4") {
         termino.setMonth(hoy.getMonth() + parseInt(noticia.duracion.cantidad))
-    }else if(noticia.duracion.unidad == "1"){
-        let addTime =  parseInt(noticia.duracion.cantidad) * 3600;
+    } else if (noticia.duracion.unidad == "1") {
+        let addTime = parseInt(noticia.duracion.cantidad) * 3600;
         termino.setSeconds(addTime)
     }
 
-    // let res = await fetch('http://192.168.1.51:3000/addNoticia', {
-    let res = await fetch('http://192.168.0.16:3000/addNoticia', {
+    let res = await fetch('http://192.168.1.51:3000/addNoticia', {
+        //let res = await fetch('http://192.168.0.16:3000/addNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
@@ -141,6 +141,7 @@ const publicar = async (noticia, agregar, navigation) => {
             fechaPublicacion: hoy.toString(),
         }),
     })
+    noticia = { ...noticia, fechaTermino: termino.toString(), fechaPublicacion: hoy.toString() }
     res = await res.json()
     if (res.ok) {
         await agregar(noticia)

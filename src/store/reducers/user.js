@@ -27,7 +27,6 @@ export default (state = initialState, action) => {
             break
         case userConstants.LOGOUT:
             return ({
-                ...state,
                 nombre: '',
                 pass: '',
                 correo: '',
