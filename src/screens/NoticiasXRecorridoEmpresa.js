@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
+import { color } from 'react-native-reanimated'
 import { connect } from 'react-redux'
+import noticias from '../store/reducers/noticias'
 
 const DATA = [
     {
@@ -32,7 +34,7 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function NoticiasXRecorridoEmpresa({ navigation }) {
+function NoticiasXRecorridoEmpresa({ navigation, noticias }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -40,7 +42,9 @@ function NoticiasXRecorridoEmpresa({ navigation }) {
             <Item
                 item={item}
                 onPress={() => {
-                    navigation.navigate('EditarNoticia')
+                    navigation.navigate('EditarNoticia', {
+                        item,
+                    })
                     setSelectedId(item.id)
                 }}
                 style={{ backgroundColor: '#e84c22' }}
@@ -52,17 +56,23 @@ function NoticiasXRecorridoEmpresa({ navigation }) {
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate('AgregarNoticias')
+                    navigation.navigate('AgregarNoticias',)
                 }}
                 style={[styles.button2]}>
                 <Text style={styles.texto2}>Agregar Noticia</Text>
             </TouchableOpacity>
-            <FlatList
-                data={DATA}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                extraData={selectedId}
-            />
+            {
+                noticias.data.length > 0 ? (
+                    <FlatList
+                        data={noticias.data}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        extraData={selectedId}
+                    />
+                ) : (
+                        <Text style={[styles.texto2, { color: 'black', marginTop: '70%' }]}>Aún no hay noticias</Text>
+                    )
+            }
         </View>
     );
 }

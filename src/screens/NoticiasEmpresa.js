@@ -23,16 +23,6 @@ const DATA = [
         origen: 'Pinto',
         destino: 'Chillán'
     },
-    {
-        id: "4",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "5",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
 ]
 
 const Item = ({ item, onPress, style }) => (

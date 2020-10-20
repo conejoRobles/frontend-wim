@@ -52,7 +52,6 @@ function NoticiasXRecorridoPasajero({ navigation, noticias }) {
                 data={noticias.data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
-                extraData={selectedId}
             />
         </View>
     );

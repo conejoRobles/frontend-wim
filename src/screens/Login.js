@@ -90,11 +90,11 @@ const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => 
 		if (ans2.ok) {
 			let noti = ans2.noticias
 			await noticiasLoad(noti)
+			await inicioSesion(ans.usuario)
 		}
-		await inicioSesion(ans.usuario)
 		Alert.alert(
 			"Bienvenido!",
-			user.nombre,
+			ans.usuario.nombre,
 			[
 				{
 					text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
