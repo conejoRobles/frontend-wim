@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
 import { noticiasLoad } from '../store/actions/noticias'
-import { AppLoading } from 'expo';
+import { AppLoading } from 'expo'
+import { back } from '../../env'
 
 const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
 	const [email, setEmail] = useState('');
@@ -73,8 +74,7 @@ const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
 }
 
 const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => {
-	const res = await fetch('http://192.168.1.51:3000/', {
-		// const res = await fetch('http://192.168.0.16:3000/', {
+	const res = await fetch(back, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',
@@ -86,8 +86,7 @@ const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => 
 	})
 	const ans = await res.json()
 	if (ans.ok) {
-		let res2 = await fetch('http://192.168.1.51:3000/Noticias?rut=801234567&recorrido=0')
-		// let res2 = await fetch('http://192.168.0.16:3000/Noticias?rut=801234567&recorrido=0')
+		let res2 = await fetch(back + 'Noticias?rut=801234567&recorrido=0')
 		let ans2 = await res2.json()
 		if (ans2.ok) {
 			let noti = ans2.noticias

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
+import { back } from '../../env'
 
 const PasajeroRegistration = ({ navigation }) => {
 	const [nombre, setNombre] = useState('')
@@ -102,8 +103,7 @@ const PasajeroRegistration = ({ navigation }) => {
 }
 
 const registro = async (usuario, navigation) => {
-	const res = await fetch('http://192.168.1.51:3000/addPasajero', {
-		// const res = await fetch('http://192.168.0.16:3000/addPasajero', {
+	const res = await fetch(back + 'addPasajero', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'Application/json',

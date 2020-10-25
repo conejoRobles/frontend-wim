@@ -5,6 +5,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { logout } from '../store/actions/user'
 import { user } from "../store/reducers";
+import { back } from '../../env'
 
 const EditarCuenta = ({ navigation, user, load, logout }) => {
 	const [nombre, setNombre] = useState(user.nombre)
@@ -238,8 +239,7 @@ const isChanging = (editar, setEditar, load, nombre, pass, correo, rut, telefono
 
 const guardar = async (usuario) => {
 	const res = usuario.rol == 'empresa' ? (
-		await fetch('http://192.168.1.51:3000/editEmpresa', {
-			// await fetch('http://192.168.0.16:3000/editEmpresa', {
+		await fetch(back + 'editEmpresa', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'Application/json',
@@ -254,8 +254,7 @@ const guardar = async (usuario) => {
 				rol: 'empresa',
 			}),
 		})) : (
-			await fetch('http://192.168.1.51:3000/editPasajero', {
-				// await fetch('http://192.168.0.16:3000/editPasajero', {
+			await fetch(back + 'editPasajero', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'Application/json',

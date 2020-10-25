@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert }
 import { connect } from 'react-redux'
 import { Picker } from '@react-native-community/picker'
 import { eliminarNoticia, editar, noticiasLoad } from '../store/actions/noticias'
+import { back } from '../../env'
 
 
 function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia }) {
@@ -110,8 +111,7 @@ const publicar = async (noticia, editar, navigation) => {
         hoy.setSeconds(addTime)
         termino = hoy
     }
-    let res = await fetch('http://192.168.1.51:3000/editNoticia', {
-        // let res = await fetch('http://192.168.0.16:3000/editNoticia', {
+    let res = await fetch(back + 'editNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
@@ -152,8 +152,7 @@ const publicar = async (noticia, editar, navigation) => {
 
 const eliminar = async (item, eliminarNoticia, navigation) => {
 
-    let res = await fetch('http://192.168.1.51:3000/removeNoticia', {
-        // let res = await fetch('http://192.168.0.16:3000/removeNoticia', {
+    let res = await fetch(back + 'removeNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',

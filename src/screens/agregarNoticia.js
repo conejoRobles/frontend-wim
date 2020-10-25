@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native'
 import { Picker } from '@react-native-community/picker'
 import { agregar } from '../store/actions/noticias'
+import { back } from '../../env'
 import uuid from 'uuid/v4'
 
 
@@ -124,8 +125,7 @@ const publicar = async (noticia, agregar, navigation) => {
         termino.setSeconds(addTime)
     }
 
-    let res = await fetch('http://192.168.1.51:3000/addNoticia', {
-        //let res = await fetch('http://192.168.0.16:3000/addNoticia', {
+    let res = await fetch(back + 'addNoticia', {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json',
