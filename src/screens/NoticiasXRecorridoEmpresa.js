@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Component } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { color } from 'react-native-reanimated'
 import { connect } from 'react-redux'
@@ -35,6 +36,7 @@ const Item = ({ item, onPress, style }) => (
 )
 
 function NoticiasXRecorridoEmpresa({ navigation, noticias }) {
+
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";

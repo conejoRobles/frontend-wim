@@ -86,7 +86,7 @@ const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => 
 	})
 	const ans = await res.json()
 	if (ans.ok) {
-		let res2 = await fetch(back + 'Noticias?rut=801234567&recorrido=0')
+		let res2 = await fetch(back + 'Noticias?rut=' + ans.usuario.rut + '&recorrido=0')
 		let ans2 = await res2.json()
 		if (ans2.ok) {
 			let noti = ans2.noticias
