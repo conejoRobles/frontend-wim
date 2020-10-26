@@ -1,7 +1,7 @@
 export const noticiasConstants = {
-	ADD: 'ADD',
-	EDIT: 'EDIT',
-	LOAD: 'LOAD',
+	ADD: 'ADDNOTICIA',
+	EDIT: 'EDITNOTICIA',
+	LOAD: 'LOADNOTICIA',
 	ERROR: 'ERROR',
 	REMOVE: 'REMOVE',
 }

@@ -1,4 +1,4 @@
-export const load = () => ({
+export const empresasLoad = (empresas) => ({
     type: 'LOAD',
-    payload: 'WENA'
+    empresas
 })

@@ -6,10 +6,9 @@ const initialState = {
 
 
 export default (state = initialState, action) => {
+
 	switch (action.type) {
 		case noticiasConstants.LOAD:
-
-			let noticias = Object.values(action.noticias)
 			return ({
 				...state,
 				data: noticias
@@ -20,7 +19,6 @@ export default (state = initialState, action) => {
 			break
 		case noticiasConstants.EDIT:
 			let arr = [...state.data]
-			console.log('EDIT', arr)
 			return ({
 				...state,
 				data: arr.map(x => {
@@ -35,7 +33,6 @@ export default (state = initialState, action) => {
 		case noticiasConstants.ADD: {
 			let arr = [...state.data]
 			arr.push(action.noticia)
-			console.log('noticia', action.noticia)
 			return { ...state, data: arr }
 		}
 			break

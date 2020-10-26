@@ -4,10 +4,11 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
 import { noticiasLoad } from '../store/actions/noticias'
+import { empresasLoad } from '../store/actions/empresas'
 import { AppLoading } from 'expo'
 import { back } from '../../env'
 
-const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
+const Login = ({ navigation, inicioSesion, empresasLoad, user }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
@@ -41,6 +42,7 @@ const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
 					<TextInput
 						style={styles.inputText}
 						returnKeyType='done'
+						autoCapitalize='none'
 						onChangeText={text => setPassword(text)}
 						placeholder={'contraseña'}
 						secureTextEntry={showPass}
@@ -62,7 +64,7 @@ const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
 						inicio({
 							email,
 							password,
-						}, navigation, inicioSesion, noticiasLoad, user)
+						}, navigation, inicioSesion, empresasLoad, user)
 
 					}}
 				>
@@ -73,7 +75,7 @@ const Login = ({ navigation, inicioSesion, noticiasLoad, user }) => {
 	);
 }
 
-const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => {
+const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => {
 	const res = await fetch(back, {
 		method: 'POST',
 		headers: {
@@ -86,12 +88,21 @@ const inicio = async (usuario, navigation, inicioSesion, noticiasLoad, user) => 
 	})
 	const ans = await res.json()
 	if (ans.ok) {
-		let res2 = await fetch(back + 'Noticias?rut=' + ans.usuario.rut + '&recorrido=0')
-		let ans2 = await res2.json()
-		if (ans2.ok) {
-			let noti = ans2.noticias
-			await noticiasLoad(noti)
-			await inicioSesion(ans.usuario)
+		await inicioSesion(ans.usuario)
+		if (ans.usuario.rol == 'empresa') {
+			let res2 = await fetch(back + 'getRecorridos?rut=' + ans.usuario.rut)
+			let ans2 = await res2.json()
+			if (ans2.ok) {
+				let recorridos = ans2.recorridos
+				empresasLoad(recorridos)
+			}
+		} else {
+			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
+			let ans2 = await res2.json()
+			if (ans2.ok) {
+				let empresas = Object.values(ans2.empresas)
+				empresasLoad(empresas)
+			}
 		}
 		Alert.alert(
 			"Bienvenido!",
@@ -182,7 +193,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	inicioSesion: (user) => dispatch(inicioSesion(user)),
-	noticiasLoad: (noticias) => dispatch(noticiasLoad(noticias))
+	empresasLoad: (empresas) => dispatch(empresasLoad(empresas))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

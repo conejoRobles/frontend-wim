@@ -1,6 +1,7 @@
 import { AppLoading } from 'expo'
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
+import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio'
 import { connect } from 'react-redux'
 
 
@@ -34,7 +35,8 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function NoticiasXRecorridoPasajero({ navigation, noticias }) {
+function NoticiasXRecorridoPasajero({ navigation, route }) {
+    const { noticias } = route.params
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -49,7 +51,7 @@ function NoticiasXRecorridoPasajero({ navigation, noticias }) {
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <FlatList
-                data={noticias.data}
+                data={Object.values(noticias)}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
             />

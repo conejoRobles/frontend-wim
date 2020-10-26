@@ -1,5 +1,6 @@
 
 import { userConstants } from '../constants/user'
+
 const initialState = {
     nombre: '',
     pass: '',

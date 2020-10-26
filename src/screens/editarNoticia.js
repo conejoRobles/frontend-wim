@@ -241,6 +241,5 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     eliminarNoticia: (item) => dispatch(eliminarNoticia(item)),
     editar: (item) => dispatch(editar(item)),
-    // noticiasLoad: (noticias) => dispatch(noticiasLoad(noticias))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(editarNoticia)

@@ -33,7 +33,7 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function NoticiasEmpresa({ navigation }) {
+function NoticiasEmpresa({ navigation, empresas }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -42,7 +42,9 @@ function NoticiasEmpresa({ navigation }) {
                 item={item}
                 onPress={() => {
                     setSelectedId(item.id)
-                    navigation.navigate('NoticiasxRecorridoEmpresa')
+                    navigation.navigate('NoticiasxRecorridoEmpresa', {
+                        noticias: item.Noticias ? Object.values(item.Noticias) : []
+                    })
                 }}
                 style={{ backgroundColor: '#e84c22' }}
             />
@@ -52,7 +54,7 @@ function NoticiasEmpresa({ navigation }) {
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <FlatList
-                data={DATA}
+                data={empresas.data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}

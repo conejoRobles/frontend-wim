@@ -35,11 +35,11 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function NoticiasXRecorridoEmpresa({ navigation, noticias }) {
-
+function NoticiasXRecorridoEmpresa({ navigation, route }) {
+    const { noticias } = route.params
+    let data = noticias
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
-        // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
         return (
             <Item
                 item={item}
@@ -64,9 +64,9 @@ function NoticiasXRecorridoEmpresa({ navigation, noticias }) {
                 <Text style={styles.texto2}>Agregar Noticia</Text>
             </TouchableOpacity>
             {
-                noticias.data.length > 0 ? (
+                data.length > 0 && data != null && data != undefined ? (
                     <FlatList
-                        data={noticias.data}
+                        data={data}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}
