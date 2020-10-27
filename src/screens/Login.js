@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
-import { noticiasLoad } from '../store/actions/noticias'
 import { empresasLoad } from '../store/actions/empresas'
 import { AppLoading } from 'expo'
 import { back } from '../../env'

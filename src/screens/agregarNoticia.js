@@ -145,10 +145,10 @@ const publicar = async (noticia, agregar, navigation, user, recorrido) => {
     noticia = { ...noticia, fechaTermino: termino.toString(), fechaPublicacion: hoy.toString() }
     res = await res.json()
     if (res.ok) {
-        await agregar(noticia)
+        await agregar(noticia, recorrido)
         Alert.alert(
             "Genial!",
-            'Se ha editado su noticia!',
+            'Se ha agregado su noticia!',
             [
                 { text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa') }
             ],
@@ -220,6 +220,6 @@ const mapStateToProps = state => {
     return state
 }
 const mapDispatchToProps = dispatch => ({
-    agregar: (item) => dispatch(agregar(item)),
+    agregar: (item, recorrido) => dispatch(agregar(item, recorrido)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(agregarNoticia)

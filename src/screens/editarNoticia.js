@@ -129,7 +129,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation) => {
     })
     res = await res.json()
     if (res.ok) {
-        await editar(noticia)
+        await editar(noticia, recorrido)
         Alert.alert(
             "Genial!",
             'Se ha editado su noticia!',
@@ -165,7 +165,7 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido) => {
     })
     res = await res.json()
     if (res.ok) {
-        await eliminarNoticia(item)
+        await eliminarNoticia(item, recorrido)
         Alert.alert(
             "Genial!",
             'Se ha eliminado la noticia!',
@@ -239,7 +239,7 @@ const mapStateToProps = state => {
     return state
 }
 const mapDispatchToProps = dispatch => ({
-    eliminarNoticia: (item) => dispatch(eliminarNoticia(item)),
-    editar: (item) => dispatch(editar(item)),
+    eliminarNoticia: (item, recorrido) => dispatch(eliminarNoticia(item, recorrido)),
+    editar: (item, recorrido) => dispatch(editar(item, recorrido)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(editarNoticia)
