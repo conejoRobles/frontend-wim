@@ -7,7 +7,7 @@ import { back } from '../../env'
 
 
 function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
-    const { item, recorrido } = route.params
+    const { item, recorrido, noticias } = route.params
     const [noticia, setNoticia] = useState({ ...item })
     return (
         <View style={[styles.container]}>
@@ -81,10 +81,10 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
                 </View>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', marginHorizontal: 20 }}>
-                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation, user, recorrido) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Eliminar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, user, recorrido, navigation) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, user, recorrido, navigation, noticias) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
                 </TouchableOpacity>
             </View>
@@ -94,7 +94,7 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
 }
 
 
-const publicar = async (noticia, editar, user, recorrido, navigation) => {
+const publicar = async (noticia, editar, user, recorrido, navigation, noticias) => {
     let hoy = new Date(noticia.fechaPublicacion)
     let termino = new Date()
     if (noticia.duracion.unidad == "2") {
@@ -130,11 +130,22 @@ const publicar = async (noticia, editar, user, recorrido, navigation) => {
     res = await res.json()
     if (res.ok) {
         await editar(noticia, recorrido)
+        noticias = noticias.map(x => {
+            if (x.id == noticia.id) {
+                x = noticia
+            }
+            return x
+        })
         Alert.alert(
             "Genial!",
             'Se ha editado su noticia!',
             [
-                { text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa') }
+                {
+                    text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa', {
+                        noticias,
+                        recorrido
+                    })
+                }
             ],
             { cancelable: false }
         );
@@ -150,7 +161,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation) => {
     }
 }
 
-const eliminar = async (item, eliminarNoticia, navigation, user, recorrido) => {
+const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias) => {
 
     let res = await fetch(back + 'removeNoticia', {
         method: 'POST',
@@ -166,11 +177,20 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido) => {
     res = await res.json()
     if (res.ok) {
         await eliminarNoticia(item, recorrido)
+        console.log('ITEM :', item.id)
+        console.log('ELIMIANR :', noticias)
+        noticias = noticias.filter(x => x.id != item.id)
+        console.log('ELIMIANR2 :', noticias)
         Alert.alert(
             "Genial!",
             'Se ha eliminado la noticia!',
             [
-                { text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa') }
+                {
+                    text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa', {
+                        recorrido,
+                        noticias,
+                    })
+                }
             ],
             { cancelable: false }
         );

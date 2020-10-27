@@ -7,8 +7,8 @@ import { back } from '../../env'
 import uuid from 'uuid/v4'
 
 
-function agregarNoticia({ navigation, agregar, user, route }) {
-    const { recorrido } = route.params
+function agregarNoticia({ navigation, agregar, user, route, }) {
+    const { recorrido, noticias } = route.params
     const [noticia, setNoticia] = useState({
         id: uuid(),
         descripcion: '',
@@ -102,7 +102,7 @@ function agregarNoticia({ navigation, agregar, user, route }) {
 
             </View>
 
-            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation, user, recorrido) }}>
+            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
             </TouchableOpacity>
 
@@ -111,7 +111,7 @@ function agregarNoticia({ navigation, agregar, user, route }) {
 }
 
 
-const publicar = async (noticia, agregar, navigation, user, recorrido) => {
+const publicar = async (noticia, agregar, navigation, user, recorrido, noticias) => {
     let hoy = new Date()
     let termino = new Date()
 
@@ -146,11 +146,17 @@ const publicar = async (noticia, agregar, navigation, user, recorrido) => {
     res = await res.json()
     if (res.ok) {
         await agregar(noticia, recorrido)
+        noticias.unshift(noticia)
         Alert.alert(
             "Genial!",
             'Se ha agregado su noticia!',
             [
-                { text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa') }
+                {
+                    text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa', {
+                        recorrido,
+                        noticia
+                    })
+                }
             ],
             { cancelable: false }
         );

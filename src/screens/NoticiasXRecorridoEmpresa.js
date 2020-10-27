@@ -46,7 +46,8 @@ function NoticiasXRecorridoEmpresa({ navigation, route }) {
                 onPress={() => {
                     navigation.navigate('EditarNoticia', {
                         item,
-                        recorrido
+                        recorrido,
+                        noticias
                     })
                     setSelectedId(item.id)
                 }}
@@ -60,7 +61,8 @@ function NoticiasXRecorridoEmpresa({ navigation, route }) {
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate('AgregarNoticias', {
-                        recorrido
+                        recorrido,
+                        noticias
                     })
                 }}
                 style={[styles.button2]}>
