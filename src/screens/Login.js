@@ -100,8 +100,28 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
 			let ans2 = await res2.json()
 			if (ans2.ok) {
-				let empresas = Object.values(ans2.empresas)
-				empresasLoad(empresas)
+				let aux = Object.values(ans2.empresas)
+				let empresas = []
+				Promise.all(aux.map(async (empresa, i) => {
+					let res3 = await fetch(back + 'getRecorridos?rut=' + empresa.rut)
+					let ans3 = await res3.json()
+					if (ans3.ok) {
+						empresa.recorridos.map((recorrido) => {
+							ans3.recorridos.map(reco => {
+								if (recorrido.id == reco.id) {
+									reco = {
+										...reco,
+										rut: '' + empresa.rut,
+										nombre: '' + empresa.nombre,
+									}
+									empresas.push(reco)
+								}
+							})
+						})
+					}
+				})).then(() => {
+					empresasLoad(empresas)
+				})
 			}
 		}
 		Alert.alert(

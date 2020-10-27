@@ -64,19 +64,19 @@ const Item = ({ item, onPress, style }) => (
                 <View style={styles.foto}>
                     <Text style={styles.texto3}>T</Text>
                     <View style={{ width: '100%', height: '100%', zIndex: 0, position: 'absolute' }}>
-                        <Badge size={25} >5</Badge>
+                        <Badge size={25} >{item.Noticias ? Object.values(item.Noticias).length : 0}</Badge>
                     </View>
                 </View>
             </View>
             <View style={{ flex: 5 }}>
-                <Text style={styles.texto2}>Empresa Bonita</Text>
+                <Text style={styles.texto2}>{item.nombre}</Text>
                 <Text style={styles.texto}>{item.origen} - {item.destino}</Text>
             </View>
         </View>
     </TouchableOpacity>
 )
 
-function NoticiaPasajero({ navigation }) {
+function NoticiaPasajero({ navigation, empresas }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
@@ -84,7 +84,9 @@ function NoticiaPasajero({ navigation }) {
             <Item
                 item={item}
                 onPress={() => {
-                    navigation.navigate('NoticiasXRecorridoPasajero')
+                    navigation.navigate('NoticiasXRecorridoPasajero', {
+                        noticias: item.Noticias ? Object.values(item.Noticias) : []
+                    })
                     setSelectedId(item.id)
                 }}
                 style={{ backgroundColor }}
@@ -94,14 +96,20 @@ function NoticiaPasajero({ navigation }) {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <FlatList
-                data={DATA}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                extraData={selectedId}
-            />
+            {
+                empresas.data.length > 0 ? (
+                    <FlatList
+                        data={empresas.data}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        extraData={selectedId}
+                    />
+                ) : (
+                        <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>No sigues ningun recorrido</Text>
+                    )
+            }
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -124,6 +132,11 @@ const styles = StyleSheet.create({
         color: '#1F1F1F',
         fontSize: 25,
         fontWeight: 'bold'
+    },
+    texto4: {
+        color: '#e84c22',
+        textAlign: 'center',
+        fontSize: 20,
     },
     bordes: {
         borderBottomWidth: 1.5,

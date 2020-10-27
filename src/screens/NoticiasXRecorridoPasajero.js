@@ -50,11 +50,17 @@ function NoticiasXRecorridoPasajero({ navigation, route }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <FlatList
-                data={Object.values(noticias)}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-            />
+            {
+                noticias.length > 0 ? (
+                    <FlatList
+                        data={noticias}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                    />
+                ) : (
+                        <Text style={[styles.texto2, { color: 'black', marginTop: '70%' }]}>Aún no hay noticias</Text>
+                    )
+            }
         </View>
     );
 }
