@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Constants from 'expo-constants'
 import { connect } from 'react-redux'
 import { LinearGradient } from 'expo-linear-gradient';
+import empresas from '../store/reducers/empresas'
 
 const DATA = [
     {
@@ -46,7 +47,7 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function Bienvenida({ user }) {
+function Bienvenida({ user, empresas }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
@@ -71,12 +72,14 @@ function Bienvenida({ user }) {
                     user.rol == 'empresa' ? (<Text style={styles.texto3}>Aqui tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>)
                 }
             </View>
-            <FlatList
-                data={DATA}
+            {empresas.data.length > 0 ? (<FlatList
+                data={empresas.data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}
-            />
+            />) : (
+                    <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado recorridos</Text>
+                )}
         </View>
     );
 }
@@ -97,6 +100,11 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: 'white',
         letterSpacing: 1
+    },
+    texto4: {
+        color: '#e84c22',
+        textAlign: 'center',
+        fontSize: 20,
     },
     container: {
         flex: 1,

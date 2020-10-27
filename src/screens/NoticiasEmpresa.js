@@ -54,12 +54,14 @@ function NoticiasEmpresa({ navigation, empresas }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <FlatList
+            {empresas.data.length > 0 ? (<FlatList
                 data={empresas.data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}
-            />
+            />) : (
+                    <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado recorridos</Text>
+                )}
         </View>
     );
 }
@@ -85,6 +87,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // marginTop: Constants.statusBarHeight,
+    },
+    texto4: {
+        color: '#e84c22',
+        textAlign: 'center',
+        fontSize: 20,
     },
     button: {
         marginHorizontal: 40,

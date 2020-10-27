@@ -94,6 +94,8 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 			if (ans2.ok) {
 				let recorridos = ans2.recorridos
 				empresasLoad(recorridos)
+			} else {
+				empresasLoad([])
 			}
 		} else {
 			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
