@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { logout } from '../store/actions/user'
-import { user } from "../store/reducers";
 import { back } from '../../env'
 
 const EditarCuenta = ({ navigation, user, load, logout }) => {

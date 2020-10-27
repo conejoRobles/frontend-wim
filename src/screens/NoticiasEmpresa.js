@@ -43,7 +43,8 @@ function NoticiasEmpresa({ navigation, empresas }) {
                 onPress={() => {
                     setSelectedId(item.id)
                     navigation.navigate('NoticiasxRecorridoEmpresa', {
-                        noticias: item.Noticias ? Object.values(item.Noticias) : []
+                        noticias: item.Noticias ? Object.values(item.Noticias) : [],
+                        recorrido: item.id
                     })
                 }}
                 style={{ backgroundColor: '#e84c22' }}

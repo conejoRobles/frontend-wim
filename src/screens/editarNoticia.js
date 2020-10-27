@@ -6,8 +6,8 @@ import { eliminarNoticia, editar, noticiasLoad } from '../store/actions/noticias
 import { back } from '../../env'
 
 
-function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia }) {
-    const { item } = route.params
+function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
+    const { item, recorrido } = route.params
     const [noticia, setNoticia] = useState({ ...item })
     return (
         <View style={[styles.container]}>
@@ -81,10 +81,10 @@ function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia })
                 </View>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', marginHorizontal: 20 }}>
-                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation, user, recorrido) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Eliminar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, navigation) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, user, recorrido, navigation) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
                 </TouchableOpacity>
             </View>
@@ -94,7 +94,7 @@ function editarNoticia({ navigation, noticias, editar, route, eliminarNoticia })
 }
 
 
-const publicar = async (noticia, editar, navigation) => {
+const publicar = async (noticia, editar, user, recorrido, navigation) => {
     let hoy = new Date(noticia.fechaPublicacion)
     let termino = new Date()
     if (noticia.duracion.unidad == "2") {
@@ -117,8 +117,8 @@ const publicar = async (noticia, editar, navigation) => {
             'Content-Type': 'Application/json',
         },
         body: JSON.stringify({
-            rut: '801234567',
-            recorrido: '0',
+            rut: user.rut,
+            recorrido,
             id: noticia.id,
             descripcion: noticia.descripcion,
             titulo: noticia.titulo,
@@ -150,7 +150,7 @@ const publicar = async (noticia, editar, navigation) => {
     }
 }
 
-const eliminar = async (item, eliminarNoticia, navigation) => {
+const eliminar = async (item, eliminarNoticia, navigation, user, recorrido) => {
 
     let res = await fetch(back + 'removeNoticia', {
         method: 'POST',
@@ -158,9 +158,9 @@ const eliminar = async (item, eliminarNoticia, navigation) => {
             'Content-Type': 'Application/json',
         },
         body: JSON.stringify({
-            rut: '801234567',
+            rut: user.rut,
             id: item.id,
-            recorrido: '0'
+            recorrido
         }),
     })
     res = await res.json()

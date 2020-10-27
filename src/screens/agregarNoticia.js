@@ -7,7 +7,8 @@ import { back } from '../../env'
 import uuid from 'uuid/v4'
 
 
-function agregarNoticia({ navigation, agregar, noticias, }) {
+function agregarNoticia({ navigation, agregar, user, route }) {
+    const { recorrido } = route.params
     const [noticia, setNoticia] = useState({
         id: uuid(),
         descripcion: '',
@@ -101,7 +102,7 @@ function agregarNoticia({ navigation, agregar, noticias, }) {
 
             </View>
 
-            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation) }}>
+            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation, user, recorrido) }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
             </TouchableOpacity>
 
@@ -110,7 +111,7 @@ function agregarNoticia({ navigation, agregar, noticias, }) {
 }
 
 
-const publicar = async (noticia, agregar, navigation) => {
+const publicar = async (noticia, agregar, navigation, user, recorrido) => {
     let hoy = new Date()
     let termino = new Date()
 
@@ -131,8 +132,8 @@ const publicar = async (noticia, agregar, navigation) => {
             'Content-Type': 'Application/json',
         },
         body: JSON.stringify({
-            rut: '801234567',
-            recorrido: '0',
+            rut: user.rut,
+            recorrido,
             id: noticia.id,
             descripcion: noticia.descripcion,
             titulo: noticia.titulo,

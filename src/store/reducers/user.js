@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
                 nombre: user.nombre,
                 pass: user.pass,
                 correo: user.correo,
-                rut: user.rut,
+                rut: '' + user.rut,
                 telefono: user.telefono,
                 recorridos: user.recorridos || [],
                 rol: user.rol || '',
