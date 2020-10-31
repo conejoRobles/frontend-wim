@@ -47,14 +47,17 @@ const Item = ({ item, onPress, style }) => (
     </TouchableOpacity>
 )
 
-function Bienvenida({ user, empresas }) {
+function Bienvenida({ user, empresas, navigation }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
-        const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
+        const backgroundColor = "#e84c22";
         return (
             <Item
                 item={item}
-                onPress={() => setSelectedId(item.id)}
+                onPress={() => {
+                    setSelectedId(item.id)
+                    navigation.navigate('Horarios');
+                }}
                 style={{ backgroundColor }}
             />
         )
@@ -62,16 +65,23 @@ function Bienvenida({ user, empresas }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#ff6900"></StatusBar>
-            {/* <LinearGradient
-         colors={["#0033ff","#6bc1ff"]}
-         style={{height:"20%"}}
-         /> */}
-            <View style={[styles.button, styles.bordes, { backgroundColor: 'white', zIndex: 1 }]}>
+            <View style={[styles.button, styles.bordes, { backgroundColor: 'white', marginBottom:0 }]}>
                 <Text style={styles.texto2}>Bienvenido</Text>
                 {
                     user.rol == 'empresa' ? (<Text style={styles.texto3}>Aqui tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>)
                 }
             </View>
+
+            <View style= {{alignContent:'center', alignItems:'center'}}>
+                {user.rol == 'empresa' && <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('AgregarRecorrido',{user})
+                    }}
+                    style={[styles.button2]}>
+                    <Text style={styles.texto4}>Agregar Recorrido</Text>
+                </TouchableOpacity>}
+            </View>
+
             {empresas.data.length > 0 ? (<FlatList
                 data={empresas.data}
                 renderItem={renderItem}
@@ -101,10 +111,15 @@ const styles = StyleSheet.create({
         color: 'white',
         letterSpacing: 1
     },
+    texto2: {
+        color: '#e84c22',
+        textAlign: 'center',
+        fontSize: 15,
+    },
     texto4: {
         color: '#e84c22',
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 22,
     },
     container: {
         flex: 1,
@@ -117,6 +132,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginVertical: 15,
+    },
+    button2: {
+        backgroundColor: 'rgba(232,76,34,0.3)',
+        width: '60%',
+        alignItems: 'center',
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        height: 45,
+        // justifyContent: 'center',
+        paddingTop: 4,
+        marginBottom: 10,
     },
     contenedor: {
         // flex: 1,

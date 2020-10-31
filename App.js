@@ -16,12 +16,16 @@ import NoticiasPasajero from './src/screens/NoticiasPasajero'
 import NoticiasXRecorridoEmpresa from './src/screens/NoticiasXRecorridoEmpresa'
 import NoticiasXRecorridoPasajero from './src/screens/NoticiasXRecorridoPasajero'
 import NoticiaEmpresa from './src/screens/NoticiasEmpresa'
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Provider, connect } from 'react-redux'
 import store from './src/store/store'
 import EditarCuenta from './src/screens/EditarCuenta'
 import agregarNoticia from './src/screens/agregarNoticia'
 import editarNoticia from './src/screens/editarNoticia'
+import AgregarRecorrido from './src/screens/AgregarRecorrido'
+import Horarios from './src/screens/Horarios'
+import AgregarHorario from './src/screens/AgregarHorario'
 
 const AuthStack = createStackNavigator()
 const NoticiaStack = createStackNavigator()
@@ -29,30 +33,6 @@ const BuscarStack = createStackNavigator()
 const RutasStack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
-
-
-// import React, { useState } from 'react';
-// import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
-// import { createAppContainer, createSwitchNavigator } from 'react-navigation'
-// import Home from './src/screens/Home';
-// import Login from './src/screens/Login';
-// import Registration from './src/screens/Registration';
-
-// const AppNavigator = createSwitchNavigator({
-//   HomeScreen: {
-//     screen: Home,
-//   },
-//   LoginScreen: {
-//     screen: Login
-//   },
-//   RegistrationScreen: {
-//     screen: Registration
-//   }
-// }, {
-//   initialRouteName: 'HomeScreen',
-// })
-
-// export default createAppContainer(AppNavigator)
 
 
 function leftButton({ navigation }) {
@@ -71,6 +51,13 @@ function rightButton() {
     <TouchableOpacity>
       <Icon name="info-circle" size={30} style={styles.icon} />
     </TouchableOpacity>
+  )
+}
+
+function header(){
+  return (
+    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}}  colors={['#e84c22', '#F79F46']}>
+    </LinearGradient>
   )
 }
 
@@ -150,6 +137,17 @@ function RutasStackScreen() {
   )
 }
 
+function RutasStackScreenEmpresa() {
+  return (
+    <RutasStack.Navigator>
+      <RutasStack.Screen name="Bienvenida" component={Bienvenida} />
+      <RutasStack.Screen name="AgregarRecorrido" component={AgregarRecorrido} />
+      <RutasStack.Screen name="Horarios" component={Horarios} />
+      <RutasStack.Screen name="AgregarHorario" component={AgregarHorario} />
+    </RutasStack.Navigator>
+  )
+}
+
 function TabPasajero() {
   return (
     <Tab.Navigator
@@ -210,21 +208,9 @@ function TabEmpresa() {
         showLabel: false,
       }}
     >
-      {/* <Tab.Screen
-        name="HomePage"
-        component={BuscarStackScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5
-              name={'search'}
-              color={color}
-              size={35}
-            />
-          ),
-        }} /> */}
       <Tab.Screen
         name="Bienvenida"
-        component={RutasStackScreen}
+        component={RutasStackScreenEmpresa}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5
