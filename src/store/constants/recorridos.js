@@ -1,0 +1,6 @@
+export const recorridosConstants = {
+	ADD: 'ADD_RECORRIDO',
+	EDIT: 'EDIT_RECORRIDO',
+	LOAD: 'LOAD_RECORRIDO',
+	REMOVE: 'REMOVE_RECORRIDO',
+}

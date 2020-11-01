@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList } from 'react-native'
+import DatePicker from 'react-native-date-picker'
 import { agregar } from '../store/actions/noticias'
 import { back } from '../../env'
 import uuid from 'uuid/v4'
@@ -9,54 +10,55 @@ import { LinearGradient } from 'expo-linear-gradient';
 const Dias = [
     {
         id: "00",
-        dia:"Lu",
+        dia: "Lu",
         activo: false,
     },
     {
         id: "01",
-        dia:"Ma",
+        dia: "Ma",
         activo: false,
     },
     {
         id: "02",
-        dia:"Mi",
+        dia: "Mi",
         activo: false,
     },
     {
         id: "03",
-        dia:"Ju",
+        dia: "Ju",
         activo: false,
     },
     {
         id: "04",
-        dia:"Vi",
+        dia: "Vi",
         activo: true,
     },
     {
         id: "05",
-        dia:"Sa",
+        dia: "Sa",
         activo: false,
     },
     {
         id: "06",
-        dia:"Do",
+        dia: "Do",
         activo: false,
     }
 ]
-function precionado(){
-    if (estado){
+function precionado() {
+    if (estado) {
         setEstado(false)
-    } 
-    if (!estado){
+    }
+    if (!estado) {
         setEstado(true)
-    } 
+    }
 }
 
-function AgregarRecorrido({ navigation, user }) {
+function AgregarRecorrido({ navigation, user, route }) {
+    const { isNew } = route.params
     const [estado, setEstado] = useState(true);
-    const color =  estado ? '#e84c22' : 'transparent'
-    const color2 =  estado ? '#F79F46' : 'transparent'
-    const color3 =  estado ? 'white' : 'black'
+    const color = estado ? '#e84c22' : 'transparent'
+    const color2 = estado ? '#F79F46' : 'transparent'
+    const color3 = estado ? 'white' : 'black'
     // const []
 
     // const { recorrido, noticias } = route.params
@@ -84,25 +86,25 @@ function AgregarRecorrido({ navigation, user }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <View style={{flex:1, maxHeight: 100, flexDirection: "row", justifyContent:'center'}}>
-                <View style={{flex:1, alignItems:'center'}}>
+            <View style={{ flex: 1, maxHeight: 100, flexDirection: "row", justifyContent: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'center' }}>
                     <Text style={styles.texto}>Salida:</Text>
                     <View style={styles.inputView}>
                         <TextInput
                             style={styles.inputText}
-                            //value={noticia.titulo}
-                            //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
+                        //value={noticia.titulo}
+                        //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
                         />
                     </View>
                 </View>
 
-                <View style={{flex:1, alignItems:'center'}}>
+                <View style={{ flex: 1, alignItems: 'center' }}>
                     <Text style={styles.texto}>Llegada:</Text>
                     <View style={styles.inputView}>
                         <TextInput
                             style={styles.inputText}
-                            //value={noticia.titulo}
-                            //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
+                        //value={noticia.titulo}
+                        //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
                         />
                     </View>
                 </View>
@@ -125,69 +127,79 @@ function AgregarRecorrido({ navigation, user }) {
             </LinearGradient> */}
 
             <FlatList
-                horizontal = {true}
+                horizontal={true}
                 data={Dias}
-                renderItem={({item}) =>{
-                return(
-                    <View>
-                        {item.activo ? (
-                        <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}}  colors={['#e84c22', '#F79F46']} style = {[styles.dias]}>
-                            <TouchableOpacity style= {styles.dias} 
-                            // onPress = {() => {
-                            // }}
-                            >
-                                <Text style = {{color:'white', fontWeight:'bold'}}>{item.dia}</Text>
-                            </TouchableOpacity>
-                        </LinearGradient>) 
-                        : (
-                        <LinearGradient colors={['transparent', 'transparent']} style = {[styles.dias]}>
-                            <TouchableOpacity style= {styles.dias}
-                            // onPress = {() => {
-                            // }}
-                            >
-                                <Text style = {{color:'#e84c22', fontWeight:'bold'}}>{item.dia}</Text>
-                            </TouchableOpacity>
-                        </LinearGradient> 
-                        )}
-                    </View>
-                )}}
+                renderItem={({ item }) => {
+                    return (
+                        <View>
+                            {item.activo ? (
+                                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
+                                    <TouchableOpacity style={styles.dias}
+                                    // onPress = {() => {
+                                    // }}
+                                    >
+                                        <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>)
+                                : (
+                                    <LinearGradient colors={['transparent', 'transparent']} style={[styles.dias]}>
+                                        <TouchableOpacity style={styles.dias}
+                                        // onPress = {() => {
+                                        // }}
+                                        >
+                                            <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
+                                        </TouchableOpacity>
+                                    </LinearGradient>
+                                )}
+                        </View>
+                    )
+                }}
                 keyExtractor={(item) => item.id}
-                contentContainerStyle= {{flexGrow: 1, justifyContent: 'center'}}
-                style = {{maxHeight: 50}}
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                style={{ maxHeight: 50 }}
             />
 
 
             <Text style={styles.texto}>Conductor:</Text>
-                    <View style={styles.inputView}>
-                        <TextInput
-                            style={styles.inputText}
-                            //value={noticia.titulo}
-                            //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
-                        />
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.inputText}
+                //value={noticia.titulo}
+                //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
+                />
             </View>
 
             <Text style={styles.texto}>Patente:</Text>
-                    <View style={styles.inputView}>
-                        <TextInput
-                            style={styles.inputText}
-                            //value={noticia.titulo}
-                            //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
-                        />
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.inputText}
+                //value={noticia.titulo}
+                //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
+                />
             </View>
+            {!isNew ? (
+                <View style={{ flexDirection: "row" }}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: "#04254E" }]}
+                    // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                    >
+                        <Text style={[styles.texto, { color: 'white' }]}>Editar</Text>
+                    </TouchableOpacity>
 
-            <View style={{flexDirection:"row"}}>
-                <TouchableOpacity style={[styles.button , {backgroundColor: "#04254E"}]} 
-                // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
-                >
-                    <Text style={[styles.texto, { color: 'white' }]}>Editar</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.button]} 
-                // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
-                >
-                    <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity style={[styles.button]}
+                    // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                    >
+                        <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                    <View style={{ flexDirection: "row" }}>
+                        <TouchableOpacity style={[styles.button]}
+                        // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                        >
+                            <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
         </View>
     );
@@ -261,10 +273,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        width:'40%',
+        width: '40%',
         borderRadius: 10,
         height: 50,
-        backgroundColor:'#e84c22',
+        backgroundColor: '#e84c22',
         alignItems: "center",
         justifyContent: "center",
         marginHorizontal: 10,
@@ -273,7 +285,7 @@ const styles = StyleSheet.create({
     button2: {
         backgroundColor: 'rgba(232,76,34,0.3)',
         alignItems: 'center',
-        minWidth:'65%',
+        minWidth: '65%',
         borderBottomRightRadius: 50,
         borderBottomLeftRadius: 50,
         height: 35,
@@ -284,16 +296,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
     },
-    texto:{
-        marginTop: 10, 
-        color:'#e84c22', 
-        fontSize:25, 
-        fontWeight: 'bold', 
-        marginBottom:5
+    texto: {
+        marginTop: 10,
+        color: '#e84c22',
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginBottom: 5
     },
     texto1: {
-        fontSize:25,
-        color:'black'
+        fontSize: 25,
+        color: 'black'
     },
     bordes: {
         borderWidth: 1,
@@ -308,7 +320,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 3,
         height: 50,
         marginBottom: 10,
-        borderColor:'#e84c22'
+        borderColor: '#e84c22'
     },
     inputText: {
         fontSize: 20,
@@ -329,14 +341,14 @@ const styles = StyleSheet.create({
     },
     dias: {
         borderRadius: 50,
-        width:40,
+        width: 40,
         height: 40,
         textAlign: 'center',
-        alignContent:'center',
+        alignContent: 'center',
         alignItems: 'center',
-        justifyContent:'center',
-        marginHorizontal:3,
-        marginVertical:4
+        justifyContent: 'center',
+        marginHorizontal: 3,
+        marginVertical: 4
     }
 });
 

@@ -93,7 +93,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 			let ans2 = await res2.json()
 			if (ans2.ok) {
 				let recorridos = ans2.recorridos
-				empresasLoad(recorridos)
+				empresasLoad(Object.values(recorridos))
 			} else {
 				empresasLoad([])
 			}
@@ -107,8 +107,8 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 					let res3 = await fetch(back + 'getRecorridos?rut=' + empresa.rut)
 					let ans3 = await res3.json()
 					if (ans3.ok) {
-						empresa.recorridos.map((recorrido) => {
-							ans3.recorridos.map(reco => {
+						Object.values(empresa.recorridos).map((recorrido) => {
+							Object.values(ans3.recorridos).map(reco => {
 								if (recorrido.id == reco.id) {
 									reco = {
 										...reco,
@@ -121,7 +121,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 						})
 					}
 				})).then(() => {
-					empresasLoad(empresas)
+					empresasLoad(Object.values(empresas))
 				})
 			}
 		}
