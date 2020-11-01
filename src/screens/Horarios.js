@@ -2,46 +2,46 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { LinearGradient } from 'expo-linear-gradient';
- 
+
 const DATA = [
     {
         id: "0",
         horaInicio: '13:00',
         horaTermino: '13:45',
-        dias : [
+        dias: [
             {
                 id: "00",
-                dia:"Lu",
+                dia: "Lu",
                 activo: true,
             },
             {
                 id: "01",
-                dia:"Ma",
+                dia: "Ma",
                 activo: false,
             },
             {
                 id: "02",
-                dia:"Mi",
+                dia: "Mi",
                 activo: true,
             },
             {
                 id: "03",
-                dia:"Ju",
+                dia: "Ju",
                 activo: false,
             },
             {
                 id: "04",
-                dia:"Vi",
+                dia: "Vi",
                 activo: false,
             },
             {
                 id: "05",
-                dia:"Sa",
+                dia: "Sa",
                 activo: true,
             },
             {
                 id: "06",
-                dia:"Do",
+                dia: "Do",
                 activo: true,
             }
         ]
@@ -50,40 +50,40 @@ const DATA = [
         id: "1",
         horaInicio: '14:00',
         horaTermino: '14:50',
-        dias : [
+        dias: [
             {
                 id: "00",
-                dia:"Lu",
+                dia: "Lu",
                 activo: true,
             },
             {
                 id: "01",
-                dia:"Ma",
+                dia: "Ma",
                 activo: true,
             },
             {
                 id: "02",
-                dia:"Mi",
+                dia: "Mi",
                 activo: true,
             },
             {
                 id: "03",
-                dia:"Ju",
+                dia: "Ju",
                 activo: false,
             },
             {
                 id: "04",
-                dia:"Vi",
+                dia: "Vi",
                 activo: false,
             },
             {
                 id: "05",
-                dia:"Sa",
+                dia: "Sa",
                 activo: false,
             },
             {
                 id: "06",
-                dia:"Do",
+                dia: "Do",
                 activo: true,
             }
         ]
@@ -92,40 +92,40 @@ const DATA = [
         id: "2",
         horaInicio: '15:30',
         horaTermino: '16:10',
-        dias : [
+        dias: [
             {
                 id: "00",
-                dia:"Lu",
+                dia: "Lu",
                 activo: true,
             },
             {
                 id: "01",
-                dia:"Ma",
+                dia: "Ma",
                 activo: true,
             },
             {
                 id: "02",
-                dia:"Mi",
+                dia: "Mi",
                 activo: true,
             },
             {
                 id: "03",
-                dia:"Ju",
+                dia: "Ju",
                 activo: false,
             },
             {
                 id: "04",
-                dia:"Vi",
+                dia: "Vi",
                 activo: false,
             },
             {
                 id: "05",
-                dia:"Sa",
+                dia: "Sa",
                 activo: true,
             },
             {
                 id: "06",
-                dia:"Do",
+                dia: "Do",
                 activo: true,
             }
         ]
@@ -134,40 +134,40 @@ const DATA = [
         id: "3",
         horaInicio: '16:20',
         horaTermino: '17:00',
-        dias : [
+        dias: [
             {
                 id: "00",
-                dia:"Lu",
+                dia: "Lu",
                 activo: true,
             },
             {
                 id: "01",
-                dia:"Ma",
+                dia: "Ma",
                 activo: true,
             },
             {
                 id: "02",
-                dia:"Mi",
+                dia: "Mi",
                 activo: true,
             },
             {
                 id: "03",
-                dia:"Ju",
+                dia: "Ju",
                 activo: false,
             },
             {
                 id: "04",
-                dia:"Vi",
+                dia: "Vi",
                 activo: false,
             },
             {
                 id: "05",
-                dia:"Sa",
+                dia: "Sa",
                 activo: true,
             },
             {
                 id: "06",
-                dia:"Do",
+                dia: "Do",
                 activo: true,
             }
         ]
@@ -176,40 +176,40 @@ const DATA = [
         id: "4",
         horaInicio: '17:00',
         horaTermino: '17:50',
-        dias : [
+        dias: [
             {
                 id: "00",
-                dia:"Lu",
+                dia: "Lu",
                 activo: true,
             },
             {
                 id: "01",
-                dia:"Ma",
+                dia: "Ma",
                 activo: true,
             },
             {
                 id: "02",
-                dia:"Mi",
+                dia: "Mi",
                 activo: true,
             },
             {
                 id: "03",
-                dia:"Ju",
+                dia: "Ju",
                 activo: true,
             },
             {
                 id: "04",
-                dia:"Vi",
+                dia: "Vi",
                 activo: false,
             },
             {
                 id: "05",
-                dia:"Sa",
+                dia: "Sa",
                 activo: true,
             },
             {
                 id: "06",
-                dia:"Do",
+                dia: "Do",
                 activo: true,
             }
         ]
@@ -218,40 +218,40 @@ const DATA = [
         id: "5",
         horaInicio: '18:00',
         horaTermino: '18:45',
-        dias : [
+        dias: [
             {
                 id: "00",
-                dia:"Lu",
+                dia: "Lu",
                 activo: true,
             },
             {
                 id: "01",
-                dia:"Ma",
+                dia: "Ma",
                 activo: true,
             },
             {
                 id: "02",
-                dia:"Mi",
+                dia: "Mi",
                 activo: true,
             },
             {
                 id: "03",
-                dia:"Ju",
+                dia: "Ju",
                 activo: false,
             },
             {
                 id: "04",
-                dia:"Vi",
+                dia: "Vi",
                 activo: false,
             },
             {
                 id: "05",
-                dia:"Sa",
+                dia: "Sa",
                 activo: true,
             },
             {
                 id: "06",
-                dia:"Do",
+                dia: "Do",
                 activo: true,
             }
         ]
@@ -262,30 +262,32 @@ function Horarios({ user, empresas, navigation }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         return (
-            <TouchableOpacity 
-            onPress = {() => navigation.navigate('AgregarHorario')}
-            style={[styles.button, styles.bordes]}>
-            <View style = {{justifyContent:'center', alignItems:'center'}}>
-            <Text style={[styles.texto]}>{item.horaInicio} - {item.horaTermino} {item.dias[0].id}</Text>
-                    <View style= {{flexDirection: 'row'}}>
-                    <FlatList
-                        horizontal = {true}
-                        data={item.dias}
-                        renderItem={({item}) => 
-                            <View>
-                                {item.activo ? (<LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}}  colors={['#e84c22', '#F79F46']} style = {[styles.dias]}>
-                                    <Text style = {{color:'white', fontWeight:'bold'}}>{item.dia}</Text>
-                                </LinearGradient>) 
-                                : (
-                                <LinearGradient colors={['transparent', 'transparent']} style = {[styles.dias]}>
-                                    <Text style = {{color:'#e84c22', fontWeight:'bold'}}>{item.dia}</Text>
-                                </LinearGradient> 
-                                )}
-                            </View>
-                        }
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle= {{flexGrow: 1, justifyContent: 'center'}}
-                    />
+            <TouchableOpacity
+                onPress={() => navigation.navigate('AgregarHorario', {
+                    isNew: false,
+                })}
+                style={[styles.button, styles.bordes]}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={[styles.texto]}>{item.horaInicio} - {item.horaTermino}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <FlatList
+                            horizontal={true}
+                            data={item.dias}
+                            renderItem={({ item }) =>
+                                <View>
+                                    {item.activo ? (<LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
+                                        <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
+                                    </LinearGradient>)
+                                        : (
+                                            <LinearGradient colors={['transparent', 'transparent']} style={[styles.dias]}>
+                                                <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
+                                            </LinearGradient>
+                                        )}
+                                </View>
+                            }
+                            keyExtractor={(item) => item.id}
+                            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                        />
                     </View>
                 </View>
             </TouchableOpacity>
@@ -296,11 +298,11 @@ function Horarios({ user, empresas, navigation }) {
             <StatusBar backgroundColor="#e84c22"></StatusBar>
 
             <TouchableOpacity
-                    onPress={() => {
-                        navigation.navigate('AgregarHorario')
-                    }}
-                    style={[styles.button2]}>
-                    <Text style={styles.texto4}>Agregar Horario</Text>
+                onPress={() => navigation.navigate('AgregarHorario', {
+                    isNew: true,
+                })}
+                style={[styles.button2]}>
+                <Text style={styles.texto4}>Agregar Horario</Text>
             </TouchableOpacity>
 
             {DATA.length > 0 ? (<FlatList
@@ -389,14 +391,14 @@ const styles = StyleSheet.create({
     },
     dias: {
         borderRadius: 50,
-        width:30,
+        width: 30,
         height: 30,
         textAlign: 'center',
-        alignContent:'center',
+        alignContent: 'center',
         alignItems: 'center',
-        justifyContent:'center',
-        marginHorizontal:3,
-        marginVertical:4
+        justifyContent: 'center',
+        marginHorizontal: 3,
+        marginVertical: 4
     }
 });
 

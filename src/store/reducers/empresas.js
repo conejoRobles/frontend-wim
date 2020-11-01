@@ -1,5 +1,6 @@
 import { empresasConstants } from '../constants/empresas'
 import { noticiasConstants } from '../constants/noticias'
+import { recorridosConstants } from '../constants/recorridos'
 
 const initialState = {
     data: []
@@ -7,7 +8,6 @@ const initialState = {
 
 
 export default (state = initialState, action) => {
-    console.log('action', action.type)
     switch (action.type) {
 
         case empresasConstants.LOAD:
@@ -62,15 +62,11 @@ export default (state = initialState, action) => {
             })
             break
         case noticiasConstants.REMOVE:
-            console.log('action', action.type)
             recorridos = [...state.data]
             reco = recorridos.map(recorrido => {
-                console.log('recorrido', recorrido.id)
-                console.log('RECORRIDO', action.recorrido)
                 if (recorrido.id == action.recorrido) {
                     let noticias = recorrido.Noticias ? Object.values(recorrido.Noticias) : []
                     noticias = noticias.filter(x => x.id != action.noticia.id)
-                    console.log('noticias filtradas', noticias)
                     recorrido.Noticias = noticias
                 }
                 return recorrido
@@ -78,6 +74,14 @@ export default (state = initialState, action) => {
             return ({
                 ...state,
                 data: reco
+            })
+            break
+        case recorridosConstants.ADD:
+            recorridos = [...state.data]
+            recorridos.push(action.recorrido)
+            return ({
+                ...state,
+                data: recorridos
             })
             break
         default:

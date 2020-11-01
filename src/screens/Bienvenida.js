@@ -65,17 +65,17 @@ function Bienvenida({ user, empresas, navigation }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#ff6900"></StatusBar>
-            <View style={[styles.button, styles.bordes, { backgroundColor: 'white', marginBottom:0 }]}>
+            <View style={[styles.button, styles.bordes, { backgroundColor: 'white', marginBottom: 0 }]}>
                 <Text style={styles.texto2}>Bienvenido</Text>
                 {
                     user.rol == 'empresa' ? (<Text style={styles.texto3}>Aqui tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>)
                 }
             </View>
 
-            <View style= {{alignContent:'center', alignItems:'center'}}>
+            <View style={{ alignContent: 'center', alignItems: 'center' }}>
                 {user.rol == 'empresa' && <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('AgregarRecorrido',{user})
+                        navigation.navigate('AgregarRecorrido', { user })
                     }}
                     style={[styles.button2]}>
                     <Text style={styles.texto4}>Agregar Recorrido</Text>

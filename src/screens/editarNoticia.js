@@ -177,10 +177,7 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noti
     res = await res.json()
     if (res.ok) {
         await eliminarNoticia(item, recorrido)
-        console.log('ITEM :', item.id)
-        console.log('ELIMIANR :', noticias)
         noticias = noticias.filter(x => x.id != item.id)
-        console.log('ELIMIANR2 :', noticias)
         Alert.alert(
             "Genial!",
             'Se ha eliminado la noticia!',
