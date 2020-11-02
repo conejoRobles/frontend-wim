@@ -59,8 +59,8 @@ function AgregarRecorrido({ navigation, user, route }) {
     const color = estado ? '#e84c22' : 'transparent'
     const color2 = estado ? '#F79F46' : 'transparent'
     const color3 = estado ? 'white' : 'black'
+    
     // const []
-
     // const { recorrido, noticias } = route.params
     // const [noticia, setNoticia] = useState({
     //     id: uuid(),
@@ -73,6 +73,7 @@ function AgregarRecorrido({ navigation, user, route }) {
     //     },
     //     fechaPublicacion: '',
     // })
+
     const renderItem = ({ item }) => {
         const [selectedId, setSelectedId] = useState(null)
         return (

@@ -1,6 +1,7 @@
 import { empresasConstants } from '../constants/empresas'
 import { noticiasConstants } from '../constants/noticias'
 import { recorridosConstants } from '../constants/recorridos'
+import { horariosConstants } from '../constants/horarios'
 
 const initialState = {
     data: []
