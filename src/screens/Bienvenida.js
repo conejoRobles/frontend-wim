@@ -56,7 +56,9 @@ function Bienvenida({ user, empresas, navigation }) {
                 item={item}
                 onPress={() => {
                     setSelectedId(item.id)
-                    navigation.navigate('Horarios');
+                    navigation.navigate('AgregarRecorrido', {
+                        isNew: false
+                    })
                 }}
                 style={{ backgroundColor }}
             />
@@ -75,7 +77,7 @@ function Bienvenida({ user, empresas, navigation }) {
             <View style={{ alignContent: 'center', alignItems: 'center' }}>
                 {user.rol == 'empresa' && <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('AgregarRecorrido', { user })
+                        navigation.navigate('AgregarRecorrido', { user, isNew:true })
                     }}
                     style={[styles.button2]}>
                     <Text style={styles.texto4}>Agregar Recorrido</Text>

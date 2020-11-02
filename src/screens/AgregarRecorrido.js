@@ -41,7 +41,9 @@ const renderItem = ({ item }) => {
 }
 
 
-function AgregarRecorrido({ navigation, user, agregarRec }) {
+function AgregarRecorrido({ navigation, user,route, agregarRec }) {
+    const { isNew } = route.params
+    const [editar, setEditar] = useState(false)
     const [recorrido, setRecorrido] = useState({
         id: uuid(),
         origen: '',
@@ -57,6 +59,9 @@ function AgregarRecorrido({ navigation, user, agregarRec }) {
                     <Text style={styles.texto}>Origen:</Text>
                     <View style={styles.inputView}>
                         <TextInput
+                            editable={
+                                (!isNew && editar)
+                            }
                             style={styles.inputText}
                             onChangeText={text => setRecorrido({ ...recorrido, origen: text })}
                         />
@@ -67,6 +72,9 @@ function AgregarRecorrido({ navigation, user, agregarRec }) {
                     <Text style={styles.texto}>Destino:</Text>
                     <View style={styles.inputView}>
                         <TextInput
+                            editable={
+                                (!isNew && editar)
+                            }
                             style={styles.inputText}
                             onChangeText={text => setRecorrido({ ...recorrido, destino: text })}
                         />
@@ -98,12 +106,56 @@ function AgregarRecorrido({ navigation, user, agregarRec }) {
                     style={{ width: '90%', padding: 15 }}
                 />
             </View>
+            {!isNew ? (
+            <View style={{ flexDirection: "row" }}>
+                {!editar ? (<TouchableOpacity style={[styles.button, { backgroundColor: "#04254E", width:'40%', marginRight:20 }]}
+                // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                onPress = {() => {
+                    setEditar(true)
+                    console.log("poto")
+                }}
+                >
+                    <Text style={[styles.texto, { color: 'white' }]}>Editar</Text>
+                </TouchableOpacity>):
+                (
+                    <TouchableOpacity style={[styles.button, { backgroundColor: "#04254E", width:'40%', marginRight:20 }]}
+                // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                onPress = {() => {
+                    setEditar(false)
+                    console.log("poto")
+                }}
+                >
+                    <Text style={[styles.texto, { color: 'white' }]}>Cancelar</Text>
+                </TouchableOpacity>
+                )}
 
-            <TouchableOpacity style={[styles.button]}
+                {!editar ? (<TouchableOpacity style={[styles.button, {width: '40%'}]}
+                // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                onPress={() => {
+                    navigation.navigate('Horarios', {user})
+                }}
+                >
+                <Text style={[styles.texto, { color: 'white' }]}>Horarios</Text>
+                </TouchableOpacity>)
+                :(
+                    <TouchableOpacity style={[styles.button, {width: '40%'}]}
+                    // onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}
+                    onPress={() => {
+                        navigation.navigate('Horarios', {user})
+                    }}
+                    >
+                        <Text style={[styles.texto, { color: 'white' }]}>Guardar</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+            ):(
+                <TouchableOpacity style={[styles.button]}
                 onPress={() => { publicar(navigation, user, recorrido, agregarRec) }}
             >
                 <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
             </TouchableOpacity>
+            )}
+
 
         </View>
     );
