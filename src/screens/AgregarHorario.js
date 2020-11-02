@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList } from 'react-native'
-import DatePicker from 'react-native-date-picker'
 import { agregar } from '../store/actions/noticias'
 import { back } from '../../env'
 import uuid from 'uuid/v4'
 import { LinearGradient } from 'expo-linear-gradient';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+
 
 const Dias = [
     {
@@ -44,14 +47,8 @@ const Dias = [
         activo: false,
     }
 ]
-function precionado() {
-    if (estado) {
-        setEstado(false)
-    }
-    if (!estado) {
-        setEstado(true)
-    }
-}
+const mode = 'time'
+const displayFormat = 'HH:mm'
 
 function AgregarRecorrido({ navigation, user, route }) {
     const { isNew } = route.params
@@ -59,27 +56,41 @@ function AgregarRecorrido({ navigation, user, route }) {
     const color = estado ? '#e84c22' : 'transparent'
     const color2 = estado ? '#F79F46' : 'transparent'
     const color3 = estado ? 'white' : 'black'
-    // const []
 
-    // const { recorrido, noticias } = route.params
-    // const [noticia, setNoticia] = useState({
-    //     id: uuid(),
-    //     descripcion: '',
-    //     titulo: '',
-    //     fechaTermino: '',
-    //     duracion: {
-    //         cantidad: '1',
-    //         unidad: '1'
-    //     },
-    //     fechaPublicacion: '',
-    // })
+
+    // const [value, setValue] = useState('')
+    const [show, setShow] = useState(false)
+    const [show2, setShow2] = useState(false)
+    const [date, setDate] = useState(new Date());
+    const [date2, setDate2] = useState(new Date());
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date
+        setShow(Platform.OS === 'ios')
+        setDate(currentDate)
+    }
+
+    const showTimepicker = () => {
+        setShow(true)
+    }
+
+
+    const onChange2 = (event, selectedDate) => {
+        const currentDate2 = selectedDate || date2
+        setShow2(Platform.OS === 'ios')
+        setDate2(currentDate2)
+    }
+
+    const showTimepicker2 = () => {
+        setShow2(true)
+    }
+
     const renderItem = ({ item }) => {
         const [selectedId, setSelectedId] = useState(null)
         return (
             <Item
                 item={item}
                 onPress={() => setSelectedId(item.id)}
-
             />
         )
     }
@@ -87,44 +98,59 @@ function AgregarRecorrido({ navigation, user, route }) {
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View style={{ flex: 1, maxHeight: 100, flexDirection: "row", justifyContent: 'center' }}>
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Text style={styles.texto}>Salida:</Text>
-                    <View style={styles.inputView}>
+                <View style={{ flex: 1, flexDirection:'row', alignItems:'center', justifyContent:'center', width:'80%', }}>
+                    <Text style={styles.texto}>&nbsp;&nbsp;&nbsp;&nbsp;Salida:</Text>
+                    <View style={[styles.inputView, {width: '30%', marginHorizontal:10, marginBottom:0}]}>
                         <TextInput
-                            style={styles.inputText}
-                        //value={noticia.titulo}
-                        //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
+                            style={[styles.inputText, {alignItems: 'center', textAlign:'center'}]}
+                            editable={false}
+                            value= {
+                            moment(date).format('HH:mm')
+                            }
                         />
                     </View>
-                </View>
 
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Text style={styles.texto}>Llegada:</Text>
-                    <View style={styles.inputView}>
-                        <TextInput
-                            style={styles.inputText}
-                        //value={noticia.titulo}
-                        //onChangeText={text => setNoticia({ ...noticia, titulo: text })}
-                        />
-                    </View>
+                    <TouchableOpacity onPress={showTimepicker}>
+                        <FontAwesome5 name={'clock'} color={'#e84c22'} size={35} />
+                    </TouchableOpacity>
+
+                    {show && <DateTimePicker
+                        value={date}
+                        // is24Hour = {true}
+                        mode= {mode}
+                        onChange = {onChange}
+                        display = {"spinner"}
+                    />}
                 </View>
             </View>
-            {/* 
-            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}}  colors={[color, color2]} style = {[styles.dias]}>
-                <TouchableOpacity 
-                style = {[styles.dias,{borderWidth: 1, borderColor:'#e84c22'}]}
-                onPress={() => {
-                    if (estado){
-                        setEstado(false)
-                    } 
-                    if (!estado){
-                        setEstado(true)
-                    } 
-                }}
-                >
-                    <Text style = {{color:color3, fontWeight:'bold', fontSize:20}}>Lu</Text>
-                </TouchableOpacity>
-            </LinearGradient> */}
+
+            <View style={{ flex: 1, maxHeight: 100, flexDirection: "row", justifyContent: 'center' }}>
+                <View style={{ flex: 1,flexDirection:'row', alignItems: 'center', justifyContent:'center', width:'80%', alignContent:'center' }}>
+                    <Text style={styles.texto}>&nbsp;Llegada:</Text>
+                    <View style={[styles.inputView, {width: '30%', marginHorizontal:10, marginBottom:0}]}>
+                        <TextInput
+                            style={[styles.inputText, {alignItems: 'center', textAlign:'center'}]}
+                            editable={false}
+                            value= {
+                            moment(date2).format('HH:mm')
+                            }
+                        />
+                    </View>
+
+                    <TouchableOpacity onPress={showTimepicker2}>
+                        <FontAwesome5 name={'clock'} color={'#e84c22'} size={35} />
+                    </TouchableOpacity>
+
+                    {show2 && <DateTimePicker
+                        value={date}
+                        // is24Hour = {true}
+                        mode= {mode}
+                        onChange = {onChange2}
+                        display = {"spinner"}
+                    />}
+                </View>
+            </View>
+
 
             <FlatList
                 horizontal={true}
