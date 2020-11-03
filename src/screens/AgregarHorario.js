@@ -345,7 +345,6 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
 
 
 const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
-    console.log('HORAR', horar)
     let res = await fetch(back + 'addHorario', {
         method: 'POST',
         headers: {

@@ -108,16 +108,17 @@ export default (state = initialState, action) => {
             })
             break
         case horariosConstants.ADD:
-            console.log('HORAIO', action.horario)
             recorridos = [...state.data]
             let horarios = {}
             reco = recorridos.map(x => {
                 if (x.id == action.recorrido.id) {
-                    console.log('HOARRIOS X', { ...x.Horarios })
-                    horarios = { ...x.Horarios }
-                    horarios[action.horario.id] = action.horario
-                    x = { ...x, Horarios: horarios }
-                    console.log('X', x)
+                    if(x.Horarios == undefined){
+                        x.Horarios = {}
+                    }
+                        horarios = x.Horarios 
+                        horarios[action.horario.id] = action.horario
+                        x = { ...x, Horarios: horarios }
+                        console.log("X " , x.Horarios)
                 }
                 return x
             })
