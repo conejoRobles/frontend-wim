@@ -9,8 +9,8 @@ const initialState = {
 
 
 export default (state = initialState, action) => {
+    console.log('ACTION!', action.type)
     switch (action.type) {
-
         case empresasConstants.LOAD:
             return ({
                 ...state,
@@ -83,6 +83,73 @@ export default (state = initialState, action) => {
             return ({
                 ...state,
                 data: recorridos
+            })
+
+            break
+        case recorridosConstants.EDIT:
+            recorridos = [...state.data]
+            recorridos = recorridos.map(rec => {
+                if (rec.id == action.recorrido.id) {
+                    rec = { ...rec, ...action.recorrido }
+                }
+                return rec
+            })
+            return ({
+                ...state,
+                data: recorridos
+            })
+            break
+        case recorridosConstants.REMOVE:
+            recorridos = [...state.data]
+            reco = recorridos.filter(x => x.id != action.recorrido.id)
+            return ({
+                ...state,
+                data: reco
+            })
+            break
+        case horariosConstants.ADD:
+            recorridos = [...state.data]
+            let horarios = {}
+            reco = recorridos.map(x => {
+                if (x.id == action.recorrido.id) {
+                    horarios = x.Horarios
+                    horarios[action.horario.id] = action.horario
+                    x = { ...x, Horarios: horarios }
+                }
+                return x
+            })
+            return ({
+                ...state,
+                data: reco
+            })
+            break
+        case horariosConstants.EDIT:
+            recorridos = [...state.data]
+            horarios = {}
+            reco = recorridos.map(x => {
+                if (x.id == action.recorrido.id) {
+                    horarios = x.Horarios
+                    horarios[action.horario.id] = { ...horarios[action.horario.id], ...action.horario }
+                    x = { ...x, Horarios: horarios }
+                }
+                return x
+            })
+            return ({
+                ...state,
+                data: reco
+            })
+            break
+        case horariosConstants.REMOVE:
+            recorridos = [...state.data]
+            reco = recorridos.map(recorrido => {
+                if (recorrido.id == action.recorrido.id) {
+                    delete recorrido.Horarios[action.horario.id]
+                }
+                return recorrido
+            })
+            return ({
+                ...state,
+                data: reco
             })
             break
         default:

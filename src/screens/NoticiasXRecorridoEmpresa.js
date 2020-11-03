@@ -30,32 +30,32 @@ const DATA = [
     }
 ]
 
-function tiempo (minutos){
-    if(minutos > 59){
-        let horas = Math.trunc(minutos/60)
-        let m = minutos%60
-        if(horas > 23){
-            let dias = Math.trunc(horas/24)
-            horas = horas%24
-            m 
-            return ""+dias+"d "+ horas+ "h " + m+ "m"
+function tiempo(minutos) {
+    if (minutos > 59) {
+        let horas = Math.trunc(minutos / 60)
+        let m = minutos % 60
+        if (horas > 23) {
+            let dias = Math.trunc(horas / 24)
+            horas = horas % 24
+            m
+            return "" + dias + "d " + horas + "h " + m + "m"
         }
-        return ""+ horas+ "h " + m+ "m"
-    }else{
-        return ""+ minutos+ "m"
+        return "" + horas + "h " + m + "m"
+    } else {
+        return "" + minutos + "m"
     }
 }
 
 const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.button, style,{flex:1}]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, style, { flex: 1 }]}>
         <Text style={styles.texto}>{item.titulo}</Text>
-        <Text style={[styles.texto3, {flex:1}]}>{item.descripcion}</Text>
-        <View style={{flex:1 ,justifyContent:'flex-end', marginBottom:10, borderTopWidth: 2, borderTopColor:'white', maxHeight:50}}>
-            <Text style={[styles.texto3, {fontSize: 15}]}>Publicación: {moment(item.fechaPublicacion).format('DD/MM').toString()}</Text>
-            <Text style={[styles.texto3, {fontSize: 15}]}>
+        <Text style={[styles.texto3, { flex: 1 }]}>{item.descripcion}</Text>
+        <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10, borderTopWidth: 2, borderTopColor: 'white', maxHeight: 50 }}>
+            <Text style={[styles.texto3, { fontSize: 15 }]}>Publicación: {moment(item.fechaPublicacion).format('DD/MM/YY').toString()}</Text>
+            <Text style={[styles.texto3, { fontSize: 15 }]}>
                 Quedan:
-                {tiempo(moment(item.fechaTermino).diff(moment(new Date()),'minutes'))}                 
-                </Text>
+                {' ' + tiempo(moment(item.fechaTermino).diff(moment(new Date()), 'minutes'))}
+            </Text>
         </View>
     </TouchableOpacity>
 )
@@ -93,16 +93,16 @@ function NoticiasXRecorridoEmpresa({ navigation, route }) {
                 style={[styles.button2]}>
                 <Text style={styles.texto2}>Agregar Noticia</Text>
             </TouchableOpacity>
-                {data.length > 0 && data != null && data != undefined ? (
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        extraData={selectedId}
-                    />
-                ) : (
-                        <Text style={[styles.texto2, { color: 'black', marginTop: '70%' }]}>Aún no hay noticias</Text>
-                    )
+            {data.length > 0 && data != null && data != undefined ? (
+                <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    extraData={selectedId}
+                />
+            ) : (
+                    <Text style={[styles.texto2, { color: 'black', marginTop: '70%' }]}>Aún no hay noticias</Text>
+                )
             }
         </View>
     );

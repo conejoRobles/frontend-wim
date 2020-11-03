@@ -6,17 +6,20 @@ export const horariosLoad = (horarios) => ({
 	horarios
 })
 
-export const agregarRec = (horario) => ({
+export const agregarHo = (horario, recorrido) => ({
 	type: horariosConstants.ADD,
-	horario
+	horario,
+	recorrido
 })
 
-export const eliminarhorario = (horario) => ({
+export const eliminarHorario = (horario, recorrido) => ({
 	type: horariosConstants.REMOVE,
-	horario
+	horario,
+	recorrido
 })
 
-export const editarhorario = (horario) => ({
+export const editarHorario = (horario, recorrido) => ({
 	type: horariosConstants.EDIT,
-	horario
+	horario,
+	recorrido
 })

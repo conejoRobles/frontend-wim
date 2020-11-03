@@ -5,9 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
 import { empresasLoad } from '../store/actions/empresas'
 import { AppLoading } from 'expo'
+import { logout } from '../store/actions/user'
 import { back } from '../../env'
 
-const Login = ({ navigation, inicioSesion, empresasLoad, user }) => {
+const Login = ({ navigation, inicioSesion, empresasLoad, user, logout }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
@@ -63,7 +64,7 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user }) => {
 						inicio({
 							email,
 							password,
-						}, navigation, inicioSesion, empresasLoad, user)
+						}, navigation, inicioSesion, empresasLoad, user, logout)
 
 					}}
 				>
@@ -74,7 +75,7 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user }) => {
 	);
 }
 
-const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => {
+const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout) => {
 	const res = await fetch(back, {
 		method: 'POST',
 		headers: {
@@ -87,6 +88,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 	})
 	const ans = await res.json()
 	if (ans.ok) {
+		await logout()
 		await inicioSesion(ans.usuario)
 		if (ans.usuario.rol == 'empresa') {
 			let res2 = await fetch(back + 'getRecorridos?rut=' + ans.usuario.rut)
@@ -138,6 +140,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user) => 
 			{ cancelable: false }
 		);
 	} else {
+		await logout()
 		Alert.alert(
 			"Oh no!",
 			ans.mensaje,
@@ -214,7 +217,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	inicioSesion: (user) => dispatch(inicioSesion(user)),
-	empresasLoad: (empresas) => dispatch(empresasLoad(empresas))
+	empresasLoad: (empresas) => dispatch(empresasLoad(empresas)),
+	logout: () => dispatch(logout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

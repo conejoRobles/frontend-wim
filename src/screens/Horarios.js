@@ -1,278 +1,27 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import moment from 'moment';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const DATA = [
-    {
-        id: "0",
-        horaInicio: '13:00',
-        horaTermino: '13:45',
-        dias: [
-            {
-                id: "00",
-                dia: "Lu",
-                activo: true,
-            },
-            {
-                id: "01",
-                dia: "Ma",
-                activo: false,
-            },
-            {
-                id: "02",
-                dia: "Mi",
-                activo: true,
-            },
-            {
-                id: "03",
-                dia: "Ju",
-                activo: false,
-            },
-            {
-                id: "04",
-                dia: "Vi",
-                activo: false,
-            },
-            {
-                id: "05",
-                dia: "Sa",
-                activo: true,
-            },
-            {
-                id: "06",
-                dia: "Do",
-                activo: true,
-            }
-        ]
-    },
-    {
-        id: "1",
-        horaInicio: '14:00',
-        horaTermino: '14:50',
-        dias: [
-            {
-                id: "00",
-                dia: "Lu",
-                activo: true,
-            },
-            {
-                id: "01",
-                dia: "Ma",
-                activo: true,
-            },
-            {
-                id: "02",
-                dia: "Mi",
-                activo: true,
-            },
-            {
-                id: "03",
-                dia: "Ju",
-                activo: false,
-            },
-            {
-                id: "04",
-                dia: "Vi",
-                activo: false,
-            },
-            {
-                id: "05",
-                dia: "Sa",
-                activo: false,
-            },
-            {
-                id: "06",
-                dia: "Do",
-                activo: true,
-            }
-        ]
-    },
-    {
-        id: "2",
-        horaInicio: '15:30',
-        horaTermino: '16:10',
-        dias: [
-            {
-                id: "00",
-                dia: "Lu",
-                activo: true,
-            },
-            {
-                id: "01",
-                dia: "Ma",
-                activo: true,
-            },
-            {
-                id: "02",
-                dia: "Mi",
-                activo: true,
-            },
-            {
-                id: "03",
-                dia: "Ju",
-                activo: false,
-            },
-            {
-                id: "04",
-                dia: "Vi",
-                activo: false,
-            },
-            {
-                id: "05",
-                dia: "Sa",
-                activo: true,
-            },
-            {
-                id: "06",
-                dia: "Do",
-                activo: true,
-            }
-        ]
-    },
-    {
-        id: "3",
-        horaInicio: '16:20',
-        horaTermino: '17:00',
-        dias: [
-            {
-                id: "00",
-                dia: "Lu",
-                activo: true,
-            },
-            {
-                id: "01",
-                dia: "Ma",
-                activo: true,
-            },
-            {
-                id: "02",
-                dia: "Mi",
-                activo: true,
-            },
-            {
-                id: "03",
-                dia: "Ju",
-                activo: false,
-            },
-            {
-                id: "04",
-                dia: "Vi",
-                activo: false,
-            },
-            {
-                id: "05",
-                dia: "Sa",
-                activo: true,
-            },
-            {
-                id: "06",
-                dia: "Do",
-                activo: true,
-            }
-        ]
-    },
-    {
-        id: "4",
-        horaInicio: '17:00',
-        horaTermino: '17:50',
-        dias: [
-            {
-                id: "00",
-                dia: "Lu",
-                activo: true,
-            },
-            {
-                id: "01",
-                dia: "Ma",
-                activo: true,
-            },
-            {
-                id: "02",
-                dia: "Mi",
-                activo: true,
-            },
-            {
-                id: "03",
-                dia: "Ju",
-                activo: true,
-            },
-            {
-                id: "04",
-                dia: "Vi",
-                activo: false,
-            },
-            {
-                id: "05",
-                dia: "Sa",
-                activo: true,
-            },
-            {
-                id: "06",
-                dia: "Do",
-                activo: true,
-            }
-        ]
-    },
-    {
-        id: "5",
-        horaInicio: '18:00',
-        horaTermino: '18:45',
-        dias: [
-            {
-                id: "00",
-                dia: "Lu",
-                activo: true,
-            },
-            {
-                id: "01",
-                dia: "Ma",
-                activo: true,
-            },
-            {
-                id: "02",
-                dia: "Mi",
-                activo: true,
-            },
-            {
-                id: "03",
-                dia: "Ju",
-                activo: false,
-            },
-            {
-                id: "04",
-                dia: "Vi",
-                activo: false,
-            },
-            {
-                id: "05",
-                dia: "Sa",
-                activo: true,
-            },
-            {
-                id: "06",
-                dia: "Do",
-                activo: true,
-            }
-        ]
-    },
-]
-
-function Horarios({ user, empresas, navigation }) {
+function Horarios({ user, empresas, navigation, route }) {
     const [selectedId, setSelectedId] = useState(null)
+    const { reco } = route.params
     const renderItem = ({ item }) => {
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate('AgregarHorario', {
                     isNew: false,
+                    horario: item,
+                    recorrido: reco
                 })}
                 style={[styles.button, styles.bordes]}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={[styles.texto]}>{item.horaInicio} - {item.horaTermino}</Text>
+                    <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <FlatList
                             horizontal={true}
-                            data={item.dias}
+                            data={Object.values(item.dias)}
                             renderItem={({ item }) =>
                                 <View>
                                     {item.activo ? (<LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
@@ -300,13 +49,14 @@ function Horarios({ user, empresas, navigation }) {
             <TouchableOpacity
                 onPress={() => navigation.navigate('AgregarHorario', {
                     isNew: true,
+                    recorrido: reco
                 })}
                 style={[styles.button2]}>
                 <Text style={styles.texto4}>Agregar Horario</Text>
             </TouchableOpacity>
 
-            {DATA.length > 0 ? (<FlatList
-                data={DATA}
+            { reco.Horarios ? (<FlatList
+                data={Object.values(reco.Horarios)}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}

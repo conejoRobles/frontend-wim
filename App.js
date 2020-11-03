@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, LogBox } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from './src/screens/Home'
@@ -17,7 +17,6 @@ import NoticiasXRecorridoEmpresa from './src/screens/NoticiasXRecorridoEmpresa'
 import NoticiasXRecorridoPasajero from './src/screens/NoticiasXRecorridoPasajero'
 import NoticiaEmpresa from './src/screens/NoticiasEmpresa'
 import { LinearGradient } from 'expo-linear-gradient';
-
 import { Provider, connect } from 'react-redux'
 import store from './src/store/store'
 import EditarCuenta from './src/screens/EditarCuenta'
@@ -33,6 +32,10 @@ const BuscarStack = createStackNavigator()
 const RutasStack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 
 function leftButton({ navigation }) {
@@ -54,9 +57,9 @@ function rightButton() {
   )
 }
 
-function header(){
+function header() {
   return (
-    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}}  colors={['#e84c22', '#F79F46']}>
+    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']}>
     </LinearGradient>
   )
 }

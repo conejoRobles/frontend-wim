@@ -57,7 +57,8 @@ function Bienvenida({ user, empresas, navigation }) {
                 onPress={() => {
                     setSelectedId(item.id)
                     navigation.navigate('AgregarRecorrido', {
-                        isNew: false
+                        isNew: false,
+                        reco: item
                     })
                 }}
                 style={{ backgroundColor }}
@@ -67,7 +68,7 @@ function Bienvenida({ user, empresas, navigation }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#ff6900"></StatusBar>
-            <View style={[styles.button, styles.bordes, { backgroundColor: 'white', marginBottom: 0 }]}>
+            <View style={[styles.button, styles.bordes, { backgroundColor: 'white', marginBottom: 0, }]}>
                 <Text style={styles.texto2}>Bienvenido</Text>
                 {
                     user.rol == 'empresa' ? (<Text style={styles.texto3}>Aqui tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>)
@@ -77,9 +78,9 @@ function Bienvenida({ user, empresas, navigation }) {
             <View style={{ alignContent: 'center', alignItems: 'center' }}>
                 {user.rol == 'empresa' && <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('AgregarRecorrido', { user, isNew:true })
+                        navigation.navigate('AgregarRecorrido', { user, isNew: true })
                     }}
-                    style={[styles.button2]}>
+                    style={[styles.button2,]}>
                     <Text style={styles.texto4}>Agregar Recorrido</Text>
                 </TouchableOpacity>}
             </View>
