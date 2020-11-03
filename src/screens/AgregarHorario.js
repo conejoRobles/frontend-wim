@@ -325,7 +325,7 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
             [
                 {
                     text: "OK", onPress: () => navigation.navigate('Horarios', {
-                        recorrido
+                        reco: recorrido
                     })
                 }
             ],
@@ -344,7 +344,7 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
 }
 
 
-const publicar = async (navigation, horar, user, recorrido = {}, agregarHo) => {
+const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
     console.log('HORAR', horar)
     let res = await fetch(back + 'addHorario', {
         method: 'POST',
@@ -371,7 +371,7 @@ const publicar = async (navigation, horar, user, recorrido = {}, agregarHo) => {
             [
                 {
                     text: "OK", onPress: () => navigation.navigate('Horarios', {
-                        recorrido
+                        reco: recorrido
                     })
                 }
             ],
@@ -416,7 +416,7 @@ const editar = async (navigation, horar, user, recorrido, editarHorario) => {
             [
                 {
                     text: "OK", onPress: () => navigation.navigate('Horarios', {
-                        recorrido,
+                        reco: recorrido,
                     })
                 }
             ],
