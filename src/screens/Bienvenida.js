@@ -56,10 +56,15 @@ function Bienvenida({ user, empresas, navigation }) {
                 item={item}
                 onPress={() => {
                     setSelectedId(item.id)
-                    navigation.navigate('AgregarRecorrido', {
-                        isNew: false,
-                        reco: item
-                    })
+                    if(user.rol == 'empresa'){
+                        navigation.navigate('AgregarRecorrido', {
+                            isNew: false,
+                            reco: item
+                        })
+                    }else{
+                        navigation.navigate('FavXRecorridos')
+                    }
+
                 }}
                 style={{ backgroundColor }}
             />

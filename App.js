@@ -25,6 +25,9 @@ import editarNoticia from './src/screens/editarNoticia'
 import AgregarRecorrido from './src/screens/AgregarRecorrido'
 import Horarios from './src/screens/Horarios'
 import AgregarHorario from './src/screens/AgregarHorario'
+import buscarRecorrido from './src/screens/buscarRecorrido'
+import infoRecorrido from './src/screens/infoRecorrido'
+import FavXRecorridos from './src/screens/FavXRecorridos'
 
 const AuthStack = createStackNavigator()
 const NoticiaStack = createStackNavigator()
@@ -126,8 +129,8 @@ function NoticiaEmpresaStackScreen() {
 function BuscarStackScreen() {
   return (
     <BuscarStack.Navigator>
-      <BuscarStack.Screen name="Buscar" component={NoticiasPasajero} />
-      {/* <NoticiaStack.Screen name="MostrarRecorrido" component={} /> */}
+      <NoticiaStack.Screen name="BuscarRecorrido" component={buscarRecorrido} />
+      <NoticiaStack.Screen name="InfoRecorrido" component={infoRecorrido} />
     </BuscarStack.Navigator>
   )
 }
@@ -135,7 +138,8 @@ function BuscarStackScreen() {
 function RutasStackScreen() {
   return (
     <RutasStack.Navigator>
-      <RutasStack.Screen name="Bienvenida" component={Bienvenida} />
+      <RutasStack.Screen name="Bienvenida" component={Bienvenida}/>
+      <RutasStack.Screen name="FavXRecorridos" component={FavXRecorridos}/>
     </RutasStack.Navigator>
   )
 }
