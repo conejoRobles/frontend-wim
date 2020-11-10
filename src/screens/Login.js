@@ -76,6 +76,7 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user, logout }) => {
 }
 
 const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout) => {
+	await logout()
 	const res = await fetch(back, {
 		method: 'POST',
 		headers: {
@@ -88,7 +89,6 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 	})
 	const ans = await res.json()
 	if (ans.ok) {
-		await logout()
 		await inicioSesion(ans.usuario)
 		if (ans.usuario.rol == 'empresa') {
 			let res2 = await fetch(back + 'getRecorridos?rut=' + ans.usuario.rut)

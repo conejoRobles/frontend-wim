@@ -1,129 +1,264 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, Alert } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, Alert, Modal, TextInput } from 'react-native'
+import { Picker } from '@react-native-community/picker'
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { connect } from 'react-redux'
 import moment from 'moment';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 const recorridos = {
-    "Horarios" : {
-    "707c47a8-9706-4510-951d-6b2b1714dcb5" : {
-        "conductor" : "",
-        "dias" : [ {
-        "activo" : true,
-        "dia" : "Lu",
-        "id" : "00"
-        }, {
-        "activo" : false,
-        "dia" : "Ma",
-        "id" : "01"
-        }, {
-        "activo" : true,
-        "dia" : "Mi",
-        "id" : "02"
-        }, {
-        "activo" : false,
-        "dia" : "Ju",
-        "id" : "03"
-        }, {
-        "activo" : false,
-        "dia" : "Vi",
-        "id" : "04"
-        }, {
-        "activo" : true,
-        "dia" : "Sa",
-        "id" : "05"
-        }, {
-        "activo" : false,
-        "dia" : "Do",
-        "id" : "06"
-        } ],
-        "horaInicio" : "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
-        "horaTermino" : "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
-        "id" : "707c47a8-9706-4510-951d-6b2b1714dcb5",
-        "patente" : ""
+    "Horarios": {
+        "707c47a8-9706-4510-951d-6b2b1714dcb5": {
+            "conductor": "",
+            "dias": [{
+                "activo": true,
+                "dia": "Lu",
+                "id": "00"
+            }, {
+                "activo": false,
+                "dia": "Ma",
+                "id": "01"
+            }, {
+                "activo": true,
+                "dia": "Mi",
+                "id": "02"
+            }, {
+                "activo": false,
+                "dia": "Ju",
+                "id": "03"
+            }, {
+                "activo": false,
+                "dia": "Vi",
+                "id": "04"
+            }, {
+                "activo": true,
+                "dia": "Sa",
+                "id": "05"
+            }, {
+                "activo": false,
+                "dia": "Do",
+                "id": "06"
+            }],
+            "horaInicio": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
+            "horaTermino": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
+            "id": "707c47a8-9706-4510-951d-6b2b1714dcb5",
+            "patente": ""
         }
     }
 }
-
+const mode = 'time'
 
 function buscarRecorrido({ user, empresas, navigation, route }) {
+    const week = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     const [selectedId, setSelectedId] = useState(null)
+    const [editar, setEditar] = useState(false)
+    const [dia, setDia] = useState((new Date().getDay() - 1))
+    const [date, setDate] = useState((new Date()));
+    const [date2, setDate2] = useState((new Date()));
+    const [modalVisible, setModalVisible] = useState(false)
+    const [modalVisible2, setModalVisible2] = useState(false)
+    const [show, setShow] = useState(false)
+    const [show2, setShow2] = useState(false)
+    const [dataSearch, setdataSearch] = useState({
+        origen: 'Origen',
+        destino: 'Destino',
+        dia: '',
+        horaInicio: new Date(),
+        horaTermino: '',
+    })
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date
+        setShow(Platform.OS === 'ios')
+        setDate(currentDate)
+    }
+
+    const showTimepicker = () => {
+        setShow(true)
+    }
+
+
+    const onChange2 = (event, selectedDate) => {
+        const currentDate2 = selectedDate || date2
+        setShow2(Platform.OS === 'ios')
+        setDate2(currentDate2)
+    }
+
+    const showTimepicker2 = () => {
+        setShow2(true)
+    }
     const renderItem = ({ item }) => {
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate('InfoRecorrido', {
-                    // isNew: false,
-                    // horario: item,
-                    // recorrido: reco
+
                 })}
                 style={[styles.button, styles.bordes]}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        {/* <FlatList
-                            horizontal={true}
-                            data={Object.values(item.dias)}
-                            renderItem={({ item }) =>
-                                <View>
-                                    {item.activo ? (<LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
-                                        <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
-                                    </LinearGradient>)
-                                        : (
-                                            <LinearGradient colors={['transparent', 'transparent']} style={[styles.dias]}>
-                                                <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
-                                            </LinearGradient>
-                                        )}
-                                </View>
-                            }
-                            keyExtractor={(item) => item.id}
-                            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
-                        /> */}
-                        <Text style={[styles.texto]}>Empresita</Text>
+                        <Text style={[styles.texto]}>{item.empresa}Nombre Empresa</Text>
                     </View>
                 </View>
             </TouchableOpacity>
         )
     }
     return (
-        <View style={[styles.container]}>
-            <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <View
-                style={[styles.button2, {flexDirection: "row", justifyContent:'center', marginBottom:0}]}>
-                <TouchableOpacity>
-                    <Text style={[styles.texto4]}>Origen</Text>
+        <View style={modalVisible || modalVisible2 ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
+            <StatusBar backgroundColor="#e84c22" />
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible2}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={[styles.modalText, { fontWeight: 'bold', fontSize: 25, color: '#e84c22', borderBottomWidth: 2, borderBottomColor: '#e84c22' }]}>Seleccionar Recorrido</Text>
+                        <Text style={[styles.modalText, { paddingTop: 10 }]}>Origen</Text>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText}
+                                placeholder='Ej: San Carlos'
+                                onChangeText={(text) => {
+                                    setdataSearch({ ...dataSearch, origen: text })
+                                }}
+                            />
+                        </View>
+                        <Text style={[styles.modalText, { paddingTop: 10 }]}>Destino</Text>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText}
+                                placeholder='Ej: La Ribera'
+                                onChangeText={(text) => {
+                                    setdataSearch({ ...dataSearch, destino: text })
+                                }}
+                            />
+                        </View>
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
+                            onPress={() => {
+                                setModalVisible2(!modalVisible2)
+                            }}
+                        >
+                            <Text style={styles.textStyle} onPress={() => setModalVisible2(!modalVisible2)}>Aceptar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={[styles.modalText, { fontWeight: 'bold', fontSize: 25, color: '#e84c22', borderBottomWidth: 2, borderBottomColor: '#e84c22' }]}>Seleccionar horario</Text>
+                        <Text style={[styles.modalText, { paddingTop: 10 }]}>Día</Text>
+                        <View style={[styles.inputView, { marginHorizontal: 10 }]}>
+                            <Picker style={{ width: '100%', color: 'black' }}
+                                itemStyle={{ borderRadius: 4, borderColor: 'blue' }}
+                                selectedValue={dia}
+                                onValueChange={(itemValue) => setDia(itemValue)}
+                            >
+                                <Picker.Item label={week[dia]} value={dia} />
+                                <Picker.Item label='Lunes' value="0" />
+                                <Picker.Item label='Martes' value="1" />
+                                <Picker.Item label='Miercoles' value="2" />
+                                <Picker.Item label='Jueves' value="3" />
+                                <Picker.Item label='Viernes' value="4" />
+                                <Picker.Item label='Sabado' value="5" />
+                                <Picker.Item label='Domingo' value="6" />
+                            </Picker>
+                        </View>
+                        <Text style={styles.modalText}>Hora Salida</Text>
+                        <View style={styles.inputView}>
+                            <TouchableOpacity style={{ paddingLeft: 10 }} onPress={showTimepicker}>
+                                <TextInput
+                                    style={[styles.inputText, { alignItems: 'center', textAlign: 'center' }]}
+                                    editable={false}
+                                    value={
+                                        moment(date).format('HH:mm')
+                                    }
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.modalText}>Hora llegada</Text>
+                        <View style={styles.inputView}>
+                            <TouchableOpacity style={{ paddingLeft: 10 }} onPress={showTimepicker2}>
+                                <TextInput
+                                    style={[styles.inputText, { alignItems: 'center', textAlign: 'center' }]}
+                                    editable={false}
+                                    value={
+                                        moment(date2).format('HH:mm')
+                                    }
+                                />
+                            </TouchableOpacity>
+                            {show && <DateTimePicker
+                                value={date}
+                                mode={mode}
+                                onChange={onChange}
+                                display={"spinner"}
+                            />}
+                            {show2 && <DateTimePicker
+                                value={date2}
+                                mode={mode}
+                                onChange={onChange2}
+                                display={"spinner"}
+                            />}
+                        </View>
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle} onPress={() => setModalVisible(false)}>Buscar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+            <View style={[styles.button2, { flexDirection: "row", justifyContent: 'center', marginBottom: 0 }]}>
+                <TouchableOpacity onPress={() => { setModalVisible2(true) }}>
+                    <Text style={[styles.texto4]}>{dataSearch.origen}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style = {{marginHorizontal:15}}>
-                <FontAwesome5
-                    name={'exchange-alt'}
-                    size={35}
-                    color= {'#e84c22'}
+                <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }} onPress={() => {
+                    setdataSearch({ ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen })
+                }}>
+                    <FontAwesome5
+                        name={'exchange-alt'}
+                        size={35}
+                        color={'#e84c22'}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <Text style={styles.texto4}>Destino</Text>
+                <TouchableOpacity onPress={() => { setModalVisible2(true) }}>
+                    <Text style={[styles.texto4]}>{dataSearch.destino}</Text>
                 </TouchableOpacity>
             </View>
-            <View style= {{justifyContent:'center', alignItems:'center', marginTop: 0}}>
-                <View style = {[styles.button2, {width: "80%", flexDirection: "row", justifyContent:'center', marginTop: 0, backgroundColor : '#e84c22', paddingHorizontal:15}]}>
-                    <TouchableOpacity style={{flex:1}}>
-                        <Text style={[styles.texto4, {color: 'white', paddingLeft:15}]}>Lunes</Text>
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0 }}>
+                <View style={[styles.button2, { width: "80%", flexDirection: "row", justifyContent: 'center', marginTop: 0, backgroundColor: '#e84c22', paddingHorizontal: 15 }]}>
+                    <TouchableOpacity style={{ flex: 1 }}
+                        onPress={() => {
+                            setModalVisible(!modalVisible)
+                        }}
+                    >
+                        <Text style={[styles.texto5, { color: 'white', paddingLeft: 15, marginRight: 10 }]}>
+                            {week[dia]}
+                        </Text>
                     </TouchableOpacity>
-                    <View style={{justifyContent:'center', alignItems:'center', marginHorizontal:5}}>
-                        <Text style={{color: 'white', fontSize: 30, fontWeight: 'bold', justifyContent:'center'}}>|</Text>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', marginHorizontal: 5 }}>
+                        <Text style={{ color: 'white', fontSize: 30, fontWeight: 'bold', justifyContent: 'center' }}>|</Text>
                     </View>
-                    <TouchableOpacity style={{flex:2}}>
-                        <Text style={[styles.texto4, {color: 'white'}]}>Horario</Text>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                        setModalVisible(!modalVisible)
+                    }}>
+                        <Text style={[styles.texto4, { color: 'white' }]}>Horario</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-
             <FlatList
-                    data={Object.values(recorridos.Horarios)}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    extraData={selectedId}
-                />
+                data={Object.values(recorridos.Horarios)}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                extraData={selectedId}
+            />
         </View>
     );
 }
@@ -138,6 +273,19 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         alignItems: 'center',
         // justifyContent: 'center',
+    }, openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 30,
+        padding: 10,
+        marginTop: 10,
+        elevation: 2,
+        minWidth: 150,
+    }, texto: {
+        marginTop: 10,
+        color: '#e84c22',
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginBottom: 5
     },
     headerText: {
         fontWeight: 'bold',
@@ -149,10 +297,39 @@ const styles = StyleSheet.create({
         color: '#e84c22',
         textAlign: 'center',
         fontSize: 22,
+    }, texto5: {
+        color: '#e84c22',
+        textAlign: 'center',
+        fontSize: 18,
     },
     container: {
         flex: 1,
         // marginTop: Constants.statusBarHeight,
+    }, contenedor: {
+        backgroundColor: 'white',
+        alignItems: 'center',
+    },
+    modalView: {
+        padding: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 10,
+            height: 20
+        },
+        shadowOpacity: 1,
+        minHeight: '50%',
+        width: '90%',
+        justifyContent: 'center',
+        paddingHorizontal: 30,
+        shadowRadius: 3.84,
+        elevation: 30
+    }, modalText: {
+        textAlign: "center",
+        fontSize: 20,
+        marginBottom: 10
     },
     button: {
         marginHorizontal: 20,
@@ -184,6 +361,11 @@ const styles = StyleSheet.create({
     icon: {
         width: 50,
         color: 'white'
+    }, textStyle: {
+        color: "white",
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
     },
     texto2: {
         color: '#e84c22',
@@ -210,7 +392,43 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: 3,
         marginVertical: 4
-    }
+    }, inputText2: {
+        fontSize: 18,
+        minWidth: 230,
+        marginHorizontal: 10,
+        marginVertical: 10,
+    },
+    inputView1: {
+        maxHeight: 60,
+        minWidth: 230,
+        borderWidth: 2,
+        borderRadius: 25,
+        paddingHorizontal: 10,
+        justifyContent: 'center',
+        marginBottom: 20,
+        borderColor: '#e84c22'
+    }, inputView: {
+        width: "80%",
+        borderRadius: 25,
+        borderWidth: 1,
+        borderBottomWidth: 3,
+        height: 50,
+        justifyContent: 'center',
+        marginBottom: 10,
+        borderColor: '#e84c22'
+    }, centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    inputText: {
+        fontSize: 20,
+        color: "black",
+        marginHorizontal: 10,
+        marginVertical: 10,
+        textAlignVertical: 'top'
+    },
 });
 
 const mapStateToProps = state => {

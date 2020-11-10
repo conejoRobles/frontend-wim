@@ -59,6 +59,8 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
     })) : (
             useState({
                 id: reco.id,
+                Oldorigen: reco.origen,
+                Olddestino: reco.destino,
                 origen: reco.origen,
                 destino: reco.destino,
                 precios: reco.precios ? reco.precios : []
@@ -180,7 +182,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 <View style={{ flexDirection: "row" }}>
                     {!editar ? (<TouchableOpacity style={[styles.button, { backgroundColor: "#04254E", width: '40%', marginRight: 20 }]}
                         onPress={() => {
-                            setEditar(true)
+                            setEditar(!editar)
                         }}
                     >
                         <Text style={[styles.texto, { color: 'white' }]}>Editar</Text>
@@ -199,7 +201,6 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                     {!editar ? (<TouchableOpacity style={[styles.button, { width: '40%' }]}
                         onPress={() => {
                             navigation.navigate('Horarios', {
-
                                 reco
                             })
                         }}
@@ -238,6 +239,8 @@ const eliminar = async (navigation, user, recorrido, eliminarRecorrido) => {
         },
         body: JSON.stringify({
             rut: user.rut,
+            origen: recorrido.origen,
+            destino: recorrido.destino,
             id: recorrido.id,
         }),
     })
@@ -277,6 +280,8 @@ const editarRec = async (navigation, user, recorrido, editarRecorrido) => {
             id: recorrido.id,
             origen: recorrido.origen,
             destino: recorrido.destino,
+            Oldorigen: recorrido.Oldorigen,
+            Olddestino: recorrido.Olddestino,
             precios: recorrido.precios,
         }),
     })
@@ -335,7 +340,7 @@ const publicar = async (navigation, user, recorrido, agregarRec) => {
     } else {
         Alert.alert(
             "Oh no! algo anda mal",
-            'No se ha podido agregar su recorrido',
+            'No se ha podido agregar su recorrido:\n' + res.mensaje,
             [
                 { text: "Volver a intentar" }
             ],

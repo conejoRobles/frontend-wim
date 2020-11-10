@@ -345,6 +345,23 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
 
 
 const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
+    let cont = 0
+    await horar.dias.map(dia => {
+        if (dia.activo) {
+            cont++
+        }
+    })
+    if (cont <= 0) {
+        Alert.alert(
+            'Debes seleccionar mínimo 1 día!',
+            'Para seleccionar un día debes tocar sobre los días en los que funciona este horario',
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+        return
+    }
     let res = await fetch(back + 'addHorario', {
         method: 'POST',
         headers: {

@@ -82,6 +82,7 @@ function AuthStackScreen({ navigation }) {
       <AuthStack.Screen name="PrincipalDrawer"
         component={PrincipalDrawer}
         options={({ navigation }) => ({
+          headerTitle: false,
           headerShown: true,
           headerLeft: () => {
             return (
@@ -138,8 +139,8 @@ function BuscarStackScreen() {
 function RutasStackScreen() {
   return (
     <RutasStack.Navigator>
-      <RutasStack.Screen name="Bienvenida" component={Bienvenida}/>
-      <RutasStack.Screen name="FavXRecorridos" component={FavXRecorridos}/>
+      <RutasStack.Screen name="Bienvenida" component={Bienvenida} />
+      <RutasStack.Screen name="FavXRecorridos" component={FavXRecorridos} />
     </RutasStack.Navigator>
   )
 }
