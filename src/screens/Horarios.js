@@ -67,13 +67,13 @@ function Horarios({ user, empresas, navigation, route }) {
                 <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
             )} */}
             {reco.Horarios ? (<FlatList
-                    data={Object.values(reco.Horarios)}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    extraData={selectedId}
-                />):(
-                        <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text> 
-                ) }
+                data={Object.values(reco.Horarios)}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                extraData={selectedId}
+            />) : (
+                    <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
+                )}
         </View>
     );
 }

@@ -71,6 +71,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
         const currentDate = selectedDate || date
         setShow(Platform.OS === 'ios')
         setDate(currentDate)
+        setdataSearch({ ...dataSearch, horaInicio: currentDate })
     }
 
     const showTimepicker = () => {
@@ -82,6 +83,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
         const currentDate2 = selectedDate || date2
         setShow2(Platform.OS === 'ios')
         setDate2(currentDate2)
+        setdataSearch({ ...dataSearch, horaTermino: currentDate2 })
     }
 
     const showTimepicker2 = () => {
@@ -156,7 +158,10 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                             <Picker style={{ width: '100%', color: 'black' }}
                                 itemStyle={{ borderRadius: 4, borderColor: 'blue' }}
                                 selectedValue={dia}
-                                onValueChange={(itemValue) => setDia(itemValue)}
+                                onValueChange={(itemValue) => {
+                                    setdataSearch({ ...dataSearch, dia: itemValue })
+                                    setDia(itemValue)
+                                }}
                             >
                                 <Picker.Item label={week[dia]} value={dia} />
                                 <Picker.Item label='Lunes' value="0" />
@@ -207,7 +212,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
-                                setModalVisible(false);
+                                publicar(navigation, dataSearch)
                             }}
                         >
                             <Text style={styles.textStyle} onPress={() => setModalVisible(false)}>Buscar</Text>
@@ -262,6 +267,45 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
         </View>
     );
 }
+
+const publicar = async (navigation, dataSearch) => {
+    let res = await fetch(back + 'searchRecorrido', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify({
+            origen: dataSearch.origen,
+            destino: dataSearch.destino,
+            dia: dataSearch.dia,
+            horaInicio: dataSearch.horaInicio,
+            horaTermino: dataSearch.horaTermino,
+        }),
+    })
+    res = await res.json()
+    if (res.ok) {
+        Alert.alert(
+            "Genial!",
+            'Estos son los recorridos en el horaio que pusiste!',
+            [
+                {
+                    text: "OK", onPress: () => navigation.navigate('Bienvenida')
+                }
+            ],
+            { cancelable: false }
+        );
+    } else {
+        Alert.alert(
+            "Oh no! algo anda mal",
+            'No se ha podido agregar su recorrido:\n' + res.mensaje,
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+    }
+}
+
 
 const styles = StyleSheet.create({
     header: {
