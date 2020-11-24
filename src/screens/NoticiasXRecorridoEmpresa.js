@@ -1,34 +1,34 @@
 import React, { useState } from 'react'
 import { Component } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native'
 import { color } from 'react-native-reanimated'
 import { connect } from 'react-redux'
 import noticias from '../store/reducers/noticias'
 import moment from 'moment';
 
 
-const DATA = [
-    {
-        id: "0",
-        titulo: 'Bus en Mantención',
-        descripcion: 'En bus se puso triste :C'
-    },
-    {
-        id: "1",
-        titulo: 'Bus Enfermito',
-        descripcion: 'Al bus le duele la guatita'
-    },
-    {
-        id: "2",
-        titulo: 'Bus con su periodo',
-        descripcion: 'Al bus le llego la regla y esta con colicos :c'
-    },
-    {
-        id: "3",
-        titulo: 'Bus con su periodo',
-        descripcion: 'Al bus le llego la regla y esta con colicos :c'
-    }
-]
+// const DATA = [
+//     {
+//         id: "0",
+//         titulo: 'Bus en Mantención',
+//         descripcion: 'En bus se puso triste :C'
+//     },
+//     {
+//         id: "1",
+//         titulo: 'Bus Enfermito',
+//         descripcion: 'Al bus le duele la guatita'
+//     },
+//     {
+//         id: "2",
+//         titulo: 'Bus con su periodo',
+//         descripcion: 'Al bus le llego la regla y esta con colicos :c'
+//     },
+//     {
+//         id: "3",
+//         titulo: 'Bus con su periodo',
+//         descripcion: 'Al bus le llego la regla y esta con colicos :c'
+//     }
+// ]
 
 function tiempo(minutos) {
     if (minutos > 59) {
@@ -47,7 +47,7 @@ function tiempo(minutos) {
 }
 
 const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.button, style, { flex: 1 }]}>
+    moment(item.fechaTermino).diff(moment(new Date()), 'minutes') > 0 && (<TouchableOpacity onPress={onPress} style={[styles.button, style, { flex: 1 }]}>
         <Text style={styles.texto}>{item.titulo}</Text>
         <Text style={[styles.texto3, { flex: 1 }]}>{item.descripcion}</Text>
         <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10, borderTopWidth: 2, borderTopColor: 'white', maxHeight: 50 }}>
@@ -57,7 +57,8 @@ const Item = ({ item, onPress, style }) => (
                 {' ' + tiempo(moment(item.fechaTermino).diff(moment(new Date()), 'minutes'))}
             </Text>
         </View>
-    </TouchableOpacity>
+    </TouchableOpacity>)
+
 )
 
 function NoticiasXRecorridoEmpresa({ navigation, route }) {
@@ -81,6 +82,9 @@ function NoticiasXRecorridoEmpresa({ navigation, route }) {
         )
     }
     return (
+        // <View style={{justifyContent:'center', alignItems:'center', height:'100%'}}>
+        //     <ActivityIndicator size={100} color='#e84c22' style={{justifyContent:'center', alignItems:'center'}}/>
+        // </View>
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <TouchableOpacity

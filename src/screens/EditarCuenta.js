@@ -17,7 +17,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 	const [rol, setRol] = useState(user.rol)
 
 	return editar ? (
-		<View style={styles.container} >
+		<View style={[styles.container]} >
 			<StatusBar backgroundColor="#e84c22" />
 			<Text style={styles.titulo}>Cuenta</Text>
 			<View style={styles.inputView}>
