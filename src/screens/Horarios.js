@@ -29,9 +29,9 @@ function Horarios({ user, empresas, navigation, route }) {
                                         <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
                                     </LinearGradient>)
                                         : (
-                                            <LinearGradient colors={['#f4f4f4', '#fafafa']} style={[styles.dias, {borderWidth:1, borderColor:'#e84c22',}]}>
-                                                <Text style={{ color: '#e84c22', fontWeight: 'bold'}}>{item.dia}</Text>
-                                                <Icon name="close" size={40} style={[styles.icon, { zIndex: 0, position: 'absolute', textAlign:'center'}]} />
+                                            <LinearGradient colors={['#f4f4f4', '#fafafa']} style={[styles.dias, { borderWidth: 1, borderColor: '#e84c22', }]}>
+                                                <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
+                                                <Icon name="close" size={40} style={[styles.icon, { zIndex: 0, position: 'absolute', textAlign: 'center' }]} />
                                             </LinearGradient>
                                         )}
                                 </View>

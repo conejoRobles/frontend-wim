@@ -9,7 +9,6 @@ const initialState = {
 
 
 export default (state = initialState, action) => {
-    console.log('ACTION!', action.type)
     switch (action.type) {
         case empresasConstants.LOAD:
             return ({
@@ -112,13 +111,12 @@ export default (state = initialState, action) => {
             let horarios = {}
             reco = recorridos.map(x => {
                 if (x.id == action.recorrido.id) {
-                    if(x.Horarios == undefined){
+                    if (x.Horarios == undefined) {
                         x.Horarios = {}
                     }
-                        horarios = x.Horarios 
-                        horarios[action.horario.id] = action.horario
-                        x = { ...x, Horarios: horarios }
-                        console.log("X " , x.Horarios)
+                    horarios = x.Horarios
+                    horarios[action.horario.id] = action.horario
+                    x = { ...x, Horarios: horarios }
                 }
                 return x
             })

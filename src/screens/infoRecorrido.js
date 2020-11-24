@@ -9,7 +9,6 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 function infoRecorrido({ navigation, route }) {
     const { item } = route.params
-    console.log('ITEM: ', item)
     const [fav, setFav] = useState(false)
     return (
         <View style={[styles.container, { padding: 20 }]}>
@@ -27,11 +26,11 @@ function infoRecorrido({ navigation, route }) {
             </View>
             <View style={{ borderTopWidth: 1, borderTopColor: '#e84c22' }}>
                 <Text style={[styles.texto]}>Conductor:</Text>
-                <Text style={[styles.texto3, { marginBottom: 20 }]}>Juanito Alcachofa</Text>
+                <Text style={[styles.texto3, { marginBottom: 20 }]}>{item.conductor}</Text>
             </View>
             <View style={{ borderTopWidth: 1, borderTopColor: '#e84c22' }}>
                 <Text style={[styles.texto]}>Patente:</Text>
-                <Text style={[styles.texto3, { marginBottom: 20 }]}>XX-XX-00</Text>
+                <Text style={[styles.texto3, { marginBottom: 20 }]}>{item.patente}</Text>
             </View>
             <View style={[{ alignItems: 'center', borderTopWidth: 1, borderTopColor: '#e84c22' }]}>
                 <Text style={[styles.texto]}>Agregar a favoritos</Text>

@@ -37,7 +37,7 @@ const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
-
+  'value provided is not in a recognized RFC2822 or ISO format'
 ]);
 let noticias = 0
 const getTotalNoticias = () => {

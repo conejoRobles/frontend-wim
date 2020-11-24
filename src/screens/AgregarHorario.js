@@ -304,7 +304,6 @@ function AgregarHorario({ navigation, user, route, eliminarHorario, agregarHo, e
 
 
 const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => {
-    console.log('re', recorrido)
     let res = await fetch(back + 'removeHorario', {
         method: 'POST',
         headers: {
