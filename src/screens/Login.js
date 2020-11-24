@@ -88,6 +88,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 		}),
 	})
 	const ans = await res.json()
+	let cantNoticias = 0;
 	if (ans.ok) {
 		await inicioSesion(ans.usuario)
 		if (ans.usuario.rol == 'empresa') {
@@ -99,6 +100,19 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 			} else {
 				empresasLoad([])
 			}
+			Alert.alert(
+				"Bienvenido!",
+				ans.usuario.nombre,
+				[
+					{
+						text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
+							rol: ans.usuario.rol,
+							cantNoticias: 0
+						})
+					}
+				],
+				{ cancelable: false }
+			);
 		} else {
 			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
 			let ans2 = await res2.json()
@@ -112,6 +126,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 						Object.values(empresa.recorridos).map((recorrido) => {
 							Object.values(ans3.recorridos).map(reco => {
 								if (recorrido.id == reco.id) {
+									cantNoticias = cantNoticias + (reco.Noticias != undefined && reco.Noticias != null ? Object.keys(reco.Noticias).length : 0)
 									reco = {
 										...reco,
 										rut: '' + empresa.rut,
@@ -124,21 +139,22 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					}
 				})).then(() => {
 					empresasLoad(Object.values(empresas))
+					Alert.alert(
+						"Bienvenido!",
+						ans.usuario.nombre,
+						[
+							{
+								text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
+									rol: ans.usuario.rol,
+									cantNoticias: cantNoticias
+								})
+							}
+						],
+						{ cancelable: false }
+					);
 				})
 			}
 		}
-		Alert.alert(
-			"Bienvenido!",
-			ans.usuario.nombre,
-			[
-				{
-					text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
-						rol: ans.usuario.rol
-					})
-				}
-			],
-			{ cancelable: false }
-		);
 	} else {
 		await logout()
 		Alert.alert(

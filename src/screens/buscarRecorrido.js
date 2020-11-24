@@ -6,53 +6,54 @@ import { connect } from 'react-redux'
 import moment from 'moment';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { back } from '../../env'
 
-const recorridos = {
-    "Horarios": {
-        "707c47a8-9706-4510-951d-6b2b1714dcb5": {
-            "conductor": "",
-            "dias": [{
-                "activo": true,
-                "dia": "Lu",
-                "id": "00"
-            }, {
-                "activo": false,
-                "dia": "Ma",
-                "id": "01"
-            }, {
-                "activo": true,
-                "dia": "Mi",
-                "id": "02"
-            }, {
-                "activo": false,
-                "dia": "Ju",
-                "id": "03"
-            }, {
-                "activo": false,
-                "dia": "Vi",
-                "id": "04"
-            }, {
-                "activo": true,
-                "dia": "Sa",
-                "id": "05"
-            }, {
-                "activo": false,
-                "dia": "Do",
-                "id": "06"
-            }],
-            "horaInicio": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
-            "horaTermino": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
-            "id": "707c47a8-9706-4510-951d-6b2b1714dcb5",
-            "patente": ""
-        }
-    }
-}
+// const recorridos = {
+//     "Horarios": {
+//         "707c47a8-9706-4510-951d-6b2b1714dcb5": {
+//             "conductor": "",
+//             "dias": [{
+//                 "activo": true,
+//                 "dia": "Lu",
+//                 "id": "00"
+//             }, {
+//                 "activo": false,
+//                 "dia": "Ma",
+//                 "id": "01"
+//             }, {
+//                 "activo": true,
+//                 "dia": "Mi",
+//                 "id": "02"
+//             }, {
+//                 "activo": false,
+//                 "dia": "Ju",
+//                 "id": "03"
+//             }, {
+//                 "activo": false,
+//                 "dia": "Vi",
+//                 "id": "04"
+//             }, {
+//                 "activo": true,
+//                 "dia": "Sa",
+//                 "id": "05"
+//             }, {
+//                 "activo": false,
+//                 "dia": "Do",
+//                 "id": "06"
+//             }],
+//             "horaInicio": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
+//             "horaTermino": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
+//             "id": "707c47a8-9706-4510-951d-6b2b1714dcb5",
+//             "patente": ""
+//         }
+//     }
+// }
 const mode = 'time'
 
 function buscarRecorrido({ user, empresas, navigation, route }) {
     const week = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     const [selectedId, setSelectedId] = useState(null)
-    const [editar, setEditar] = useState(false)
+    const [search, setSearch] = useState(false)
     const [dia, setDia] = useState((new Date().getDay() - 1))
     const [date, setDate] = useState((new Date()));
     const [date2, setDate2] = useState((new Date()));
@@ -60,12 +61,13 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
     const [modalVisible2, setModalVisible2] = useState(false)
     const [show, setShow] = useState(false)
     const [show2, setShow2] = useState(false)
+    const [recorridos, setRecorridos] = useState([])
     const [dataSearch, setdataSearch] = useState({
-        origen: 'Origen',
-        destino: 'Destino',
-        dia: '',
+        origen: 'La Ribera',
+        destino: 'San Carlo',
+        dia,
         horaInicio: new Date(),
-        horaTermino: '',
+        horaTermino: new Date(),
     })
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date
@@ -99,7 +101,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={[styles.texto]}>{item.empresa}Nombre Empresa</Text>
+                        <Text style={[styles.texto]}>{item.nombre}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -212,10 +214,21 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
-                                publicar(navigation, dataSearch)
+                                publicar(navigation, dataSearch).then((recos) => {
+                                    setRecorridos(recos)
+                                    setSearch(true)
+                                })
+                                setModalVisible(false)
                             }}
                         >
-                            <Text style={styles.textStyle} onPress={() => setModalVisible(false)}>Buscar</Text>
+                            <Text style={styles.textStyle} onPress={() => {
+
+                                publicar(navigation, dataSearch).then((recos) => {
+                                    setRecorridos(recos)
+                                    setSearch(true)
+                                })
+                                setModalVisible(false)
+                            }}>Buscar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -254,16 +267,20 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                         setModalVisible(!modalVisible)
                     }}>
-                        <Text style={[styles.texto4, { color: 'white' }]}>Horario</Text>
+                        <Text style={[styles.texto4, { color: 'white' }]}>{moment(date).format('HH:mm') + '-' + moment(date2).format('HH:mm')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <FlatList
-                data={Object.values(recorridos.Horarios)}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                extraData={selectedId}
-            />
+            {recorridos.length <= 0 ? (
+                search ? (<Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>No se encontraron recorridos</Text>) : (<Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Seleccione las opciones para comenzar a buscar</Text>)
+            ) : (
+                    <FlatList
+                        data={recorridos}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        extraData={selectedId}
+                    />
+                )}
         </View>
     );
 }
@@ -277,32 +294,55 @@ const publicar = async (navigation, dataSearch) => {
         body: JSON.stringify({
             origen: dataSearch.origen,
             destino: dataSearch.destino,
-            dia: dataSearch.dia,
-            horaInicio: dataSearch.horaInicio,
-            horaTermino: dataSearch.horaTermino,
         }),
     })
     res = await res.json()
     if (res.ok) {
-        Alert.alert(
-            "Genial!",
-            'Estos son los recorridos en el horaio que pusiste!',
-            [
-                {
-                    text: "OK", onPress: () => navigation.navigate('Bienvenida')
+        let horaInicio = new Date(dataSearch.horaInicio)
+        let horaTermino = new Date(dataSearch.horaTermino)
+
+        let recorridos = res.recorridos
+        let res2 = {}
+        let todo = []
+        todo = await recorridos.map(async recorrido => {
+            res2 = await fetch(back + 'getRecorridoById?empresa=' + recorrido.empresa + '&recorrido=' + recorrido.recorrido)
+            res2 = await res2.json()
+            if (res2.ok) {
+                if (res2.recorrido.Horarios != undefined && res2.recorrido.Horarios != null) {
+                    let horarios = Object.values(res2.recorrido.Horarios)
+                    let todo2 = horarios.map(horario => {
+                        if (horario.dias[dataSearch.dia].activo) {
+                            let horaI = new Date(horario.horaInicio)
+                            if (horaI.getHours() >= horaInicio.getHours() && horaI.getHours() <= horaTermino.getHours()) {
+                                if (horaI.getHours() == horaTermino.getHours()) {
+                                    if (horaI.getMinutes() <= horaTermino.getMinutes()) {
+                                        return { ...horario, nombre: recorrido.nombre }
+                                    }
+                                } else {
+                                    return { ...horario, nombre: recorrido.nombre }
+                                }
+                            }
+                        }
+                    })
+
+                    return todo2.filter(x => x != null && x != undefined)
                 }
-            ],
-            { cancelable: false }
-        );
+            }
+        })
+
+        return Promise.all(todo).then((recorridos) => {
+            let recos = []
+            recorridos.map(x => {
+                x.map(y => {
+                    recos.push({
+                        ...y
+                    })
+                })
+            })
+            return recos
+        })
     } else {
-        Alert.alert(
-            "Oh no! algo anda mal",
-            'No se ha podido agregar su recorrido:\n' + res.mensaje,
-            [
-                { text: "Volver a intentar" }
-            ],
-            { cancelable: false }
-        );
+        return []
     }
 }
 

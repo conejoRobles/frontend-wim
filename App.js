@@ -6,7 +6,7 @@ import Home from './src/screens/Home'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { DrawerActions, NavigationContainer } from '@react-navigation/native'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer'
 import Login from './src/screens/Login'
 import PasajeroRegistration from './src/screens/PasajeroRegistration'
 import EmpresaRegistration from './src/screens/EmpresaRegistration'
@@ -35,12 +35,17 @@ const BuscarStack = createStackNavigator()
 const RutasStack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
-
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
-
-
+let noticias = 0
+const getTotalNoticias = () => {
+  return noticias
+}
+const setTotalNoticias = (valor) => {
+  noticias = valor
+  return noticias
+}
 function leftButton({ navigation }) {
 
   return (
@@ -93,6 +98,7 @@ function AuthStackScreen({ navigation }) {
               </TouchableOpacity>
             )
           },
+          number: 5,
           headerStyle: { backgroundColor: '#e84c22' },
           headerTitleStyle: { color: 'white' },
           headerRight: rightButton
@@ -156,7 +162,11 @@ function RutasStackScreenEmpresa() {
   )
 }
 
-function TabPasajero() {
+function TabPasajero({ navigation, route }) {
+
+
+  let cant2 = getTotalNoticias()
+
   return (
     <Tab.Navigator
       initialRouteName="Bienvenida"
@@ -193,7 +203,7 @@ function TabPasajero() {
         name="NoticiaPasajero"
         component={NoticiaPasajeroStackScreen}
         options={{
-          tabBarBadge: 3,
+          tabBarBadge: cant2,
           tabBarIcon: ({ color }) => (
             <FontAwesome5
               name={'bell'}
@@ -232,7 +242,6 @@ function TabEmpresa() {
         name="NoticiaEmpresa"
         component={NoticiaEmpresaStackScreen}
         options={{
-          tabBarBadge: 3,
           tabBarIcon: ({ color }) => (
             <FontAwesome5
               name={'bell'}
@@ -247,7 +256,8 @@ function TabEmpresa() {
 }
 
 function PrincipalDrawer({ route, navigation }) {
-  const { rol } = route.params
+  const { rol, cantNoticias } = route.params
+  setTotalNoticias(cantNoticias)
   return (
     <Drawer.Navigator>
       { rol == 'empresa' ? (

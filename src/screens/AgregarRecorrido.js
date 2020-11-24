@@ -280,6 +280,7 @@ const editarRec = async (navigation, user, recorrido, editarRecorrido) => {
             id: recorrido.id,
             origen: recorrido.origen,
             destino: recorrido.destino,
+            nombre: user.nombre,
             Oldorigen: recorrido.Oldorigen,
             Olddestino: recorrido.Olddestino,
             precios: recorrido.precios,
@@ -321,6 +322,7 @@ const publicar = async (navigation, user, recorrido, agregarRec) => {
             id: recorrido.id,
             origen: recorrido.origen,
             destino: recorrido.destino,
+            nombre: user.nombre,
             precios: recorrido.precios,
         }),
     })
