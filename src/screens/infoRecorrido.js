@@ -4,49 +4,52 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
+import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-function infoRecorrido(){
+function infoRecorrido({ navigation, route }) {
+    const { item } = route.params
+    console.log('ITEM: ', item)
     const [fav, setFav] = useState(false)
     return (
-        <View style={[styles.container,{padding: 20}]}>
+        <View style={[styles.container, { padding: 20 }]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={[styles.texto2, {marginBottom: 20}]}>Nombre Empresita c: ajsdlkjsd</Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={[styles.texto2, { marginBottom: 20 }]}>{item.nombre}</Text>
             </View>
-            <View style={{borderTopWidth: 1, borderTopColor:'#e84c22'}}>
+            <View style={{ borderTopWidth: 1, borderTopColor: '#e84c22' }}>
                 <Text style={[styles.texto]}>Recorrido:</Text>
-                <Text style={[styles.texto3, {marginBottom: 20}]}>San Carlos - La Ribera</Text>
+                <Text style={[styles.texto3, { marginBottom: 20 }]}>{item.origen} - {item.destino} </Text>
             </View>
-            <View style={{borderTopWidth: 1, borderTopColor:'#e84c22'}}>
+            <View style={{ borderTopWidth: 1, borderTopColor: '#e84c22' }}>
                 <Text style={[styles.texto]}>Horario:</Text>
-                <Text style={[styles.texto3, {marginBottom: 20}]}>13:00 - 13:40</Text>
+                <Text style={[styles.texto3, { marginBottom: 20 }]}>{moment(item.horaInicio).format('HH:mm')} - {moment(item.horaTermino).format('HH:mm')} </Text>
             </View>
-            <View style={{borderTopWidth: 1, borderTopColor:'#e84c22'}}>
+            <View style={{ borderTopWidth: 1, borderTopColor: '#e84c22' }}>
                 <Text style={[styles.texto]}>Conductor:</Text>
-                <Text style={[styles.texto3, {marginBottom: 20}]}>Juanito Alcachofa</Text>
+                <Text style={[styles.texto3, { marginBottom: 20 }]}>Juanito Alcachofa</Text>
             </View>
-            <View style={{borderTopWidth: 1, borderTopColor:'#e84c22'}}>
+            <View style={{ borderTopWidth: 1, borderTopColor: '#e84c22' }}>
                 <Text style={[styles.texto]}>Patente:</Text>
-                <Text style={[styles.texto3, {marginBottom: 20}]}>XX-XX-00</Text>
+                <Text style={[styles.texto3, { marginBottom: 20 }]}>XX-XX-00</Text>
             </View>
-            <View style={[{alignItems: 'center', borderTopWidth: 1, borderTopColor:'#e84c22'}]}>
+            <View style={[{ alignItems: 'center', borderTopWidth: 1, borderTopColor: '#e84c22' }]}>
                 <Text style={[styles.texto]}>Agregar a favoritos</Text>
-                {fav ? 
-                (<TouchableOpacity style = {[styles.bordes, {width: 70, height: 70, justifyContent:'center',alignItems: 'center', marginTop: 14}]}
-                onPress = {() => {
-                    setFav(false)
-                }}>
-                    <Icon name="heart" size={40} color= '#e84c22' />
-                </TouchableOpacity>
-                ):(
-                <TouchableOpacity style = {[styles.bordes, {width: 70, height: 70, justifyContent:'center',alignItems: 'center', marginTop: 14}]}
-                onPress = {() => {
-                    setFav(true)
-                }}>
-                    <Icon name="heart-o" size={40} color= '#e84c22' />
-                </TouchableOpacity>
-                )}
+                {fav ?
+                    (<TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
+                        onPress={() => {
+                            setFav(false)
+                        }}>
+                        <Icon name="heart" size={40} color='#e84c22' />
+                    </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
+                            onPress={() => {
+                                setFav(true)
+                            }}>
+                            <Icon name="heart-o" size={40} color='#e84c22' />
+                        </TouchableOpacity>
+                    )}
             </View>
         </View>
     )

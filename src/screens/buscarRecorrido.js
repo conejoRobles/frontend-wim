@@ -8,46 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { back } from '../../env'
 
-// const recorridos = {
-//     "Horarios": {
-//         "707c47a8-9706-4510-951d-6b2b1714dcb5": {
-//             "conductor": "",
-//             "dias": [{
-//                 "activo": true,
-//                 "dia": "Lu",
-//                 "id": "00"
-//             }, {
-//                 "activo": false,
-//                 "dia": "Ma",
-//                 "id": "01"
-//             }, {
-//                 "activo": true,
-//                 "dia": "Mi",
-//                 "id": "02"
-//             }, {
-//                 "activo": false,
-//                 "dia": "Ju",
-//                 "id": "03"
-//             }, {
-//                 "activo": false,
-//                 "dia": "Vi",
-//                 "id": "04"
-//             }, {
-//                 "activo": true,
-//                 "dia": "Sa",
-//                 "id": "05"
-//             }, {
-//                 "activo": false,
-//                 "dia": "Do",
-//                 "id": "06"
-//             }],
-//             "horaInicio": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
-//             "horaTermino": "Tue Nov 03 2020 13:57:32 GMT-0300 (-03)",
-//             "id": "707c47a8-9706-4510-951d-6b2b1714dcb5",
-//             "patente": ""
-//         }
-//     }
-// }
+
 const mode = 'time'
 
 function buscarRecorrido({ user, empresas, navigation, route }) {
@@ -95,7 +56,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate('InfoRecorrido', {
-
+                    item
                 })}
                 style={[styles.button, styles.bordes]}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -175,7 +136,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                                 <Picker.Item label='Domingo' value="6" />
                             </Picker>
                         </View>
-                        <Text style={styles.modalText}>Hora Salida</Text>
+                        <Text style={styles.modalText}>Hora mínima de salida</Text>
                         <View style={styles.inputView}>
                             <TouchableOpacity style={{ paddingLeft: 10 }} onPress={showTimepicker}>
                                 <TextInput
@@ -187,7 +148,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.modalText}>Hora llegada</Text>
+                        <Text style={styles.modalText}>Hora máxima de salida</Text>
                         <View style={styles.inputView}>
                             <TouchableOpacity style={{ paddingLeft: 10 }} onPress={showTimepicker2}>
                                 <TextInput
@@ -316,10 +277,10 @@ const publicar = async (navigation, dataSearch) => {
                             if (horaI.getHours() >= horaInicio.getHours() && horaI.getHours() <= horaTermino.getHours()) {
                                 if (horaI.getHours() == horaTermino.getHours()) {
                                     if (horaI.getMinutes() <= horaTermino.getMinutes()) {
-                                        return { ...horario, nombre: recorrido.nombre }
+                                        return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino }
                                     }
                                 } else {
-                                    return { ...horario, nombre: recorrido.nombre }
+                                    return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino }
                                 }
                             }
                         }

@@ -37,6 +37,7 @@ const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
+
 ]);
 let noticias = 0
 const getTotalNoticias = () => {
