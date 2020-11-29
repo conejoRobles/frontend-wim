@@ -15,7 +15,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
     const week = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     const [selectedId, setSelectedId] = useState(null)
     const [search, setSearch] = useState(false)
-    const [dia, setDia] = useState((new Date().getDay() - 1))
+    const [dia, setDia] = useState((new Date().getDay() - 1) < 0 ? 6 : (new Date().getDay() - 1))
     const [date, setDate] = useState((new Date()));
     const [date2, setDate2] = useState((new Date()));
     const [modalVisible, setModalVisible] = useState(false)
@@ -24,8 +24,8 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
     const [show2, setShow2] = useState(false)
     const [recorridos, setRecorridos] = useState([])
     const [dataSearch, setdataSearch] = useState({
-        origen: 'La Ribera',
-        destino: 'San Carlo',
+        origen: 'Origen',
+        destino: 'Destino',
         dia,
         horaInicio: new Date(),
         horaTermino: new Date(),
@@ -277,10 +277,12 @@ const publicar = async (navigation, dataSearch) => {
                             if (horaI.getHours() >= horaInicio.getHours() && horaI.getHours() <= horaTermino.getHours()) {
                                 if (horaI.getHours() == horaTermino.getHours()) {
                                     if (horaI.getMinutes() <= horaTermino.getMinutes()) {
-                                        return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino }
+
+                                        return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa }
                                     }
                                 } else {
-                                    return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino }
+
+                                    return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa }
                                 }
                             }
                         }

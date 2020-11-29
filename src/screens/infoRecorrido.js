@@ -6,11 +6,13 @@ import { logout } from '../store/actions/user'
 import { back } from '../../env'
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { FlatList } from "react-native-gesture-handler";
 
 function infoRecorrido({ navigation, route }) {
     const { item } = route.params
     const [fav, setFav] = useState(false)
     return (
+
         <View style={[styles.container, { padding: 20 }]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -45,6 +47,8 @@ function infoRecorrido({ navigation, route }) {
                         <TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                             onPress={() => {
                                 setFav(true)
+                                console.log(item)
+                                // agregarFav(item)
                             }}>
                             <Icon name="heart-o" size={40} color='#e84c22' />
                         </TouchableOpacity>
