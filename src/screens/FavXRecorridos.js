@@ -88,6 +88,10 @@ function FavXRecorridos({ navigation, empresas, route }) {
                 item={item}
                 onPress={() => {
                     setSelectedId(item.id)
+                    navigation.navigate('InfoRecorrido', {
+                        item,
+                        favo: true,
+                    })
                 }}
                 style={{ backgroundColor }}
             />

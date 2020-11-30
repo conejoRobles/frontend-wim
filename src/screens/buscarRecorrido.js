@@ -56,7 +56,8 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate('InfoRecorrido', {
-                    item
+                    item,
+                    favo: false
                 })}
                 style={[styles.button, styles.bordes]}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>

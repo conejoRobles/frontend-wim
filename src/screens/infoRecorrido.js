@@ -10,10 +10,10 @@ import { FlatList } from "react-native-gesture-handler";
 import { agregarHo, eliminarHorario } from '../store/actions/horarios'
 
 function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
-    const { item } = route.params
-    const [fav, setFav] = useState(false)
+    const { item, favo } = route.params
+    console.log(item)
+    const [fav, setFav] = useState(favo)
     return (
-
         <View style={[styles.container, { padding: 20 }]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -41,6 +41,7 @@ function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
                     (<TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                         onPress={() => {
                             setFav(false)
+                            removeFav(item, agregarHo, user, empresas, navigation)
                         }}>
                         <Icon name="heart" size={40} color='#e84c22' />
                     </TouchableOpacity>
@@ -108,6 +109,49 @@ const agregarFav = async (item, agregarHo, user, empresas, navigation) => {
     }
 }
 
+const removeFav = async (item, agregarHo, user, empresas, navigation) => {
+    let res = await fetch(back + 'removeFavorito', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify({
+            rut: user.rut,
+            origen: item.origen,
+            destino: item.destino,
+            empresa: item.empresa,
+            nombreEmpresa: item.nombre,
+            recorrido: item.recorrido,
+            id: item.id
+        }),
+    })
+    res = await res.json()
+    if (res.ok) {
+        Alert.alert(
+            "El horario ha sido quitado de tus favoritos!",
+            'Ya no recibirás las noticias de este horario',
+            [
+                {
+                    text: "OK", onPress: () => navigation.navigate('InfoRecorrido', {
+                        item,
+                        fav: false
+                    })
+                }
+            ],
+            { cancelable: false }
+        );
+
+    } else {
+        Alert.alert(
+            "Oh no! algo anda mal",
+            'No se ha podido quitar de favoritos, intente nuevamente',
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+    }
+}
 const styles = StyleSheet.create({
     header: {
         width: '100%',

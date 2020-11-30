@@ -41,8 +41,6 @@ const DATA = [
 ]
 
 const Item = ({ item, onPress, style }) => {
-    let destinos = Object.values(item).filter(x => x.id != undefined && x.id != null)
-    // console.log(Object.values(destinos))
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, styles.bordes, style]}>
             <Text style={styles.texto}>{item.origen}</Text>
@@ -78,7 +76,9 @@ function Bienvenida({ user, empresas, navigation }) {
                     if (res.ok) {
                         return ({
                             ...z,
-                            ...res.horario
+                            ...res.horario,
+                            origen: y.origen,
+                            destino: y.destino
                         })
                     }
                 })

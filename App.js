@@ -148,6 +148,7 @@ function RutasStackScreen() {
     <RutasStack.Navigator>
       <RutasStack.Screen name="Bienvenida" component={Bienvenida} />
       <RutasStack.Screen name="FavXRecorridos" component={FavXRecorridos} />
+      <NoticiaStack.Screen name="InfoRecorrido" component={infoRecorrido} />
     </RutasStack.Navigator>
   )
 }
