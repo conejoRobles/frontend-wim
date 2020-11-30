@@ -61,29 +61,27 @@ const Item = ({ item, onPress, style }) => (
     <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
         <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
             <View style={{ flex: 2.5 }}>
-                <TouchableOpacity style = {[styles.bordes2, {width: 70, height: 70, alignSelf:'center',justifyContent:'center',alignItems: 'center'}]}>
-                    <Icon name="heart" size={40} color= '#e84c22' />
+                <TouchableOpacity style={[styles.bordes2, { width: 70, height: 70, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}>
+                    <Icon name="heart" size={40} color='#e84c22' />
                 </TouchableOpacity>
             </View>
             <View style={{ flex: 5 }}>
-                <Text style={styles.texto2}>{item.empresa}</Text>
-                <Text style={styles.texto}>{item.HorarioSalida} - {item.HorarioLlegada}</Text>
+                <Text style={styles.texto2}>{item.HorarioSalida} - {item.HorarioLlegada}</Text>
+                <Text style={styles.texto}>{item.nombre}</Text>
             </View>
         </View>
     </TouchableOpacity>
 )
 
-function FavXRecorridos({ navigation, empresas }) {
+function FavXRecorridos({ navigation, empresas, route }) {
     const [selectedId, setSelectedId] = useState(null)
+    const { recorrido } = route.params
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
             <Item
                 item={item}
                 onPress={() => {
-                    // navigation.navigate('NoticiasXRecorridoPasajero', {
-                    //     noticias: item.Noticias ? Object.values(item.Noticias) : []
-                    // })
                     setSelectedId(item.id)
                 }}
                 style={{ backgroundColor }}
@@ -94,18 +92,18 @@ function FavXRecorridos({ navigation, empresas }) {
         <View style={styles.container}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View>
-                <Text style={[styles.texto4, {textAlign: 'center', marginTop: 20}]}>San Carlos - Chillán</Text>
+                <Text style={[styles.texto4, { textAlign: 'center', marginTop: 20 }]}>{recorrido.origen} - {recorrido.destino}</Text>
             </View>
             {
-                DATA.length > 0 ? (
+                Object.values(recorrido.Horarios).length > 0 ? (
                     <FlatList
-                        data={DATA}
+                        data={Object.values(recorrido.Horarios)}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}
                     />
                 ) : (
-                        <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>No sigues ningun recorrido</Text>
+                        <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>No sigues ningun horario</Text>
                     )
             }
         </View>
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
     },
     texto4: {
         color: '#e84c22',
-        fontSize: 35,
+        fontSize: 28,
         fontWeight: 'bold',
         textAlign: 'center'
     },

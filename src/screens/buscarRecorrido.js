@@ -100,10 +100,52 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
-                                setModalVisible2(!modalVisible2)
+                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                    publicar(navigation, dataSearch).then((recos) => {
+                                        setRecorridos(recos)
+                                        setSearch(true)
+                                    })
+                                    setModalVisible2(false)
+                                } else {
+                                    Alert.alert(
+                                        "Falta algo más!",
+                                        "Debes agregar un origen y un destino",
+                                        [
+                                            {
+                                                text: "OK", onPress: () => {
+                                                    setModalVisible(false)
+                                                    setModalVisible2(true)
+                                                }
+                                            }
+                                        ],
+                                        { cancelable: false }
+                                    );
+                                }
                             }}
                         >
-                            <Text style={styles.textStyle} onPress={() => setModalVisible2(!modalVisible2)}>Aceptar</Text>
+                            <Text style={styles.textStyle} onPress={() => {
+                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                    publicar(navigation, dataSearch).then((recos) => {
+                                        setRecorridos(recos)
+                                        setSearch(true)
+                                    })
+                                    setModalVisible2(false)
+                                } else {
+                                    Alert.alert(
+                                        "Falta algo más!",
+                                        "Debes agregar un origen y un destino",
+                                        [
+                                            {
+                                                text: "OK", onPress: () => {
+                                                    setModalVisible(false)
+                                                    setModalVisible2(true)
+                                                }
+                                            }
+                                        ],
+                                        { cancelable: false }
+                                    );
+                                }
+                            }}>Aceptar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -175,20 +217,51 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
-                                publicar(navigation, dataSearch).then((recos) => {
-                                    setRecorridos(recos)
-                                    setSearch(true)
-                                })
-                                setModalVisible(false)
+                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                    publicar(navigation, dataSearch).then((recos) => {
+                                        setRecorridos(recos)
+                                        setSearch(true)
+                                    })
+                                    setModalVisible(false)
+                                } else {
+                                    Alert.alert(
+                                        "Falta algo más!",
+                                        "Debes agregar un origen y un destino",
+                                        [
+                                            {
+                                                text: "OK", onPress: () => {
+                                                    setModalVisible(false)
+                                                    setModalVisible2(true)
+                                                }
+                                            }
+                                        ],
+                                        { cancelable: false }
+                                    );
+                                }
                             }}
                         >
                             <Text style={styles.textStyle} onPress={() => {
-
-                                publicar(navigation, dataSearch).then((recos) => {
-                                    setRecorridos(recos)
-                                    setSearch(true)
-                                })
-                                setModalVisible(false)
+                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                    publicar(navigation, dataSearch).then((recos) => {
+                                        setRecorridos(recos)
+                                        setSearch(true)
+                                    })
+                                    setModalVisible(false)
+                                } else {
+                                    Alert.alert(
+                                        "Falta algo más!",
+                                        "Debes agregar un origen y un destino",
+                                        [
+                                            {
+                                                text: "OK", onPress: () => {
+                                                    setModalVisible(false)
+                                                    setModalVisible2(true)
+                                                }
+                                            }
+                                        ],
+                                        { cancelable: false }
+                                    );
+                                }
                             }}>Buscar</Text>
                         </TouchableOpacity>
                     </View>
@@ -261,7 +334,6 @@ const publicar = async (navigation, dataSearch) => {
     if (res.ok) {
         let horaInicio = new Date(dataSearch.horaInicio)
         let horaTermino = new Date(dataSearch.horaTermino)
-
         let recorridos = res.recorridos
         let res2 = {}
         let todo = []
@@ -281,7 +353,6 @@ const publicar = async (navigation, dataSearch) => {
                                         return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa }
                                     }
                                 } else {
-
                                     return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa }
                                 }
                             }
@@ -291,6 +362,7 @@ const publicar = async (navigation, dataSearch) => {
                     return todo2.filter(x => x != null && x != undefined)
                 }
             }
+            return []
         })
 
         return Promise.all(todo).then((recorridos) => {

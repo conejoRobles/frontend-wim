@@ -39,16 +39,28 @@ const DATA = [
     },
 ]
 
-const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.button, styles.bordes, style]}>
-        <Text style={styles.texto}>{item.origen}</Text>
-        <Text style={styles.texto}>-</Text>
-        <Text style={styles.texto}>{item.destino}</Text>
-    </TouchableOpacity>
-)
+const Item = ({ item, onPress, style }) => {
+    let destinos = Object.values(item).filter(x => x.id != undefined && x.id != null)
+    // console.log(Object.values(destinos))
+    return (
+        <TouchableOpacity onPress={onPress} style={[styles.button, styles.bordes, style]}>
+            <Text style={styles.texto}>{item.origen}</Text>
+            <Text style={styles.texto}>-</Text>
+            <Text style={styles.texto}>{item.destino}</Text>
+        </TouchableOpacity>
+    )
+}
 
 function Bienvenida({ user, empresas, navigation }) {
     const [selectedId, setSelectedId] = useState(null)
+    let destinos = empresas.data.filter(x => x.id != undefined && x.id != null)
+    let data = []
+    destinos.map(x => {
+        let aux = Object.values(x).filter(x => x.id != null && x.id != undefined)
+        aux.map(y => {
+            data.push(y)
+        })
+    })
     const renderItem = ({ item }) => {
         const backgroundColor = "#e84c22";
         return (
@@ -56,13 +68,15 @@ function Bienvenida({ user, empresas, navigation }) {
                 item={item}
                 onPress={() => {
                     setSelectedId(item.id)
-                    if(user.rol == 'empresa'){
+                    if (user.rol == 'empresa') {
                         navigation.navigate('AgregarRecorrido', {
                             isNew: false,
                             reco: item
                         })
-                    }else{
-                        navigation.navigate('FavXRecorridos')
+                    } else {
+                        navigation.navigate('FavXRecorridos', {
+                            recorrido: item
+                        })
                     }
 
                 }}
@@ -91,7 +105,7 @@ function Bienvenida({ user, empresas, navigation }) {
             </View>
 
             {empresas.data.length > 0 ? (<FlatList
-                data={empresas.data}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}

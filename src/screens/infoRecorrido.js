@@ -7,8 +7,9 @@ import { back } from '../../env'
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { FlatList } from "react-native-gesture-handler";
+import { agregarHo, eliminarHorario } from '../store/actions/horarios'
 
-function infoRecorrido({ navigation, route }) {
+function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
     const { item } = route.params
     const [fav, setFav] = useState(false)
     return (
@@ -47,8 +48,7 @@ function infoRecorrido({ navigation, route }) {
                         <TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                             onPress={() => {
                                 setFav(true)
-                                console.log(item)
-                                // agregarFav(item)
+                                agregarFav(item, agregarHo, user, empresas, navigation)
                             }}>
                             <Icon name="heart-o" size={40} color='#e84c22' />
                         </TouchableOpacity>
@@ -56,6 +56,56 @@ function infoRecorrido({ navigation, route }) {
             </View>
         </View>
     )
+}
+
+const agregarFav = async (item, agregarHo, user, empresas, navigation) => {
+    let res = await fetch(back + 'addFavorito', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify({
+            rut: user.rut,
+            origen: item.origen,
+            destino: item.destino,
+            empresa: item.empresa,
+            nombreEmpresa: item.nombre,
+            recorrido: item.recorrido,
+            id: item.id
+        }),
+    })
+    res = await res.json()
+    if (res.ok) {
+        let recorrido = {
+            id: item.recorrido
+        }
+        let horario = {
+            id: item.id
+        }
+        //agregarHo({ horario, recorrido })
+        Alert.alert(
+            "El horario ha sido guardado!",
+            'Ahora recibirás las noticias de este horario',
+            [
+                {
+                    text: "OK", onPress: () => navigation.navigate('InfoRecorrido', {
+                        item
+                    })
+                }
+            ],
+            { cancelable: false }
+        );
+
+    } else {
+        Alert.alert(
+            "Oh no! algo anda mal",
+            'No se ha podido guardar como favorito, intente nuevamente',
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -139,4 +189,9 @@ const mapStateToProps = state => {
     return state
 }
 
-export default connect(mapStateToProps)(infoRecorrido)
+const mapDispatchToProps = dispatch => ({
+    agregarHo: (horario, recorrido) => dispatch(agregarHo(horario, recorrido)),
+    eliminarHorario: (horario, recorrido) => dispatch(eliminarHorario(horario, recorrido))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(infoRecorrido)
