@@ -133,14 +133,26 @@ function Bienvenida({ user, empresas, navigation }) {
                 </TouchableOpacity>}
             </View>
 
-            {data.length > 0 ? (<FlatList
+            {user.rol == 'empresa' ? (
+                empresas.data.length > 0 ? (
+                    <FlatList
+                        data={empresas.data}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        extraData={selectedId}
+                    />
+                ) : (
+                        <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado recorridos</Text>
+                    )
+            ) : (data.length > 0 ? (<FlatList
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}
             />) : (
                     <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado recorridos</Text>
-                )}
+                ))
+            }
         </View>
     );
 }
