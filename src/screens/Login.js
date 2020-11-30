@@ -61,11 +61,23 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user, logout }) => {
 				<TouchableOpacity
 					style={styles.button}
 					onPress={() => {
-						inicio({
-							email,
-							password,
-						}, navigation, inicioSesion, empresasLoad, user, logout)
-
+						if (email == undefined || email == null || password == null || password == undefined || email == '' || password == '') {
+							Alert.alert(
+								"Oh no!",
+								"Ninguno de los campos puede quedar vacio!",
+								[
+									{
+										text: "OK", onPress: () => navigation.navigate('LoginScreen')
+									}
+								],
+								{ cancelable: false }
+							);
+						} else {
+							inicio({
+								email,
+								password,
+							}, navigation, inicioSesion, empresasLoad, user, logout)
+						}
 					}}
 				>
 					<Text style={styles.textoBoton}>Iniciar sesión</Text>
@@ -124,18 +136,14 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 				favoritos.map(origen => {
 					fav.push(origen)
 				})
-				// console.log('FAAAAV: ', fav)
 				let origenes = Object.values(fav)
 				let data = []
-				// console.log('DESTINO: ', origenes)
 				origenes.map(x => {
 					let aux = Object.values(x).filter(x => x.id != null && x.id != undefined)
-					console.log('AUX: ', aux)
 					aux.map(y => {
 						data.push(y)
 					})
 				})
-				console.log('DATATAAAAA: ', Object.values(fav))
 				let empresas = []
 				Promise.all(aux.map(async (empresa, i) => {
 					let res3 = await fetch(back + 'getRecorridos?rut=' + empresa.rut)

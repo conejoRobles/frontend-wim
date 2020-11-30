@@ -2,76 +2,81 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { Badge } from 'react-native-paper'
 import { connect } from 'react-redux'
+import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-const DATA = [
-    {
-        id: "0",
-        empresa: 'Hola',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "1",
-        empresa: 'Conejo',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "2",
-        empresa: 'Estoy',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "3",
-        empresa: 'Aburrida',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "4",
-        empresa: 'Pero',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "5",
-        empresa: 'Ya',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "6",
-        empresa: 'Termine',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-    {
-        id: "7",
-        empresa: 'c:',
-        HorarioSalida: '10:30',
-        HorarioLlegada: '11:20'
-    },
-]
+// const DATA = [
+//     {
+//         id: "0",
+//         empresa: 'Hola',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "1",
+//         empresa: 'Conejo',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "2",
+//         empresa: 'Estoy',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "3",
+//         empresa: 'Aburrida',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "4",
+//         empresa: 'Pero',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "5",
+//         empresa: 'Ya',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "6",
+//         empresa: 'Termine',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+//     {
+//         id: "7",
+//         empresa: 'c:',
+//         HorarioSalida: '10:30',
+//         HorarioLlegada: '11:20'
+//     },
+// ]
 
 // Crear componente *******************************************
-const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-        <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
-            <View style={{ flex: 2.5 }}>
-                <TouchableOpacity style={[styles.bordes2, { width: 70, height: 70, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}>
-                    <Icon name="heart" size={40} color='#e84c22' />
-                </TouchableOpacity>
+const Item = ({ item, onPress, style }) => {
+    let horaInicio = new Date(item.horaInicio)
+    let horaTermino = new Date(item.horaTermino)
+    return (
+        <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+            <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
+                <View style={{ flex: 2.5 }}>
+                    <TouchableOpacity style={[styles.bordes2, { width: 70, height: 70, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}>
+                        <Icon name="heart" size={40} color='#e84c22' />
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flex: 5 }}>
+                    <Text style={styles.texto2}>{moment(horaInicio).format('HH:mm')} - {moment(horaTermino).format('HH:mm')}</Text>
+                    <Text style={styles.texto}>{item.nombre}</Text>
+                </View>
             </View>
-            <View style={{ flex: 5 }}>
-                <Text style={styles.texto2}>{item.HorarioSalida} - {item.HorarioLlegada}</Text>
-                <Text style={styles.texto}>{item.nombre}</Text>
-            </View>
-        </View>
-    </TouchableOpacity>
-)
+        </TouchableOpacity>
+    )
+}
 
 function FavXRecorridos({ navigation, empresas, route }) {
     const [selectedId, setSelectedId] = useState(null)

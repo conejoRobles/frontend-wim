@@ -5,6 +5,7 @@ import Constants from 'expo-constants'
 import { connect } from 'react-redux'
 import { LinearGradient } from 'expo-linear-gradient';
 import empresas from '../store/reducers/empresas'
+import { back } from '../../env'
 
 const DATA = [
     {
@@ -51,13 +52,41 @@ const Item = ({ item, onPress, style }) => {
     )
 }
 
+
 function Bienvenida({ user, empresas, navigation }) {
     const [selectedId, setSelectedId] = useState(null)
     let destinos = empresas.data.filter(x => x.id != undefined && x.id != null)
     let data = []
-    destinos.map(x => {
+    destinos.map(async x => {
         let aux = Object.values(x).filter(x => x.id != null && x.id != undefined)
-        aux.map(y => {
+        aux.map(async y => {
+            if (y.Horarios != null && y.Horarios != undefined) {
+                let horarios = []
+                horarios = Object.values(y.Horarios).map(async z => {
+                    let res = await fetch(back + 'searchHorario', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'Application/json',
+                        },
+                        body: JSON.stringify({
+                            empresa: z.empresa,
+                            recorrido: z.recorrido,
+                            horario: z.id
+                        }),
+                    })
+                    res = await res.json()
+                    if (res.ok) {
+                        return ({
+                            ...z,
+                            ...res.horario
+                        })
+                    }
+                })
+                Promise.all(horarios).then((horar) => {
+                    // console.log(horar)
+                    y.Horarios = horar
+                })
+            }
             data.push(y)
         })
     })
@@ -104,7 +133,7 @@ function Bienvenida({ user, empresas, navigation }) {
                 </TouchableOpacity>}
             </View>
 
-            {empresas.data.length > 0 ? (<FlatList
+            {data.length > 0 ? (<FlatList
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
