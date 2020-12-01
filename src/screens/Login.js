@@ -126,10 +126,10 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 				{ cancelable: false }
 			)
 		} else {
+
 			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
 			let ans2 = await res2.json()
 			if (ans2.ok) {
-				let aux = Object.values(ans2.empresas)
 				let favoritos = Object.values(ans2.favoritos)
 				let fav = []
 				favoritos.map(origen => {
@@ -173,22 +173,25 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					})
 				})
 				empresasLoad(Object.values(fav))
-				Alert.alert(
-					"Bienvenido!",
-					ans.usuario.nombre,
-					[
-						{
-							text: "OK", onPress: () => {
-								navigation.navigate('PrincipalDrawer', {
-									rol: ans.usuario.rol,
-									cantNoticias: cantNoticias
-								})
-							}
-						}
-					],
-					{ cancelable: false }
-				);
+			} else {
+				empresasLoad([])
 			}
+
+			Alert.alert(
+				"Bienvenido!",
+				ans.usuario.nombre,
+				[
+					{
+						text: "OK", onPress: () => {
+							navigation.navigate('PrincipalDrawer', {
+								rol: ans.usuario.rol,
+								cantNoticias: cantNoticias
+							})
+						}
+					}
+				],
+				{ cancelable: false }
+			);
 		}
 	} else {
 		await logout()

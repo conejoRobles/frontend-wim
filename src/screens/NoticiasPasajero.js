@@ -68,22 +68,27 @@ const Item = ({ item, onPress, style }) => {
     }
     return (
         <>
-            {cantNoticias <= 0 ? (<></>) : (<TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-                <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
-                    <View style={{ flex: 2 }}>
-                        <View style={styles.foto}>
-                            <Text style={styles.texto3}>{item.origen.charAt(0)}</Text>
-                            <View style={{ width: '100%', height: '100%', zIndex: 0, position: 'absolute' }}>
-                                {cantNoticias <= 0 ? (<></>) : (<Badge size={25} >{cantNoticias}</Badge>)}
+            {cantNoticias > 0 ? (
+                <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+                    <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
+                        <View style={{ flex: 2 }}>
+                            <View style={styles.foto}>
+                                <Text style={styles.texto3}>{item.origen.charAt(0)}</Text>
+                                <View style={{ width: '100%', height: '100%', zIndex: 0, position: 'absolute' }}>
+                                    {cantNoticias <= 0 ? (<></>) : (<Badge size={25} >{cantNoticias}</Badge>)}
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={{ flex: 5 }}>
-                        <Text style={styles.texto2}>{item.origen} - {item.destino}</Text>
+                        <View style={{ flex: 5 }}>
+                            <Text style={styles.texto2}>{item.origen} - {item.destino}</Text>
 
+                        </View>
                     </View>
-                </View>
-            </TouchableOpacity>)}
+                </TouchableOpacity>
+            ) : (
+                    <></>
+                )
+            }
         </>
     )
 }
@@ -117,7 +122,7 @@ function NoticiaPasajero({ navigation, empresas }) {
         <View style={styles.container}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             {
-                empresas.data.length > 0 ? (
+                data.length > 0 ? (
                     <FlatList
                         data={data}
                         renderItem={renderItem}

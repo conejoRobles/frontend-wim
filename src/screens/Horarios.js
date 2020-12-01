@@ -11,59 +11,112 @@ function Horarios({ user, empresas, navigation, route }) {
     const renderItem = ({ item }) => {
         return (
             <>
-                {item.Noticias != null && item.Noticias != undefined ? (
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (forNews) {
-                                navigation.navigate('NoticiasxRecorridoEmpresa', {
-                                    noticias: item.Noticias ? Object.values(item.Noticias) : [],
-                                    recorrido: reco.id,
-                                    horario: item
-                                })
-                            } else {
-                                navigation.navigate('AgregarHorario', {
-                                    isNew: false,
-                                    horario: item,
-                                    recorrido: reco
-                                })
-                            }
-                        }}
-                        style={[styles.button, styles.bordes]}>
-                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                {user.rol == 'pasajero' ? (
+                { user.rol == 'pasajero' ? (
+                    item.Noticias != null && item.Noticias != undefined ? (
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (forNews) {
+                                    navigation.navigate('NoticiasxRecorridoEmpresa', {
+                                        noticias: item.Noticias ? Object.values(item.Noticias) : [],
+                                        recorrido: reco.id,
+                                        horario: item
+                                    })
+                                } else {
+                                    navigation.navigate('AgregarHorario', {
+                                        isNew: false,
+                                        horario: item,
+                                        recorrido: reco
+                                    })
+                                }
+                            }}
+                            style={[styles.button, styles.bordes]}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    {user.rol == 'pasajero' ? (
 
-                                    <Text style={styles.texto}>{item.nombre}</Text>
+                                        <Text style={styles.texto}>{item.nombre}</Text>
 
-                                ) : (
-                                        <FlatList
-                                            horizontal={true}
-                                            data={Object.values(item.dias)}
-                                            renderItem={({ item }) =>
-                                                <View style={[styles.dias]}>
-                                                    {
-                                                        item.activo ? (<LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
-                                                            <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
-                                                        </LinearGradient>)
-                                                            : (
-                                                                <LinearGradient colors={['#f4f4f4', '#fafafa']} style={[styles.dias, { borderWidth: 1, borderColor: '#e84c22', }]}>
-                                                                    <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
-                                                                    <Icon name="close" size={40} style={[styles.icon, { zIndex: 0, position: 'absolute', textAlign: 'center' }]} />
-                                                                </LinearGradient>
-                                                            )
-                                                    }
-                                                </View>
-                                            }
-                                            keyExtractor={(item) => item.id}
-                                            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
-                                        />)}
+                                    ) : (
+                                            <FlatList
+                                                horizontal={true}
+                                                data={Object.values(item.dias)}
+                                                renderItem={({ item }) =>
+                                                    <View style={[styles.dias]}>
+                                                        {
+                                                            item.activo ? (<LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
+                                                                <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
+                                                            </LinearGradient>)
+                                                                : (
+                                                                    <LinearGradient colors={['#f4f4f4', '#fafafa']} style={[styles.dias, { borderWidth: 1, borderColor: '#e84c22', }]}>
+                                                                        <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
+                                                                        <Icon name="close" size={40} style={[styles.icon, { zIndex: 0, position: 'absolute', textAlign: 'center' }]} />
+                                                                    </LinearGradient>
+                                                                )
+                                                        }
+                                                    </View>
+                                                }
+                                                keyExtractor={(item) => item.id}
+                                                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                                            />)}
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    ) : (
+                            <></>
+                        )
                 ) : (
-                        <></>
-                    )}
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (forNews) {
+                                    navigation.navigate('NoticiasxRecorridoEmpresa', {
+                                        noticias: item.Noticias ? Object.values(item.Noticias) : [],
+                                        recorrido: reco.id,
+                                        horario: item
+                                    })
+                                } else {
+                                    navigation.navigate('AgregarHorario', {
+                                        isNew: false,
+                                        horario: item,
+                                        recorrido: reco
+                                    })
+                                }
+                            }}
+                            style={[styles.button, styles.bordes]}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    {user.rol == 'pasajero' ? (
+
+                                        <Text style={styles.texto}>{item.nombre}</Text>
+
+                                    ) : (
+                                            <FlatList
+                                                horizontal={true}
+                                                data={Object.values(item.dias)}
+                                                renderItem={({ item }) =>
+                                                    <View style={[styles.dias]}>
+                                                        {
+                                                            item.activo ? (<LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#e84c22', '#F79F46']} style={[styles.dias]}>
+                                                                <Text style={{ color: 'white', fontWeight: 'bold' }}>{item.dia}</Text>
+                                                            </LinearGradient>)
+                                                                : (
+                                                                    <LinearGradient colors={['#f4f4f4', '#fafafa']} style={[styles.dias, { borderWidth: 1, borderColor: '#e84c22', }]}>
+                                                                        <Text style={{ color: '#e84c22', fontWeight: 'bold' }}>{item.dia}</Text>
+                                                                        <Icon name="close" size={40} style={[styles.icon, { zIndex: 0, position: 'absolute', textAlign: 'center' }]} />
+                                                                    </LinearGradient>
+                                                                )
+                                                        }
+                                                    </View>
+                                                }
+                                                keyExtractor={(item) => item.id}
+                                                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                                            />)}
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                }
             </>
         )
     }

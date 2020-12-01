@@ -98,10 +98,10 @@ const agregarFav = async (item, agregarHo, user, empresas, navigation) => {
 
     } else {
         Alert.alert(
-            "Oh no! algo anda mal",
-            'No se ha podido guardar como favorito, intente nuevamente',
+            "Este horario ya es parte de tus favoritos!",
+            'ya recibes sus noticias!',
             [
-                { text: "Volver a intentar" }
+                { text: "Genial!" }
             ],
             { cancelable: false }
         );
