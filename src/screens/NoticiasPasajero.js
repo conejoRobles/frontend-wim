@@ -57,35 +57,55 @@ const DATA = [
 ]
 
 // Crear componente *******************************************
-const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-        <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
-            <View style={{ flex: 2 }}>
-                <View style={styles.foto}>
-                    <Text style={styles.texto3}>T</Text>
-                    <View style={{ width: '100%', height: '100%', zIndex: 0, position: 'absolute' }}>
-                        <Badge size={25} >{item.Noticias ? Object.values(item.Noticias).length : 0}</Badge>
+const Item = ({ item, onPress, style }) => {
+    let cantNoticias = 0
+    if (item.Horarios != null && item.Horarios != undefined) {
+        item.Horarios.map(x => {
+            if (x.Noticias != null && x.Noticias != undefined) {
+                cantNoticias += Object.values(x.Noticias).length
+            }
+        })
+    }
+    return (
+        <>
+            {cantNoticias <= 0 ? (<></>) : (<TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+                <View style={[styles.bordes, { flex: 1, flexDirection: 'row', height: 120, alignItems: 'center' }]}>
+                    <View style={{ flex: 2 }}>
+                        <View style={styles.foto}>
+                            <Text style={styles.texto3}>{item.origen.charAt(0)}</Text>
+                            <View style={{ width: '100%', height: '100%', zIndex: 0, position: 'absolute' }}>
+                                {cantNoticias <= 0 ? (<></>) : (<Badge size={25} >{cantNoticias}</Badge>)}
+                            </View>
+                        </View>
+                    </View>
+                    <View style={{ flex: 5 }}>
+                        <Text style={styles.texto2}>{item.origen} - {item.destino}</Text>
+
                     </View>
                 </View>
-            </View>
-            <View style={{ flex: 5 }}>
-                <Text style={styles.texto2}>{item.nombre}</Text>
-                <Text style={styles.texto}>{item.origen} - {item.destino}</Text>
-            </View>
-        </View>
-    </TouchableOpacity>
-)
+            </TouchableOpacity>)}
+        </>
+    )
+}
 
 function NoticiaPasajero({ navigation, empresas }) {
     const [selectedId, setSelectedId] = useState(null)
+    let data = []
+    empresas.data.map(x => {
+        let aux = Object.values(x).filter(y => y.id != null && y.id != undefined)
+        aux.map(y => {
+            data.push(y)
+        })
+    })
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
             <Item
                 item={item}
                 onPress={() => {
-                    navigation.navigate('NoticiasXRecorridoPasajero', {
-                        noticias: item.Noticias ? Object.values(item.Noticias) : []
+                    navigation.navigate('Horarios', {
+                        reco: item,
+                        forNews: true
                     })
                     setSelectedId(item.id)
                 }}
@@ -99,7 +119,7 @@ function NoticiaPasajero({ navigation, empresas }) {
             {
                 empresas.data.length > 0 ? (
                     <FlatList
-                        data={empresas.data}
+                        data={data}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}
@@ -130,7 +150,7 @@ const styles = StyleSheet.create({
     },
     texto2: {
         color: '#1F1F1F',
-        fontSize: 25,
+        fontSize: 21,
         fontWeight: 'bold'
     },
     texto4: {

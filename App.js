@@ -118,6 +118,8 @@ function NoticiaPasajeroStackScreen() {
     <NoticiaStack.Navigator>
       <NoticiaStack.Screen name="Noticias" component={NoticiasPasajero} />
       <NoticiaStack.Screen name="NoticiasXRecorridoPasajero" component={NoticiasXRecorridoPasajero} />
+      <NoticiaStack.Screen name="NoticiasxRecorridoEmpresa" component={NoticiasXRecorridoEmpresa} />
+      <RutasStack.Screen name="Horarios" component={Horarios} />
     </NoticiaStack.Navigator>
   )
 }
@@ -206,7 +208,7 @@ function TabPasajero({ navigation, route }) {
         name="NoticiaPasajero"
         component={NoticiaPasajeroStackScreen}
         options={{
-          stabBarBadge: cant2,
+          tabBarBadge: cant2,
           tabBarIcon: ({ color }) => (
             <FontAwesome5
               name={'bell'}

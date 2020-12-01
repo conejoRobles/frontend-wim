@@ -2,28 +2,6 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 
-// const DATA = [
-//     {
-//         id: "0",
-//         origen: 'Chillán',
-//         destino: 'San Carlos'
-//     },
-//     {
-//         id: "1",
-//         origen: 'San Carlos',
-//         destino: 'Chillán'
-//     },
-//     {
-//         id: "2",
-//         origen: 'Chillán',
-//         destino: 'Pinto'
-//     },
-//     {
-//         id: "3",
-//         origen: 'Pinto',
-//         destino: 'Chillán'
-//     },
-// ]
 
 const Item = ({ item, onPress, style }) => (
     <TouchableOpacity onPress={onPress} style={[styles.button, style]}>

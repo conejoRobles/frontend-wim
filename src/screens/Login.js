@@ -178,10 +178,12 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					ans.usuario.nombre,
 					[
 						{
-							text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
-								rol: ans.usuario.rol,
-								cantNoticias: cantNoticias
-							})
+							text: "OK", onPress: () => {
+								navigation.navigate('PrincipalDrawer', {
+									rol: ans.usuario.rol,
+									cantNoticias: cantNoticias
+								})
+							}
 						}
 					],
 					{ cancelable: false }

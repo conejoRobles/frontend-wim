@@ -98,7 +98,22 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
 
             </View>
 
-            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias, horario) }}>
+            <TouchableOpacity style={[styles.button]} onPress={() => {
+                if (noticia.titulo == '') {
+                    Alert.alert(
+                        "Debes agregar un titulo!",
+                        '',
+                        [
+                            {
+                                text: "OK"
+                            }
+                        ],
+                        { cancelable: false }
+                    );
+                } else {
+                    publicar(noticia, agregar, navigation, user, recorrido, noticias, horario)
+                }
+            }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
             </TouchableOpacity>
 
