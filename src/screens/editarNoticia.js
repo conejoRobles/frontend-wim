@@ -7,7 +7,7 @@ import { back } from '../../env'
 
 
 function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
-    const { item, recorrido, noticias } = route.params
+    const { item, recorrido, noticias, horario } = route.params
     const [noticia, setNoticia] = useState({ ...item })
     return (
         <View style={[styles.container]}>
@@ -18,8 +18,6 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
                     style={styles.inputText}
                     value={noticia.titulo}
                     onChangeText={text => setNoticia({ ...noticia, titulo: text })}
-                // placeholderTextColor="grey"
-                // onChangeText={text => setRut(text)}
                 />
             </View>
             <Text style={styles.texto}>Descripción:</Text>
@@ -30,8 +28,6 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
                     maxLength={330}
                     style={styles.inputText}
                     value={noticia.descripcion}
-                    // placeholder="Rut"
-                    // placeholderTextColor="grey"
                     onChangeText={text => setNoticia({ ...noticia, descripcion: text })}
                 />
             </View>
@@ -81,10 +77,10 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
                 </View>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', marginHorizontal: 20 }}>
-                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias, horario) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Eliminar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, user, recorrido, navigation, noticias) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, user, recorrido, navigation, noticias, horario) }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
                 </TouchableOpacity>
             </View>
@@ -94,7 +90,7 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
 }
 
 
-const publicar = async (noticia, editar, user, recorrido, navigation, noticias) => {
+const publicar = async (noticia, editar, user, recorrido, navigation, noticias, horario) => {
     let hoy = new Date(noticia.fechaPublicacion)
     let termino = new Date()
     if (noticia.duracion.unidad == "2") {
@@ -119,6 +115,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias) 
         body: JSON.stringify({
             rut: user.rut,
             recorrido,
+            horario: horario.id,
             id: noticia.id,
             descripcion: noticia.descripcion,
             titulo: noticia.titulo,
@@ -143,6 +140,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias) 
                 {
                     text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa', {
                         noticias,
+                        horario,
                         recorrido
                     })
                 }
@@ -161,7 +159,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias) 
     }
 }
 
-const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias) => {
+const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias, horario) => {
 
     let res = await fetch(back + 'removeNoticia', {
         method: 'POST',
@@ -171,6 +169,7 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noti
         body: JSON.stringify({
             rut: user.rut,
             id: item.id,
+            horario: horario.id,
             recorrido
         }),
     })

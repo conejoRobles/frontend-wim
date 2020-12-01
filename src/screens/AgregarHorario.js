@@ -324,7 +324,8 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
             [
                 {
                     text: "OK", onPress: () => navigation.navigate('Horarios', {
-                        reco: recorrido
+                        reco: recorrido,
+                        forNews: false
                     })
                 }
             ],

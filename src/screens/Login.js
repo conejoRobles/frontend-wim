@@ -124,9 +124,8 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					}
 				],
 				{ cancelable: false }
-			);
+			)
 		} else {
-
 			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
 			let ans2 = await res2.json()
 			if (ans2.ok) {
@@ -141,59 +140,53 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 				origenes.map(x => {
 					let aux = Object.values(x).filter(x => x.id != null && x.id != undefined)
 					aux.map(y => {
+						if (y.Horarios != null && y.Horarios != undefined) {
+							let horarios = []
+							horarios = Object.values(y.Horarios).map(async z => {
+								let res = await fetch(back + 'searchHorario', {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'Application/json',
+									},
+									body: JSON.stringify({
+										empresa: z.empresa,
+										recorrido: z.recorrido,
+										horario: z.id
+									}),
+								})
+								res = await res.json()
+								if (res.ok) {
+									cantNoticias = res.horario.Noticias != null && res.horario.Noticias != undefined ? (cantNoticias + Object.values(res.horario.Noticias).length) : (cantNoticias + 0)
+									return ({
+										...z,
+										...res.horario,
+										origen: y.origen,
+										destino: y.destino
+									})
+								}
+							})
+							Promise.all(horarios).then((horar) => {
+								y.Horarios = horar
+							})
+						}
 						data.push(y)
 					})
 				})
-				let empresas = []
-				Promise.all(aux.map(async (empresa, i) => {
-					let res3 = await fetch(back + 'getRecorridos?rut=' + empresa.rut)
-					let ans3 = await res3.json()
-					if (ans3.ok) {
-						Object.values(empresa.recorridos).map((recorrido) => {
-							Object.values(ans3.recorridos).map(reco => {
-								if (recorrido.id == reco.id) {
-									cantNoticias = cantNoticias + (reco.Noticias != undefined && reco.Noticias != null ? Object.keys(reco.Noticias).length : 0)
-									reco = {
-										...reco,
-										rut: '' + empresa.rut,
-										nombre: '' + empresa.nombre,
-									}
-									empresas.push(reco)
-								}
+				empresasLoad(Object.values(fav))
+				Alert.alert(
+					"Bienvenido!",
+					ans.usuario.nombre,
+					[
+						{
+							text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
+								rol: ans.usuario.rol,
+								cantNoticias: cantNoticias
 							})
-						})
-					}
-				})).then(() => {
-					empresasLoad(Object.values(fav))
-					Alert.alert(
-						"Bienvenido!",
-						ans.usuario.nombre,
-						[
-							{
-								text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
-									rol: ans.usuario.rol,
-									cantNoticias: cantNoticias
-								})
-							}
-						],
-						{ cancelable: false }
-					);
-				})
-				return
+						}
+					],
+					{ cancelable: false }
+				);
 			}
-			Alert.alert(
-				"Bienvenido!",
-				ans.usuario.nombre,
-				[
-					{
-						text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
-							rol: ans.usuario.rol,
-							cantNoticias: cantNoticias
-						})
-					}
-				],
-				{ cancelable: false }
-			);
 		}
 	} else {
 		await logout()

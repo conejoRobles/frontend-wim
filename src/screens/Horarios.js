@@ -7,15 +7,25 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 
 function Horarios({ user, empresas, navigation, route }) {
     const [selectedId, setSelectedId] = useState(null)
-    const { reco } = route.params
+    const { reco, forNews } = route.params
     const renderItem = ({ item }) => {
         return (
             <TouchableOpacity
-                onPress={() => navigation.navigate('AgregarHorario', {
-                    isNew: false,
-                    horario: item,
-                    recorrido: reco
-                })}
+                onPress={() => {
+                    if (forNews) {
+                        navigation.navigate('NoticiasxRecorridoEmpresa', {
+                            noticias: item.Noticias ? Object.values(item.Noticias) : [],
+                            recorrido: reco.id,
+                            horario: item
+                        })
+                    } else {
+                        navigation.navigate('AgregarHorario', {
+                            isNew: false,
+                            horario: item,
+                            recorrido: reco
+                        })
+                    }
+                }}
                 style={[styles.button, styles.bordes]}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={[styles.texto]}>{moment(new Date(item.horaInicio)).format('HH:mm')} - {moment(new Date(item.horaTermino)).format('HH:mm')}</Text>
@@ -48,14 +58,15 @@ function Horarios({ user, empresas, navigation, route }) {
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
 
-            <TouchableOpacity
-                onPress={() => navigation.navigate('AgregarHorario', {
-                    isNew: true,
-                    recorrido: reco
-                })}
-                style={[styles.button2]}>
-                <Text style={styles.texto4}>Agregar Horario</Text>
-            </TouchableOpacity>
+            {forNews ? (<></>) : (
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('AgregarHorario', {
+                        isNew: true,
+                        recorrido: reco
+                    })}
+                    style={[styles.button2]}>
+                    <Text style={styles.texto4}>Agregar Horario</Text>
+                </TouchableOpacity>)}
             {/* {reco.Horarios ? (
                 (reco.Horarios.size() > 0) ? (<FlatList
                     data={Object.values(reco.Horarios)}

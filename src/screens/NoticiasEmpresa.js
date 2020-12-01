@@ -2,28 +2,28 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 
-const DATA = [
-    {
-        id: "0",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "1",
-        origen: 'San Carlos',
-        destino: 'Chillán'
-    },
-    {
-        id: "2",
-        origen: 'Chillán',
-        destino: 'Pinto'
-    },
-    {
-        id: "3",
-        origen: 'Pinto',
-        destino: 'Chillán'
-    },
-]
+// const DATA = [
+//     {
+//         id: "0",
+//         origen: 'Chillán',
+//         destino: 'San Carlos'
+//     },
+//     {
+//         id: "1",
+//         origen: 'San Carlos',
+//         destino: 'Chillán'
+//     },
+//     {
+//         id: "2",
+//         origen: 'Chillán',
+//         destino: 'Pinto'
+//     },
+//     {
+//         id: "3",
+//         origen: 'Pinto',
+//         destino: 'Chillán'
+//     },
+// ]
 
 const Item = ({ item, onPress, style }) => (
     <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
@@ -36,15 +36,14 @@ const Item = ({ item, onPress, style }) => (
 function NoticiasEmpresa({ navigation, empresas }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
-        // const backgroundColor = item.id === selectedId ? "#ff6901" : "#e84c22";
         return (
             <Item
                 item={item}
                 onPress={() => {
                     setSelectedId(item.id)
-                    navigation.navigate('NoticiasxRecorridoEmpresa', {
-                        noticias: item.Noticias ? Object.values(item.Noticias) : [],
-                        recorrido: item.id
+                    navigation.navigate('Horarios', {
+                        reco: item,
+                        forNews: true
                     })
                 }}
                 style={{ backgroundColor: '#e84c22' }}

@@ -11,7 +11,6 @@ import { agregarHo, eliminarHorario } from '../store/actions/horarios'
 
 function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
     const { item, favo } = route.params
-    console.log(item)
     const [fav, setFav] = useState(favo)
     return (
         <View style={[styles.container, { padding: 20 }]}>

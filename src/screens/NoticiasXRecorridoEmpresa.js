@@ -62,7 +62,7 @@ const Item = ({ item, onPress, style }) => (
 )
 
 function NoticiasXRecorridoEmpresa({ navigation, route }) {
-    const { noticias, recorrido } = route.params
+    const { noticias, recorrido, horario } = route.params
     let data = noticias
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
@@ -73,6 +73,7 @@ function NoticiasXRecorridoEmpresa({ navigation, route }) {
                     navigation.navigate('EditarNoticia', {
                         item,
                         recorrido,
+                        horario,
                         noticias
                     })
                     setSelectedId(item.id)
@@ -82,14 +83,12 @@ function NoticiasXRecorridoEmpresa({ navigation, route }) {
         )
     }
     return (
-        // <View style={{justifyContent:'center', alignItems:'center', height:'100%'}}>
-        //     <ActivityIndicator size={100} color='#e84c22' style={{justifyContent:'center', alignItems:'center'}}/>
-        // </View>
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate('AgregarNoticias', {
+                        horario,
                         recorrido,
                         noticias
                     })

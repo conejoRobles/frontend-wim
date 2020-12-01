@@ -7,38 +7,38 @@ import { LinearGradient } from 'expo-linear-gradient';
 import empresas from '../store/reducers/empresas'
 import { back } from '../../env'
 
-const DATA = [
-    {
-        id: "0",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "1",
-        origen: 'San Carlos',
-        destino: 'Chillán'
-    },
-    {
-        id: "2",
-        origen: 'Chillán',
-        destino: 'Pinto'
-    },
-    {
-        id: "3",
-        origen: 'Pinto',
-        destino: 'Chillán'
-    },
-    {
-        id: "4",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "5",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-]
+// const DATA = [
+//     {
+//         id: "0",
+//         origen: 'Chillán',
+//         destino: 'San Carlos'
+//     },
+//     {
+//         id: "1",
+//         origen: 'San Carlos',
+//         destino: 'Chillán'
+//     },
+//     {
+//         id: "2",
+//         origen: 'Chillán',
+//         destino: 'Pinto'
+//     },
+//     {
+//         id: "3",
+//         origen: 'Pinto',
+//         destino: 'Chillán'
+//     },
+//     {
+//         id: "4",
+//         origen: 'Chillán',
+//         destino: 'San Carlos'
+//     },
+//     {
+//         id: "5",
+//         origen: 'Chillán',
+//         destino: 'San Carlos'
+//     },
+// ]
 
 const Item = ({ item, onPress, style }) => {
     return (
@@ -83,7 +83,6 @@ function Bienvenida({ user, empresas, navigation }) {
                     }
                 })
                 Promise.all(horarios).then((horar) => {
-                    // console.log(horar)
                     y.Horarios = horar
                 })
             }

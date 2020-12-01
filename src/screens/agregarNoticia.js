@@ -8,7 +8,7 @@ import uuid from 'uuid/v4'
 
 
 function agregarNoticia({ navigation, agregar, user, route, }) {
-    const { recorrido, noticias } = route.params
+    const { recorrido, noticias, horario } = route.params
     const [noticia, setNoticia] = useState({
         id: uuid(),
         descripcion: '',
@@ -29,8 +29,6 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
                     style={styles.inputText}
                     value={noticia.titulo}
                     onChangeText={text => setNoticia({ ...noticia, titulo: text })}
-                // placeholderTextColor="grey"
-                // onChangeText={text => setRut(text)}
                 />
             </View>
             <Text style={styles.texto}>Descripción:</Text>
@@ -41,8 +39,6 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
                     maxLength={330}
                     style={styles.inputText}
                     value={noticia.descripcion}
-                    // placeholder="Rut"
-                    // placeholderTextColor="grey"
                     onChangeText={text => setNoticia({ ...noticia, descripcion: text })}
                 />
             </View>
@@ -102,7 +98,7 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
 
             </View>
 
-            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias) }}>
+            <TouchableOpacity style={[styles.button]} onPress={() => { publicar(noticia, agregar, navigation, user, recorrido, noticias, horario) }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
             </TouchableOpacity>
 
@@ -111,7 +107,7 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
 }
 
 
-const publicar = async (noticia, agregar, navigation, user, recorrido, noticias) => {
+const publicar = async (noticia, agregar, navigation, user, recorrido, noticias, horario) => {
     let hoy = new Date()
     let termino = new Date()
 
@@ -134,6 +130,7 @@ const publicar = async (noticia, agregar, navigation, user, recorrido, noticias)
         body: JSON.stringify({
             rut: user.rut,
             recorrido,
+            horario: horario.id,
             id: noticia.id,
             descripcion: noticia.descripcion,
             titulo: noticia.titulo,
