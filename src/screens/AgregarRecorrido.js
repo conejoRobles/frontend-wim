@@ -35,8 +35,6 @@ const renderItem = ({ item }) => {
     return (
         <Item
             item={item}
-        // onPress={() => setSelectedId(item.id)}
-
         />
     )
 }
@@ -46,6 +44,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
     const { isNew, reco } = route.params
     const [editar, setEditar] = useState(isNew)
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible2, setModalVisible2] = useState(false);
     const [tarifa, setTarifa] = useState({
         id: uuid(),
         nombre: '',
@@ -68,7 +67,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
         )
 
     return (
-        <View style={modalVisible ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
+        <View style={modalVisible || modalVisible2 ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <Modal
                 animationType="fade"
@@ -119,6 +118,45 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                     </View>
                 </View>
             </Modal>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible2}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={[styles.modalText, { fontWeight: 'bold', fontSize: 25, color: '#e84c22', borderBottomWidth: 2, borderBottomColor: '#e84c22' }]}>Editar Precios</Text>
+                        <FlatList
+                            data={recorrido.precios}
+                            keyExtractor={(item) => item.id}
+                            style={{ width: '90%', padding: 15 }}
+                            renderItem={({ item }) =>
+                                <View>
+                                    <Text style={styles.texto1}>{item.nombre}: ${item.precio}</Text>
+                                </View>
+                            }
+                        />
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
+                            onPress={() => {
+                                if (editar) {
+                                    let precioos = [...recorrido.precios]
+                                    precioos.push(tarifa)
+                                    setRecorrido({ ...recorrido, precios: precioos })
+                                    setTarifa({
+                                        id: uuid(),
+                                        nombre: '',
+                                        precio: ''
+                                    })
+                                    setModalVisible2(!modalVisible2);
+                                }
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Agregar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
             <View style={{ flex: 1, maxHeight: 100, flexDirection: "row", justifyContent: 'center', }}>
                 <View style={{ flex: 1, alignItems: 'center' }}>
                     <Text style={styles.texto}>Origen:</Text>
@@ -153,7 +191,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 <Text style={[styles.texto2, { color: '#e84c22' }]}>Valor del Pasaje</Text>
             </View>
 
-            <View style={{ alignContent: 'center', alignItems: 'center' }}>
+            {isNew ? (<View style={{ alignContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
                     style={[styles.button2]}
                     onPress={() => {
@@ -164,9 +202,37 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 >
                     <Text style={styles.texto4}>Agregar Precio</Text>
                 </TouchableOpacity>
-            </View>
+            </View>) : (
+                    <View style={[styles.button20, { flexDirection: "row", justifyContent: 'center', marginBottom: 0 }]}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (editar) {
+                                    setModalVisible(true)
+                                }
+                            }}
+                        >
+                            <Text style={[styles.texto4]}>Agregar Precio</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }} onPress={() => {
+                            setdataSearch({ ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen })
+                        }}>
+                            <Text>|</Text>
 
-            <View style={{ width: '90%', borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: 380, alignItems: 'center' }}>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (editar) {
+                                    setModalVisible2(true)
+                                }
+                            }}
+                        >
+                            <Text style={[styles.texto4]}>Editar Precios</Text>
+                        </TouchableOpacity>
+                    </View>
+                )
+            }
+
+            <View style={{ width: '90%', borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: 380, marginTop: 10, alignItems: 'center' }}>
                 <FlatList
                     data={recorrido.precios}
                     renderItem={({ item }) =>
@@ -356,6 +422,16 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
+    button20: {
+        backgroundColor: 'rgba(232,76,34,0.3)',
+        width: '80%',
+        alignItems: 'center',
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        height: 45,
+        paddingTop: 0,
+        marginBottom: 20,
+    },
     button: {
         width: '80%',
         borderRadius: 30,
@@ -423,7 +499,7 @@ const styles = StyleSheet.create({
     texto4: {
         color: '#e84c22',
         textAlign: 'center',
-        fontSize: 22,
+        fontSize: 17,
     },
     texto2: {
         fontSize: 25,

@@ -37,7 +37,14 @@ const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
-  'value provided is not in a recognized RFC2822 or ISO format'
+  'value provided is not in a recognized RFC2822 or ISO format',
+  'Already read',
+  'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.',
+  '_reactNative.NativeModules.RNDatePickerAndroid.dismiss is not a function.',
+  '_reactNative.NativeModules.RNDatePickerAndroid.dismiss()',
+  '_reactNative.NativeModules.RNDatePickerAndroid.dismiss'
+
+
 ]);
 let noticias = 0
 const getTotalNoticias = () => {
@@ -204,7 +211,7 @@ function TabPasajero({ navigation, route }) {
             />
           ),
         }} />
-      <Tab.Screen
+      {cant2 > 0 ? (<Tab.Screen
         name="NoticiaPasajero"
         component={NoticiaPasajeroStackScreen}
         options={{
@@ -217,7 +224,19 @@ function TabPasajero({ navigation, route }) {
               color={color}
             />
           ),
-        }} />
+        }} />) : (<Tab.Screen
+          name="NoticiaPasajero"
+          component={NoticiaPasajeroStackScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <FontAwesome5
+                name={'bell'}
+                solid
+                size={35}
+                color={color}
+              />
+            ),
+          }} />)}
     </Tab.Navigator>
   )
 }

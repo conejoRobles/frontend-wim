@@ -1,19 +1,49 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, Modal, Animated, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
 import { empresasLoad } from '../store/actions/empresas'
+import { horariosLoad } from '../store/actions/horarios'
 import { AppLoading } from 'expo'
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
 
-const Login = ({ navigation, inicioSesion, empresasLoad, user, logout }) => {
+const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosLoad }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
+	const [loading, setLoading] = useState(false)
+
+	const [animation, setAnimation] = useState(new Animated.Value(0))
+	const startAnimation = () => {
+		Animated.timing(animation, {
+			toValue: -5540,
+			duration: 9000,
+			useNativeDriver: true,
+		}).start()
+	}
+	const rotateInterPolate = animation.interpolate({
+		inputRange: [0, 360],
+		outputRange: ["0deg", "-360deg"],
+	})
+	const animatedStyles = {
+		transform: [{ rotate: rotateInterPolate }],
+	};
 	return (
-		<View style={styles.container}>
+		<View style={loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])} >
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={loading}
+			>
+				<Animated.View style={[styles.container, { backgroundColor: null }, animatedStyles]} >
+					<Image
+						style={styles.tinyLogo}
+						source={require('../../assets/logo.png')}
+					></Image>
+				</Animated.View>
+			</Modal>
 			<StatusBar hidden />
 			<ImageBackground source={require('../../assets/login_register.png')} style={styles.image} resizeMode='cover'>
 				<Text style={styles.titulo}>
@@ -73,10 +103,14 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user, logout }) => {
 								{ cancelable: false }
 							);
 						} else {
-							inicio({
-								email,
-								password,
-							}, navigation, inicioSesion, empresasLoad, user, logout)
+							if (!loading) {
+								setLoading(true)
+								startAnimation()
+								inicio({
+									email,
+									password,
+								}, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad)
+							}
 						}
 					}}
 				>
@@ -87,8 +121,10 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user, logout }) => {
 	);
 }
 
-const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout) => {
-	await logout()
+const trie = async (usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading) => {
+	const timeOut = 8000
+	const controller = new AbortController()
+	const id = setTimeout(() => controller.abort(), timeOut)
 	const res = await fetch(back, {
 		method: 'POST',
 		headers: {
@@ -98,7 +134,27 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 			correo: usuario.email,
 			pass: usuario.password,
 		}),
+		signal: controller.signal
 	})
+	clearTimeout(id)
+	return res
+}
+
+const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad) => {
+	await logout()
+	try {
+		res = await trie(usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading)
+	} catch (error) {
+		setLoading(false)
+		Alert.alert(
+			"Oh no!",
+			'Parece haber un error con tus datos, revisalos y prueba denuevo',
+			[
+				{ text: "Intentar otra vez" }
+			],
+			{ cancelable: false }
+		);
+	}
 	const ans = await res.json()
 	let cantNoticias = 0;
 	if (ans.ok) {
@@ -112,6 +168,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 			} else {
 				empresasLoad([])
 			}
+			setLoading(false)
 			Alert.alert(
 				"Bienvenido!",
 				ans.usuario.nombre,
@@ -126,18 +183,18 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 				{ cancelable: false }
 			)
 		} else {
-
 			let res2 = await fetch(back + 'getEmpresas?rut=' + ans.usuario.rut)
 			let ans2 = await res2.json()
 			if (ans2.ok) {
 				let favoritos = Object.values(ans2.favoritos)
+				let from = Object.keys(ans2.favoritos)
 				let fav = []
 				favoritos.map(origen => {
 					fav.push(origen)
 				})
 				let origenes = Object.values(fav)
 				let data = []
-				origenes.map(x => {
+				origenes.map((x, i) => {
 					let aux = Object.values(x).filter(x => x.id != null && x.id != undefined)
 					aux.map(y => {
 						if (y.Horarios != null && y.Horarios != undefined) {
@@ -151,7 +208,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 									body: JSON.stringify({
 										empresa: z.empresa,
 										recorrido: z.recorrido,
-										horario: z.id
+										horario: z.id,
 									}),
 								})
 								res = await res.json()
@@ -161,7 +218,8 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 										...z,
 										...res.horario,
 										origen: y.origen,
-										destino: y.destino
+										destino: y.destino,
+										precios: res.precios
 									})
 								}
 							})
@@ -172,11 +230,12 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 						data.push(y)
 					})
 				})
+				horariosLoad(data)
 				empresasLoad(Object.values(fav))
 			} else {
 				empresasLoad([])
 			}
-
+			setLoading(false)
 			Alert.alert(
 				"Bienvenido!",
 				ans.usuario.nombre,
@@ -195,6 +254,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 		}
 	} else {
 		await logout()
+		setLoading(false)
 		Alert.alert(
 			"Oh no!",
 			ans.mensaje,
@@ -221,6 +281,9 @@ const styles = StyleSheet.create({
 	textoBoton: {
 		color: 'white',
 		fontSize: 25,
+	}, tinyLogo: {
+		width: 250,
+		height: 245,
 	},
 	button: {
 		width: "65%",
@@ -272,7 +335,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 	inicioSesion: (user) => dispatch(inicioSesion(user)),
 	empresasLoad: (empresas) => dispatch(empresasLoad(empresas)),
-	logout: () => dispatch(logout())
+	logout: () => dispatch(logout()),
+	horariosLoad: (favoritos) => dispatch(horariosLoad(favoritos)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { connect } from 'react-redux'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, ScrollView } from "react-native";
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { FlatList } from "react-native-gesture-handler";
-import { agregarHo, eliminarHorario } from '../store/actions/horarios'
+import { agregarFav, eliminarHorario, horariosLoad } from '../store/actions/horarios'
+import { createIconSetFromFontello } from "react-native-vector-icons";
 
-function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
+function infoRecorrido({ navigation, route, agregarFav, user, empresas, horarios, horariosLoad }) {
     const { item, favo } = route.params
     const [fav, setFav] = useState(favo)
     return (
-        <View style={[styles.container, { padding: 20 }]}>
+        <ScrollView style={[styles.container, { padding: 20 }]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={[styles.texto2, { marginBottom: 20 }]}>{item.nombre}</Text>
@@ -34,13 +35,28 @@ function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
                 <Text style={[styles.texto]}>Patente:</Text>
                 <Text style={[styles.texto3, { marginBottom: 20 }]}>{item.patente}</Text>
             </View>
+            <View style={[{ borderTopWidth: 1, borderTopColor: '#e84c22', marginBottom: 10 }]}>
+                <Text style={[styles.texto]}>Precios:</Text>
+                <View style={{ width: '100%', borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: 180, marginTop: 10, alignItems: 'center' }}>
+                    <FlatList
+                        data={item.precios}
+                        renderItem={({ item }) =>
+                            <View>
+                                <Text style={styles.texto1}>{item.nombre}: ${item.precio}</Text>
+                            </View>
+                        }
+                        keyExtractor={(item) => item.id}
+                        style={{ width: '90%', padding: 15 }}
+                    />
+                </View>
+            </View>
             <View style={[{ alignItems: 'center', borderTopWidth: 1, borderTopColor: '#e84c22' }]}>
                 <Text style={[styles.texto]}>Agregar a favoritos</Text>
                 {fav ?
                     (<TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                         onPress={() => {
                             setFav(false)
-                            removeFav(item, agregarHo, user, empresas, navigation)
+                            removeFav(item, user, empresas, navigation)
                         }}>
                         <Icon name="heart" size={40} color='#e84c22' />
                     </TouchableOpacity>
@@ -48,17 +64,23 @@ function infoRecorrido({ navigation, route, agregarHo, user, empresas }) {
                         <TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                             onPress={() => {
                                 setFav(true)
-                                agregarFav(item, agregarHo, user, empresas, navigation)
+                                agregarFavo(item, agregarFav, user, empresas, navigation, horarios, horariosLoad)
                             }}>
                             <Icon name="heart-o" size={40} color='#e84c22' />
                         </TouchableOpacity>
                     )}
             </View>
-        </View>
+            <View >
+                <Text> </Text>
+            </View>
+            <View >
+                <Text> </Text>
+            </View>
+        </ScrollView>
     )
 }
 
-const agregarFav = async (item, agregarHo, user, empresas, navigation) => {
+const agregarFavo = async (item, agregarFav, user, empresas, navigation, horarios, horariosLoad) => {
     let res = await fetch(back + 'addFavorito', {
         method: 'POST',
         headers: {
@@ -76,13 +98,30 @@ const agregarFav = async (item, agregarHo, user, empresas, navigation) => {
     })
     res = await res.json()
     if (res.ok) {
-        let recorrido = {
-            id: item.recorrido
+        let horar = horarios.data
+        let flag = false
+        horar = horar.map(x => {
+            if (x.origen == item.origen && x.destino == item.destino) {
+                flag = true
+                x.Horarios.map(y => {
+                    if (y.id == item.id) {
+                        y = { ...y, ...item }
+                    }
+                    return y
+                })
+            }
+            return x
+        })
+        if (!flag) {
+            horar.push({
+                Horarios: [item],
+                destino: item.destino,
+                origen: item.origen,
+                id: item.id
+            })
+
         }
-        let horario = {
-            id: item.id
-        }
-        //agregarHo({ horario, recorrido })
+        horariosLoad(horar)
         Alert.alert(
             "El horario ha sido guardado!",
             'Ahora recibirás las noticias de este horario',
@@ -108,7 +147,7 @@ const agregarFav = async (item, agregarHo, user, empresas, navigation) => {
     }
 }
 
-const removeFav = async (item, agregarHo, user, empresas, navigation) => {
+const removeFav = async (item, user, empresas, navigation) => {
     let res = await fetch(back + 'removeFavorito', {
         method: 'POST',
         headers: {
@@ -233,8 +272,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    agregarHo: (horario, recorrido) => dispatch(agregarHo(horario, recorrido)),
-    eliminarHorario: (horario, recorrido) => dispatch(eliminarHorario(horario, recorrido))
+    agregarFav: (item) => dispatch(agregarFav(item)),
+    eliminarHorario: (horario, recorrido) => dispatch(eliminarHorario(horario, recorrido)),
+    horariosLoad: (favoritos) => dispatch(horariosLoad(favoritos)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(infoRecorrido)

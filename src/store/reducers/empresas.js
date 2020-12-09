@@ -62,6 +62,7 @@ export default (state = initialState, action) => {
                 data: reco
             })
             break
+
         case noticiasConstants.REMOVE:
             recorridos = [...state.data]
             reco = recorridos.map(recorrido => {
@@ -126,7 +127,6 @@ export default (state = initialState, action) => {
                 data: reco
             })
             break
-
         case horariosConstants.EDIT:
             recorridos = [...state.data]
             horarios = {}

@@ -69,21 +69,31 @@ function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
     let data = noticias
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
-        return (
-            <Item
+        if (user.rol == 'empresa') {
+            return (
+                <Item
+                    item={item}
+                    onPress={() => {
+                        navigation.navigate('EditarNoticia', {
+                            item,
+                            recorrido,
+                            horario,
+                            noticias
+                        })
+                        setSelectedId(item.id)
+                    }}
+                    style={{ backgroundColor: '#e84c22' }}
+                />
+            )
+        } else {
+            return (<Item
                 item={item}
                 onPress={() => {
-                    navigation.navigate('EditarNoticia', {
-                        item,
-                        recorrido,
-                        horario,
-                        noticias
-                    })
                     setSelectedId(item.id)
                 }}
                 style={{ backgroundColor: '#e84c22' }}
-            />
-        )
+            />)
+        }
     }
     return (
         <View style={[styles.container]}>

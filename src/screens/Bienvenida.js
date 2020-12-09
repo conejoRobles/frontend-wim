@@ -6,39 +6,8 @@ import { connect } from 'react-redux'
 import { LinearGradient } from 'expo-linear-gradient';
 import empresas from '../store/reducers/empresas'
 import { back } from '../../env'
+import { horariosLoad } from '../store/actions/horarios'
 
-// const DATA = [
-//     {
-//         id: "0",
-//         origen: 'Chillán',
-//         destino: 'San Carlos'
-//     },
-//     {
-//         id: "1",
-//         origen: 'San Carlos',
-//         destino: 'Chillán'
-//     },
-//     {
-//         id: "2",
-//         origen: 'Chillán',
-//         destino: 'Pinto'
-//     },
-//     {
-//         id: "3",
-//         origen: 'Pinto',
-//         destino: 'Chillán'
-//     },
-//     {
-//         id: "4",
-//         origen: 'Chillán',
-//         destino: 'San Carlos'
-//     },
-//     {
-//         id: "5",
-//         origen: 'Chillán',
-//         destino: 'San Carlos'
-//     },
-// ]
 
 const Item = ({ item, onPress, style }) => {
     return (
@@ -51,44 +20,8 @@ const Item = ({ item, onPress, style }) => {
 }
 
 
-function Bienvenida({ user, empresas, navigation }) {
+function Bienvenida({ user, empresas, navigation, horariosLoad, horarios }) {
     const [selectedId, setSelectedId] = useState(null)
-    let destinos = empresas.data.filter(x => x.id != undefined && x.id != null)
-    let data = []
-    destinos.map(async x => {
-        let aux = Object.values(x).filter(x => x.id != null && x.id != undefined)
-        aux.map(async y => {
-            if (y.Horarios != null && y.Horarios != undefined) {
-                let horarios = []
-                horarios = Object.values(y.Horarios).map(async z => {
-                    let res = await fetch(back + 'searchHorario', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'Application/json',
-                        },
-                        body: JSON.stringify({
-                            empresa: z.empresa,
-                            recorrido: z.recorrido,
-                            horario: z.id
-                        }),
-                    })
-                    res = await res.json()
-                    if (res.ok) {
-                        return ({
-                            ...z,
-                            ...res.horario,
-                            origen: y.origen,
-                            destino: y.destino
-                        })
-                    }
-                })
-                Promise.all(horarios).then((horar) => {
-                    y.Horarios = horar
-                })
-            }
-            data.push(y)
-        })
-    })
     const renderItem = ({ item }) => {
         const backgroundColor = "#e84c22";
         return (
@@ -143,8 +76,8 @@ function Bienvenida({ user, empresas, navigation }) {
                 ) : (
                         <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado recorridos</Text>
                     )
-            ) : (data.length > 0 ? (<FlatList
-                data={data}
+            ) : (horarios.data.length > 0 ? (<FlatList
+                data={horarios.data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}
@@ -245,5 +178,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return state
 }
+const mapDispatchToProps = dispatch => ({
+    horariosLoad: (favoritos) => dispatch(horariosLoad(favoritos)),
+})
 
-export default connect(mapStateToProps)(Bienvenida)
+export default connect(mapStateToProps, mapDispatchToProps)(Bienvenida)

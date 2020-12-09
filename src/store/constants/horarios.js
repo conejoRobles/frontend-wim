@@ -1,5 +1,6 @@
 export const horariosConstants = {
 	ADD: 'ADD_HORARIO',
+	FAV: 'ADD_FAVORITO',
 	EDIT: 'EDIT_HORARIO',
 	LOAD: 'LOAD_HORARIO',
 	REMOVE: 'REMOVE_HORARIO',

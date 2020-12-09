@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, Alert, Modal, TextInput } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, Alert, Modal, TextInput, Animated, Image } from 'react-native'
 import { Picker } from '@react-native-community/picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { connect } from 'react-redux'
@@ -8,8 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { back } from '../../env'
 
-
 const mode = 'time'
+
 
 function buscarRecorrido({ user, empresas, navigation, route }) {
     const week = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
@@ -52,6 +52,23 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
     const showTimepicker2 = () => {
         setShow2(true)
     }
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -1540,
+            duration: 3000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
     const renderItem = ({ item }) => {
         return (
             <TouchableOpacity
@@ -70,7 +87,19 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
         )
     }
     return (
-        <View style={modalVisible || modalVisible2 ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
+        <View style={modalVisible || modalVisible2 || loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <StatusBar backgroundColor="#e84c22" />
             <Modal
                 animationType="fade"
@@ -84,6 +113,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <View style={styles.inputView}>
                             <TextInput style={styles.inputText}
                                 placeholder='Ej: San Carlos'
+                                autoCapitalize={"words"}
                                 onChangeText={(text) => {
                                     setdataSearch({ ...dataSearch, origen: text })
                                 }}
@@ -93,6 +123,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <View style={styles.inputView}>
                             <TextInput style={styles.inputText}
                                 placeholder='Ej: La Ribera'
+                                autoCapitalize={"words"}
                                 onChangeText={(text) => {
                                     setdataSearch({ ...dataSearch, destino: text })
                                 }}
@@ -102,11 +133,16 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
                                 if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
-                                    publicar(navigation, dataSearch).then((recos) => {
-                                        setRecorridos(recos)
-                                        setSearch(true)
-                                    })
-                                    setModalVisible2(false)
+                                    if (!loading) {
+                                        setModalVisible2(false)
+                                        startAnimation()
+                                        setLoading(true)
+                                        publicar(navigation, dataSearch).then((recos) => {
+                                            setRecorridos(recos)
+                                            setLoading(false)
+                                            setSearch(true)
+                                        })
+                                    }
                                 } else {
                                     Alert.alert(
                                         "Falta algo más!",
@@ -126,11 +162,16 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         >
                             <Text style={styles.textStyle} onPress={() => {
                                 if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
-                                    publicar(navigation, dataSearch).then((recos) => {
-                                        setRecorridos(recos)
-                                        setSearch(true)
-                                    })
-                                    setModalVisible2(false)
+                                    if (!loading) {
+                                        setModalVisible2(false)
+                                        startAnimation()
+                                        setLoading(true)
+                                        publicar(navigation, dataSearch).then((recos) => {
+                                            setRecorridos(recos)
+                                            setLoading(false)
+                                            setSearch(true)
+                                        })
+                                    }
                                 } else {
                                     Alert.alert(
                                         "Falta algo más!",
@@ -219,11 +260,16 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
                                 if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
-                                    publicar(navigation, dataSearch).then((recos) => {
-                                        setRecorridos(recos)
-                                        setSearch(true)
-                                    })
-                                    setModalVisible(false)
+                                    if (!loading) {
+                                        setModalVisible(false)
+                                        startAnimation()
+                                        setLoading(true)
+                                        publicar(navigation, dataSearch).then((recos) => {
+                                            setRecorridos(recos)
+                                            setLoading(false)
+                                            setSearch(true)
+                                        })
+                                    }
                                 } else {
                                     Alert.alert(
                                         "Falta algo más!",
@@ -243,11 +289,16 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         >
                             <Text style={styles.textStyle} onPress={() => {
                                 if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
-                                    publicar(navigation, dataSearch).then((recos) => {
-                                        setRecorridos(recos)
-                                        setSearch(true)
-                                    })
-                                    setModalVisible(false)
+                                    if (!loading) {
+                                        setModalVisible(false)
+                                        startAnimation()
+                                        setLoading(true)
+                                        publicar(navigation, dataSearch).then((recos) => {
+                                            setRecorridos(recos)
+                                            setLoading(false)
+                                            setSearch(true)
+                                        })
+                                    }
                                 } else {
                                     Alert.alert(
                                         "Falta algo más!",
@@ -350,11 +401,10 @@ const publicar = async (navigation, dataSearch) => {
                             if (horaI.getHours() >= horaInicio.getHours() && horaI.getHours() <= horaTermino.getHours()) {
                                 if (horaI.getHours() == horaTermino.getHours()) {
                                     if (horaI.getMinutes() <= horaTermino.getMinutes()) {
-
-                                        return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa }
+                                        return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa, telefono: res2.recorrido.telefono, precios: res2.recorrido.precios }
                                     }
                                 } else {
-                                    return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa }
+                                    return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa, telefono: res2.recorrido.telefono, precios: res2.recorrido.precios }
                                 }
                             }
                         }
@@ -393,6 +443,9 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         alignItems: 'center',
         // justifyContent: 'center',
+    }, tinyLogo: {
+        width: 250,
+        height: 245,
     }, openButton: {
         backgroundColor: "#F194FF",
         borderRadius: 30,
@@ -425,6 +478,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // marginTop: Constants.statusBarHeight,
+    }, containerLoading: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
     }, contenedor: {
         backgroundColor: 'white',
         alignItems: 'center',

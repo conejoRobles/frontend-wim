@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, Modal, Image, Animated, TouchableWithoutFeedback } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import { back } from '../../env'
@@ -11,9 +11,37 @@ const PasajeroRegistration = ({ navigation }) => {
 	const [rut, setRut] = useState('')
 	const [telefono, setTelefono] = useState('')
 	const [showPass, setShowPass] = useState({ value: true })
+	const [loading, setLoading] = useState(false)
 
+	const [animation, setAnimation] = useState(new Animated.Value(0))
+	const startAnimation = () => {
+		Animated.timing(animation, {
+			toValue: -1540,
+			duration: 3000,
+			useNativeDriver: true,
+		}).start()
+	}
+	const rotateInterPolate = animation.interpolate({
+		inputRange: [0, 360],
+		outputRange: ["0deg", "-360deg"],
+	})
+	const animatedStyles = {
+		transform: [{ rotate: rotateInterPolate }],
+	};
 	return (
-		<View style={styles.container} >
+		<View style={loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])} >
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={loading}
+			>
+				<Animated.View style={[styles.container, { backgroundColor: null }, animatedStyles]} >
+					<Image
+						style={styles.tinyLogo}
+						source={require('../../assets/logo.png')}
+					></Image>
+				</Animated.View>
+			</Modal>
 			<StatusBar backgroundColor="#e84c22"></StatusBar>
 			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
 				<Text style={styles.titulo}>Registro</Text>
@@ -36,6 +64,7 @@ const PasajeroRegistration = ({ navigation }) => {
 						secureTextEntry={showPass.value}
 						style={styles.inputText}
 						placeholder="Contraseña"
+						autoCapitalize='none'
 						placeholderTextColor="grey"
 						onChangeText={text => setPass(text)}
 					/>
@@ -58,6 +87,8 @@ const PasajeroRegistration = ({ navigation }) => {
 						style={styles.inputText}
 						placeholder="Rut"
 						placeholderTextColor="grey"
+						maxLength={9}
+						autoCapitalize='none'
 						onChangeText={text => setRut(text)}
 					/>
 				</View>
@@ -68,6 +99,9 @@ const PasajeroRegistration = ({ navigation }) => {
 					<TextInput
 						style={styles.inputText}
 						placeholder="Email"
+						autoCapitalize='none'
+						autoCompleteType='email'
+						keyboardType='email-address'
 						placeholderTextColor="grey"
 						onChangeText={text => setCorreo(text)}
 					/>
@@ -80,19 +114,40 @@ const PasajeroRegistration = ({ navigation }) => {
 						style={styles.inputText}
 						placeholder="Telefono"
 						placeholderTextColor="grey"
+						keyboardType='phone-pad'
+						maxLength={9}
 						onChangeText={text => setTelefono(text)}
 					/>
 				</View>
 				<TouchableOpacity
 					style={styles.button}
 					onPress={() => {
-						registro({
-							nombre,
-							pass,
-							correo,
-							rut,
-							telefono
-						}, navigation)
+						if (!loading) {
+							if (nombre == '' || pass == '' || correo == '' || rut == '' || telefono == '') {
+								Alert.alert(
+									"Falta algo más!",
+									"Todos los campos deben estár llenos",
+									[
+										{
+											text: "OK", onPress: () => {
+												setLoading(false)
+											}
+										}
+									],
+									{ cancelable: false }
+								);
+							} else {
+								setLoading(true)
+								startAnimation()
+								registro({
+									nombre,
+									pass,
+									correo,
+									rut: rut.replace('-', ''),
+									telefono
+								}, navigation, setLoading)
+							}
+						}
 					}}
 				>
 					<Text style={styles.textoBoton}>Registrarse</Text>
@@ -102,7 +157,7 @@ const PasajeroRegistration = ({ navigation }) => {
 	);
 }
 
-const registro = async (usuario, navigation) => {
+const registro = async (usuario, navigation, setLoading) => {
 	const res = await fetch(back + 'addPasajero', {
 		method: 'POST',
 		headers: {
@@ -120,20 +175,30 @@ const registro = async (usuario, navigation) => {
 	})
 	const ans = await res.json()
 	if (ans.ok) {
+		setLoading(false)
 		Alert.alert(
 			"Bienvenido!",
 			ans.mensaje,
 			[
-				{ text: "OK", onPress: () => navigation.navigate('LoginScreen') }
+				{
+					text: "OK", onPress: () => {
+						setLoading(false)
+						navigation.navigate('LoginScreen')
+					}
+				}
 			],
 			{ cancelable: false }
 		);
 	} else {
+		setLoading(false)
 		Alert.alert(
 			"Oh no! algo anda mal",
 			ans.mensaje,
 			[
-				{ text: "Volver a intentar" }
+				{
+					text: "Volver a intentar", onPress: () => {
+					}
+				}
 			],
 			{ cancelable: false }
 		);
@@ -172,6 +237,10 @@ const styles = StyleSheet.create({
 		marginLeft: 20,
 		marginRight: 10,
 		alignItems: 'center'
+	},
+	tinyLogo: {
+		width: 250,
+		height: 245,
 	},
 	inputView: {
 		// flex: 1,
