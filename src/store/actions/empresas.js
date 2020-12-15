@@ -1,4 +1,6 @@
+import { empresasConstants } from '../constants/empresas'
+
 export const empresasLoad = (empresas) => ({
-    type: 'LOAD',
+    type: empresasConstants.LOAD,
     empresas
 })

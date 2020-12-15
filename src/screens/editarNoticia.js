@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList, Alert, Image, Animated, Modal } from 'react-native'
 import { connect } from 'react-redux'
 import { Picker } from '@react-native-community/picker'
 import { eliminarNoticia, editar, noticiasLoad } from '../store/actions/noticias'
@@ -9,9 +9,40 @@ import { back } from '../../env'
 function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
     const { item, recorrido, noticias, horario } = route.params
     const [noticia, setNoticia] = useState({ ...item })
+
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -5540,
+            duration: 9000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
+
     return (
-        <View style={[styles.container]}>
+        <View style={loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <Text style={[styles.texto, { marginTop: 20 }]}>Titulo:</Text>
             <View style={styles.inputView}>
                 <TextInput
@@ -77,10 +108,16 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
                 </View>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', marginHorizontal: 20 }}>
-                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => { eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias, horario) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => {
+                    startAnimation()
+                    eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias, horario, setLoading)
+                }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Eliminar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => { publicar(noticia, editar, user, recorrido, navigation, noticias, horario) }}>
+                <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => {
+                    startAnimation()
+                    publicar(noticia, editar, user, recorrido, navigation, noticias, horario, setLoading)
+                }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
                 </TouchableOpacity>
             </View>
@@ -90,7 +127,8 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
 }
 
 
-const publicar = async (noticia, editar, user, recorrido, navigation, noticias, horario) => {
+const publicar = async (noticia, editar, user, recorrido, navigation, noticias, horario, setLoading) => {
+    setLoading(true)
     let hoy = new Date(noticia.fechaPublicacion)
     let termino = new Date()
     if (noticia.duracion.unidad == "2") {
@@ -133,6 +171,8 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias, 
             }
             return x
         })
+        horario.Noticias = noticias
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha editado su noticia!',
@@ -148,6 +188,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias, 
             { cancelable: false }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido editar su noticia',
@@ -159,8 +200,8 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias, 
     }
 }
 
-const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias, horario) => {
-
+const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias, horario, setLoading) => {
+    setLoading(true)
     let res = await fetch(back + 'removeNoticia', {
         method: 'POST',
         headers: {
@@ -177,6 +218,8 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noti
     if (res.ok) {
         await eliminarNoticia(item, recorrido)
         noticias = noticias.filter(x => x.id != item.id)
+        horario.Noticias = noticias
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha eliminado la noticia!',
@@ -191,6 +234,7 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noti
             { cancelable: false }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido eliminar la noticia',
@@ -203,7 +247,15 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noti
 }
 
 const styles = StyleSheet.create({
-    container: {
+    tinyLogo: {
+        width: 250,
+        height: 245,
+    }, containerLoading: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }, container: {
         flex: 1,
         alignItems: 'center',
     },

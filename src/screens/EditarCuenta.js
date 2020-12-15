@@ -203,7 +203,14 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 
 const logOut = async (navigation, user, logout) => {
 	await logout()
-	navigation.navigate('Home')
+	Alert.alert(
+		"Se ha cerrado la sesión!",
+		'',
+		[
+			{ text: "OK", onPress: () => navigation.navigate('Home') }
+		],
+		{ cancelable: false }
+	);
 }
 
 const isChanging = (editar, setEditar, load, nombre, pass, correo, rut, telefono, rol) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList, Alert, Image, Animated, Modal } from 'react-native'
 import { Picker } from '@react-native-community/picker'
 import { agregar } from '../store/actions/noticias'
 import { back } from '../../env'
@@ -8,7 +8,7 @@ import uuid from 'uuid/v4'
 
 
 function agregarNoticia({ navigation, agregar, user, route, }) {
-    const { recorrido, noticias, horario } = route.params
+    const { recorrido, noticias, horario, reco } = route.params
     const [noticia, setNoticia] = useState({
         id: uuid(),
         descripcion: '',
@@ -20,9 +20,40 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
         },
         fechaPublicacion: '',
     })
+
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -5540,
+            duration: 9000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
+
     return (
-        <View style={[styles.container]}>
+        <View style={loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <Text style={[styles.texto, { marginTop: 20 }]}>Titulo:</Text>
             <View style={styles.inputView}>
                 <TextInput
@@ -111,7 +142,7 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
                         { cancelable: false }
                     );
                 } else {
-                    publicar(noticia, agregar, navigation, user, recorrido, noticias, horario)
+                    publicar(noticia, agregar, navigation, user, recorrido, noticias, horario, setLoading)
                 }
             }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
@@ -122,7 +153,8 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
 }
 
 
-const publicar = async (noticia, agregar, navigation, user, recorrido, noticias, horario) => {
+const publicar = async (noticia, agregar, navigation, user, recorrido, noticias, horario, setLoading) => {
+    setLoading(true)
     let hoy = new Date()
     let termino = new Date()
 
@@ -159,6 +191,8 @@ const publicar = async (noticia, agregar, navigation, user, recorrido, noticias,
     if (res.ok) {
         await agregar(noticia, recorrido)
         noticias.unshift(noticia)
+        horario.Noticias = noticias
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha agregado su noticia!',
@@ -166,7 +200,7 @@ const publicar = async (noticia, agregar, navigation, user, recorrido, noticias,
                 {
                     text: "OK", onPress: () => navigation.navigate('NoticiasxRecorridoEmpresa', {
                         recorrido,
-                        noticia
+                        noticias
                     })
                 }
             ],
@@ -185,7 +219,15 @@ const publicar = async (noticia, agregar, navigation, user, recorrido, noticias,
 }
 
 const styles = StyleSheet.create({
-    container: {
+    tinyLogo: {
+        width: 250,
+        height: 245,
+    }, containerLoading: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }, container: {
         flex: 1,
         alignItems: 'center',
     },

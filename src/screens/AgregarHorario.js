@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList, Alert, Image, Animated, Modal } from 'react-native'
 import { back } from '../../env'
 import uuid from 'uuid/v4'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -101,10 +101,39 @@ function AgregarHorario({ navigation, user, route, eliminarHorario, agregarHo, e
     const showTimepicker2 = () => {
         setShow2(true)
     }
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -5540,
+            duration: 9000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
 
     return (
-        <View style={[styles.container]}>
+        <View style={loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <View style={{ flex: 1, maxHeight: 100, flexDirection: "row", justifyContent: 'center' }}>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '80%', }}>
                     <Text style={styles.texto}>&nbsp;&nbsp;&nbsp;&nbsp;Salida:</Text>
@@ -266,7 +295,13 @@ function AgregarHorario({ navigation, user, route, eliminarHorario, agregarHo, e
                                 <Text style={[styles.texto, { color: 'white' }]}>Editar</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.button]}
-                                onPress={() => { editar(navigation, horar, user, recorrido, editarHorario) }}
+                                onPress={() => {
+                                    if (!loading) {
+                                        startAnimation()
+                                        setLoading(true)
+                                        editar(navigation, horar, user, recorrido, editarHorario, setLoading)
+                                    }
+                                }}
                             >
                                 <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
                             </TouchableOpacity>
@@ -275,13 +310,25 @@ function AgregarHorario({ navigation, user, route, eliminarHorario, agregarHo, e
                             <>
                                 <TouchableOpacity style={[styles.button, { backgroundColor: "#04254E" }]}
                                     onPress={() => {
-                                        eliminar(navigation, horar, user, recorrido, eliminarHorario)
+                                        if (!loading) {
+                                            startAnimation()
+                                            setLoading(true)
+                                            eliminar(navigation, horar, user, recorrido, eliminarHorario, setLoading)
+                                        }
+
                                     }}
                                 >
                                     <Text style={[styles.texto, { color: 'white' }]}>Eliminar</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.button]}
-                                    onPress={() => { editar(navigation, horar, user, recorrido, editarHorario) }}
+                                    onPress={() => {
+                                        if (!loading) {
+                                            startAnimation()
+                                            setLoading(true)
+                                            editar(navigation, horar, user, recorrido, editarHorario, setLoading)
+                                        }
+                                    }
+                                    }
                                 >
                                     <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
                                 </TouchableOpacity>
@@ -291,7 +338,14 @@ function AgregarHorario({ navigation, user, route, eliminarHorario, agregarHo, e
             ) : (
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity style={[styles.button]}
-                            onPress={() => { publicar(navigation, horar, user, recorrido, agregarHo) }}
+                            onPress={() => {
+                                if (!loading) {
+                                    startAnimation()
+                                    setLoading(true)
+                                    publicar(navigation, horar, user, recorrido, agregarHo, setLoading)
+                                }
+                            }
+                            }
                         >
                             <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
                         </TouchableOpacity>
@@ -303,7 +357,7 @@ function AgregarHorario({ navigation, user, route, eliminarHorario, agregarHo, e
 }
 
 
-const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => {
+const eliminar = async (navigation, horar, user, recorrido, eliminarHorario, setLoading) => {
     let res = await fetch(back + 'removeHorario', {
         method: 'POST',
         headers: {
@@ -318,6 +372,7 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
     res = await res.json()
     if (res.ok) {
         await eliminarHorario(horar, recorrido)
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha elminado su horario!',
@@ -332,6 +387,7 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
             { cancelable: false }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido eliminar su horario',
@@ -344,7 +400,7 @@ const eliminar = async (navigation, horar, user, recorrido, eliminarHorario) => 
 }
 
 
-const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
+const publicar = async (navigation, horar, user, recorrido, agregarHo, setLoading) => {
     let cont = 0
     await horar.dias.map(dia => {
         if (dia.activo) {
@@ -352,6 +408,7 @@ const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
         }
     })
     if (cont <= 0) {
+        setLoading(false)
         Alert.alert(
             'Debes seleccionar mínimo 1 día!',
             'Para seleccionar un día debes tocar sobre los días en los que funciona este horario',
@@ -381,6 +438,7 @@ const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
     res = await res.json()
     if (res.ok) {
         await agregarHo(horar, recorrido)
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha agregado su horario!',
@@ -394,6 +452,7 @@ const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
             { cancelable: false }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido agregar su horario',
@@ -405,7 +464,7 @@ const publicar = async (navigation, horar, user, recorrido, agregarHo) => {
     }
 }
 
-const editar = async (navigation, horar, user, recorrido, editarHorario) => {
+const editar = async (navigation, horar, user, recorrido, editarHorario, setLoading) => {
 
     let res = await fetch(back + 'editHorario', {
         method: 'POST',
@@ -426,6 +485,7 @@ const editar = async (navigation, horar, user, recorrido, editarHorario) => {
     res = await res.json()
     if (res.ok) {
         editarHorario(horar, recorrido)
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se han guardados los cambios!',
@@ -439,6 +499,7 @@ const editar = async (navigation, horar, user, recorrido, editarHorario) => {
             { cancelable: false }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se han guardar los cambios!',
@@ -532,7 +593,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: 3,
         marginVertical: 4
-    }
+    }, tinyLogo: {
+        width: 250,
+        height: 245,
+    }, containerLoading: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 });
 
 const mapStateToProps = state => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, LogBox } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, HeaderTitle } from '@react-navigation/stack'
 import Home from './src/screens/Home'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -28,6 +28,7 @@ import AgregarHorario from './src/screens/AgregarHorario'
 import buscarRecorrido from './src/screens/buscarRecorrido'
 import infoRecorrido from './src/screens/infoRecorrido'
 import FavXRecorridos from './src/screens/FavXRecorridos'
+
 
 const AuthStack = createStackNavigator()
 const NoticiaStack = createStackNavigator()
@@ -80,11 +81,12 @@ function header() {
   )
 }
 
-function AuthStackScreen({ navigation }) {
+function AuthStackScreen({ navigation, horarios }) {
+  const [title, setTitle] = useState('')
   return (
     <AuthStack.Navigator
       screenOptions={{
-        headerShown: false
+        headerShown: false,
       }}
     >
       <AuthStack.Screen name="Home" component={Home} />
@@ -95,8 +97,8 @@ function AuthStackScreen({ navigation }) {
       <AuthStack.Screen name="PrincipalDrawer"
         component={PrincipalDrawer}
         options={({ navigation }) => ({
-          headerTitle: false,
           headerShown: true,
+          title: '',
           headerLeft: () => {
             return (
               <TouchableOpacity style={{ marginLeft: 20 }}
@@ -293,8 +295,8 @@ function PrincipalDrawer({ route, navigation }) {
       <Drawer.Screen options={{}} name="Cuenta" component={EditarCuenta} />
     </Drawer.Navigator>
   )
-}
 
+}
 
 const App = () => {
   return (
@@ -323,4 +325,9 @@ const styles = StyleSheet.create({
   },
 })
 
+const mapStateToProps = state => {
+  return state
+}
+
+connect(mapStateToProps)(PrincipalDrawer)
 export default App;

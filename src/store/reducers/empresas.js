@@ -48,6 +48,7 @@ export default (state = initialState, action) => {
             })
             break
         case noticiasConstants.ADD:
+
             recorridos = [...state.data]
             reco = recorridos.map(recorrido => {
                 if (recorrido.id == action.recorrido) {

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { Badge } from 'react-native-paper'
 import { connect } from 'react-redux'
+import { horariosConstants } from '../store/constants/horarios'
 
 const DATA = [
     {
@@ -93,7 +94,7 @@ const Item = ({ item, onPress, style }) => {
     )
 }
 
-function NoticiaPasajero({ navigation, empresas }) {
+function NoticiaPasajero({ navigation, empresas, horarios }) {
     const [selectedId, setSelectedId] = useState(null)
     let data = []
     empresas.data.map(x => {
@@ -122,9 +123,9 @@ function NoticiaPasajero({ navigation, empresas }) {
         <View style={styles.container}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             {
-                data.length > 0 ? (
+                horarios.data.length > 0 ? (
                     <FlatList
-                        data={data}
+                        data={horarios.data}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}
@@ -138,7 +139,12 @@ function NoticiaPasajero({ navigation, empresas }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    texto4: {
+        color: '#e84c22',
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    }, container: {
         flex: 1,
         // marginTop: Constants.statusBarHeight,
     },

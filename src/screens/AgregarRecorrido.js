@@ -1,28 +1,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList, Alert, Modal } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, TextInput, FlatList, Alert, Modal, Image, Animated } from 'react-native'
 import { agregarRec, editarRecorrido, eliminarRecorrido } from '../store/actions/recorridos'
 import { back } from '../../env'
 import uuid from 'uuid/v4'
 import Bienvenida from './Bienvenida'
-
-const DATA = [
-    {
-        id: "0",
-        nombre: 'General',
-        precio: '2000'
-    },
-    {
-        id: "1",
-        nombre: 'Estudiante',
-        precio: '1500'
-    },
-    {
-        id: "2",
-        nombre: 'Adulto Mayor',
-        precio: '1000'
-    },
-]
 
 const Item = ({ item, onPress, style }) => (
     <View>
@@ -43,6 +25,7 @@ const renderItem = ({ item }) => {
 function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido, eliminarRecorrido }) {
     const { isNew, reco } = route.params
     const [editar, setEditar] = useState(isNew)
+    const [indice, setIndice] = useState(0)
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
     const [tarifa, setTarifa] = useState({
@@ -65,22 +48,78 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 precios: reco.precios ? reco.precios : []
             })
         )
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -5540,
+            duration: 9000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
+    const renderItem = ({ item, index }) => {
+        const backgroundColor = "#e84c22";
+        return (
+            <Item
+                item={item}
+                onPress={() => {
+                    setIndice(index)
+                    setTarifa({ ...tarifa, precio: item.precio, nombre: item.nombre, id: item.id })
+                    setModalVisible(true)
+                }}
+                style={{ backgroundColor }}
+            />
+        )
+    }
+    const Item = ({ item, onPress, style }) => {
+        return (
+            <TouchableOpacity onPress={onPress} style={[styles.buttonE, styles.bordes]}>
+                <Text style={[styles.texto1]}>{item.nombre}: ${item.precio}</Text>
+            </TouchableOpacity>
+        )
+    }
+    const del = () => {
+        setLoading(true)
+        eliminar(navigation, user, recorrido, eliminarRecorrido, setLoading, startAnimation)
+        setEditar(false)
+    }
 
     return (
-        <View style={modalVisible || modalVisible2 ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
+        <View style={modalVisible || modalVisible2 || loading ? ([styles.container, { opacity: 0.25 }]) : ([styles.container])}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
             >
                 <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={[styles.modalText, { fontWeight: 'bold', fontSize: 25, color: '#e84c22', borderBottomWidth: 2, borderBottomColor: '#e84c22' }]}>Agregar Precio</Text>
+                    <View style={[styles.modalView]}>
+                        <Text style={[styles.modalText, { fontWeight: 'bold', fontSize: 25, color: '#e84c22', borderBottomWidth: 2, borderBottomColor: '#e84c22' }]}>{modalVisible2 ? ('Editar Precio') : ('Agregar Precio')}</Text>
                         <Text style={styles.modalText}>Tipo de pasaje</Text>
                         <View style={styles.inputView1}>
                             <TextInput style={styles.inputText2}
                                 editable={editar}
+                                value={tarifa.nombre}
                                 placeholder='Ej: General, estudiante, etc.'
                                 onChangeText={(text) => {
                                     setTarifa({ ...tarifa, nombre: text })
@@ -91,30 +130,57 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                         <View style={styles.inputView1}>
                             <TextInput style={styles.inputText2}
                                 editable={editar}
+                                value={tarifa.precio}
                                 placeholder='Ej: 800,1000,1200,etc.'
                                 onChangeText={(text) => {
                                     setTarifa({ ...tarifa, precio: text })
                                 }}
                             />
                         </View>
-                        <TouchableOpacity
-                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
-                            onPress={() => {
-                                if (editar) {
-                                    let precioos = [...recorrido.precios]
-                                    precioos.push(tarifa)
-                                    setRecorrido({ ...recorrido, precios: precioos })
-                                    setTarifa({
-                                        id: uuid(),
-                                        nombre: '',
-                                        precio: ''
-                                    })
-                                    setModalVisible(!modalVisible);
-                                }
-                            }}
-                        >
-                            <Text style={styles.textStyle}>Agregar</Text>
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: "row" }}>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", marginRight: 10 }}
+                                onPress={() => {
+                                    if (editar) {
+                                        setModalVisible(false);
+                                    }
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", marginRight: 10 }}
+                                onPress={() => {
+                                    if (editar) {
+                                        if (modalVisible2) {
+                                            let precioos = [...recorrido.precios]
+                                            precioos[indice] = tarifa
+                                            setTarifa({
+                                                id: uuid(),
+                                                nombre: '',
+                                                precio: ''
+                                            })
+                                            setRecorrido({ ...recorrido, precios: precioos })
+                                            setModalVisible2(false);
+                                            setModalVisible(false);
+                                        } else {
+                                            let precioos = [...recorrido.precios]
+                                            precioos.push(tarifa)
+                                            setRecorrido({ ...recorrido, precios: precioos })
+                                            setTarifa({
+                                                id: uuid(),
+                                                nombre: '',
+                                                precio: ''
+                                            })
+                                            setModalVisible(false);
+                                        }
+                                    }
+                                }}
+                            >
+                                <Text style={styles.textStyle}>{modalVisible2 ? ('Guardar') : ('Agregar')}</Text>
+                            </TouchableOpacity>
+
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -124,36 +190,47 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 visible={modalVisible2}
             >
                 <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
+                    <View style={modalVisible ? ([styles.modalView2, { opacity: 0.25 }]) : (styles.modalView2)}>
                         <Text style={[styles.modalText, { fontWeight: 'bold', fontSize: 25, color: '#e84c22', borderBottomWidth: 2, borderBottomColor: '#e84c22' }]}>Editar Precios</Text>
                         <FlatList
                             data={recorrido.precios}
                             keyExtractor={(item) => item.id}
-                            style={{ width: '90%', padding: 15 }}
-                            renderItem={({ item }) =>
-                                <View>
-                                    <Text style={styles.texto1}>{item.nombre}: ${item.precio}</Text>
-                                </View>
-                            }
+                            style={{ width: '100%', padding: 15 }}
+                            renderItem={renderItem}
                         />
-                        <TouchableOpacity
-                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
-                            onPress={() => {
-                                if (editar) {
-                                    let precioos = [...recorrido.precios]
-                                    precioos.push(tarifa)
-                                    setRecorrido({ ...recorrido, precios: precioos })
-                                    setTarifa({
-                                        id: uuid(),
-                                        nombre: '',
-                                        precio: ''
-                                    })
-                                    setModalVisible2(!modalVisible2);
-                                }
-                            }}
-                        >
-                            <Text style={styles.textStyle}>Agregar</Text>
-                        </TouchableOpacity>
+                        <View style={[{ flexDirection: "row", justifyContent: 'center', marginBottom: 0 }]}>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", marginRight: 10 }}
+                                onPress={() => {
+                                    if (editar) {
+                                        setTarifa({
+                                            id: uuid(),
+                                            nombre: '',
+                                            precio: ''
+                                        })
+                                        setModalVisible2(false);
+                                    }
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
+                                onPress={() => {
+                                    if (editar) {
+                                        setTarifa({
+                                            id: uuid(),
+                                            nombre: '',
+                                            precio: ''
+                                        })
+                                        setModalVisible2(false);
+                                    }
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Guardar</Text>
+                            </TouchableOpacity>
+
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -196,6 +273,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                     style={[styles.button2]}
                     onPress={() => {
                         if (editar) {
+                            setModalVisible2(false)
                             setModalVisible(true)
                         }
                     }}
@@ -207,21 +285,21 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                         <TouchableOpacity
                             onPress={() => {
                                 if (editar) {
+                                    setModalVisible2(false)
                                     setModalVisible(true)
                                 }
                             }}
                         >
                             <Text style={[styles.texto4]}>Agregar Precio</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }} onPress={() => {
-                            setdataSearch({ ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen })
-                        }}>
+                        <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }}>
                             <Text>|</Text>
-
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
                                 if (editar) {
+                                    setModalVisible(false)
+                                    setModalVisible2(false)
                                     setModalVisible2(true)
                                 }
                             }}
@@ -248,7 +326,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 <View style={{ flexDirection: "row" }}>
                     {!editar ? (<TouchableOpacity style={[styles.button, { backgroundColor: "#04254E", width: '40%', marginRight: 20 }]}
                         onPress={() => {
-                            setEditar(!editar)
+                            setEditar(true)
                         }}
                     >
                         <Text style={[styles.texto, { color: 'white' }]}>Editar</Text>
@@ -256,8 +334,23 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                         (
                             <TouchableOpacity style={[styles.button, { backgroundColor: "#04254E", width: '40%', marginRight: 20 }]}
                                 onPress={() => {
-                                    eliminar(navigation, user, recorrido, eliminarRecorrido)
-                                    setEditar(false)
+                                    if (!loading) {
+                                        Alert.alert(
+                                            "Espera!",
+                                            'Se eliminará el recorrido, estás seguro?',
+                                            [
+                                                {
+                                                    text: "No"
+                                                },
+                                                {
+                                                    text: "Si", onPress: () => {
+                                                        del()
+                                                    }
+                                                }
+                                            ],
+                                            { cancelable: true }
+                                        )
+                                    }
                                 }}
                             >
                                 <Text style={[styles.texto, { color: 'white' }]}>Eliminar</Text>
@@ -276,7 +369,11 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                         : (
                             <TouchableOpacity style={[styles.button, { width: '40%' }]}
                                 onPress={() => {
-                                    editarRec(navigation, user, recorrido, editarRecorrido)
+                                    if (!loading) {
+                                        startAnimation()
+                                        setLoading(true)
+                                        editarRec(navigation, user, recorrido, editarRecorrido, setLoading)
+                                    }
                                 }}
                             >
                                 <Text style={[styles.texto, { color: 'white' }]}>Guardar</Text>
@@ -285,19 +382,25 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 </View>
             ) : (
                     <TouchableOpacity style={[styles.button]}
-                        onPress={() => { publicar(navigation, user, recorrido, agregarRec) }}
+                        onPress={() => {
+                            if (!loading) {
+                                startAnimation()
+                                setLoading(true)
+                                publicar(navigation, user, recorrido, agregarRec, setLoading)
+                            }
+                        }}
                     >
                         <Text style={[styles.texto, { color: 'white' }]}>Publicar</Text>
                     </TouchableOpacity>
                 )}
-
-
         </View>
     );
 }
 
 
-const eliminar = async (navigation, user, recorrido, eliminarRecorrido) => {
+const eliminar = async (navigation, user, recorrido, eliminarRecorrido, setLoading, startAnimation) => {
+    startAnimation()
+    setLoading(true)
     let res = await fetch(back + 'removeRecorrido', {
         method: 'POST',
         headers: {
@@ -313,6 +416,7 @@ const eliminar = async (navigation, user, recorrido, eliminarRecorrido) => {
     res = await res.json()
     if (res.ok) {
         await eliminarRecorrido(recorrido)
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha eliminado el recorrido!',
@@ -324,6 +428,7 @@ const eliminar = async (navigation, user, recorrido, eliminarRecorrido) => {
             { cancelable: true }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido eliminar su recorrido',
@@ -335,7 +440,7 @@ const eliminar = async (navigation, user, recorrido, eliminarRecorrido) => {
     }
 }
 
-const editarRec = async (navigation, user, recorrido, editarRecorrido) => {
+const editarRec = async (navigation, user, recorrido, editarRecorrido, setLoading) => {
     let res = await fetch(back + 'editRecorrido', {
         method: 'POST',
         headers: {
@@ -355,6 +460,7 @@ const editarRec = async (navigation, user, recorrido, editarRecorrido) => {
     res = await res.json()
     if (res.ok) {
         await editarRecorrido(recorrido)
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se han actualizado los datos del recorrido!',
@@ -366,6 +472,7 @@ const editarRec = async (navigation, user, recorrido, editarRecorrido) => {
             { cancelable: true }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido editar su recorrido',
@@ -377,7 +484,7 @@ const editarRec = async (navigation, user, recorrido, editarRecorrido) => {
     }
 }
 
-const publicar = async (navigation, user, recorrido, agregarRec) => {
+const publicar = async (navigation, user, recorrido, agregarRec, setLoading) => {
     let res = await fetch(back + 'addRecorrido', {
         method: 'POST',
         headers: {
@@ -395,6 +502,7 @@ const publicar = async (navigation, user, recorrido, agregarRec) => {
     res = await res.json()
     if (res.ok) {
         await agregarRec(recorrido)
+        setLoading(false)
         Alert.alert(
             "Genial!",
             'Se ha agregado su recorrido!',
@@ -406,6 +514,7 @@ const publicar = async (navigation, user, recorrido, agregarRec) => {
             { cancelable: false }
         );
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido agregar su recorrido:\n' + res.mensaje,
@@ -421,6 +530,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+    }, texto: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'white'
+    }, tinyLogo: {
+        width: 250,
+        height: 245,
+    }, containerLoading: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     button20: {
         backgroundColor: 'rgba(232,76,34,0.3)',
@@ -431,6 +552,13 @@ const styles = StyleSheet.create({
         height: 45,
         paddingTop: 0,
         marginBottom: 20,
+    }, buttonE: {
+        marginHorizontal: 20,
+        borderRadius: 30,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: 25,
     },
     button: {
         width: '80%',
@@ -475,6 +603,7 @@ const styles = StyleSheet.create({
         color: 'black'
     },
     bordes: {
+        width: 250,
         borderWidth: 1,
         borderBottomWidth: 5,
         borderTopWidth: 0,
@@ -523,6 +652,23 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 1,
         minHeight: 400,
+        justifyContent: 'center',
+        paddingHorizontal: 30,
+        shadowRadius: 3.84,
+        elevation: 30
+    }, modalView2: {
+        padding: 30,
+        backgroundColor: "white",
+        borderRadius: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 10,
+            height: 20
+        },
+        shadowOpacity: 1,
+        minHeight: 400,
+        maxHeight: 540,
         justifyContent: 'center',
         paddingHorizontal: 30,
         shadowRadius: 3.84,

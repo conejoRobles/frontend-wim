@@ -10,7 +10,6 @@ export default (state = initialState, action) => {
         case horariosConstants.FAV:
             recorridos = [...state.data]
             let reco = recorridos.map(x => {
-                console.log('X: ', x)
                 if (x.origen == action.horario.origen && x.destino == action.horario.destino) {
                     x.Horarios.push(action.horario)
                 }

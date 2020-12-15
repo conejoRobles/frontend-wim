@@ -24,8 +24,8 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
     const [show2, setShow2] = useState(false)
     const [recorridos, setRecorridos] = useState([])
     const [dataSearch, setdataSearch] = useState({
-        origen: 'Origen',
-        destino: 'Destino',
+        origen: '',
+        destino: '',
         dia,
         horaInicio: new Date(),
         horaTermino: new Date(),
@@ -112,6 +112,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <Text style={[styles.modalText, { paddingTop: 10 }]}>Origen</Text>
                         <View style={styles.inputView}>
                             <TextInput style={styles.inputText}
+                                value={dataSearch.origen}
                                 placeholder='Ej: San Carlos'
                                 autoCapitalize={"words"}
                                 onChangeText={(text) => {
@@ -122,6 +123,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <Text style={[styles.modalText, { paddingTop: 10 }]}>Destino</Text>
                         <View style={styles.inputView}>
                             <TextInput style={styles.inputText}
+                                value={dataSearch.destino}
                                 placeholder='Ej: La Ribera'
                                 autoCapitalize={"words"}
                                 onChangeText={(text) => {
@@ -132,7 +134,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
-                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                if (dataSearch.origen != '' && dataSearch.destino != '') {
                                     if (!loading) {
                                         setModalVisible2(false)
                                         startAnimation()
@@ -161,7 +163,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                             }}
                         >
                             <Text style={styles.textStyle} onPress={() => {
-                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                if (dataSearch.origen != '' && dataSearch.destino != '') {
                                     if (!loading) {
                                         setModalVisible2(false)
                                         startAnimation()
@@ -259,7 +261,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                         <TouchableOpacity
                             style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
                             onPress={() => {
-                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                if (dataSearch.origen != '' && dataSearch.destino != '') {
                                     if (!loading) {
                                         setModalVisible(false)
                                         startAnimation()
@@ -288,7 +290,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                             }}
                         >
                             <Text style={styles.textStyle} onPress={() => {
-                                if (dataSearch.origen != 'Origen' && dataSearch.destino != 'Destino' && dataSearch.origen != '' && dataSearch.destino != '') {
+                                if (dataSearch.origen != '' && dataSearch.destino != '') {
                                     if (!loading) {
                                         setModalVisible(false)
                                         startAnimation()
@@ -321,7 +323,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
             </Modal>
             <View style={[styles.button2, { flexDirection: "row", justifyContent: 'center', marginBottom: 0 }]}>
                 <TouchableOpacity onPress={() => { setModalVisible2(true) }}>
-                    <Text style={[styles.texto4]}>{dataSearch.origen}</Text>
+                    <Text style={[styles.texto4]}>{dataSearch.origen != '' ? dataSearch.origen : 'Origen'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }} onPress={() => {
                     setdataSearch({ ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen })
@@ -333,7 +335,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                     />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { setModalVisible2(true) }}>
-                    <Text style={[styles.texto4]}>{dataSearch.destino}</Text>
+                    <Text style={[styles.texto4]}>{dataSearch.destino != '' ? dataSearch.destino : 'Destino'}</Text>
                 </TouchableOpacity>
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0 }}>

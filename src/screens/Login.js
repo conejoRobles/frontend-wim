@@ -5,11 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { inicioSesion } from '../store/actions/user'
 import { empresasLoad } from '../store/actions/empresas'
 import { horariosLoad } from '../store/actions/horarios'
+import { changeTitle } from '../store/actions/title'
 import { AppLoading } from 'expo'
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
 
-const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosLoad }) => {
+const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosLoad, horarios, changeTitle }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
@@ -109,7 +110,7 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosL
 								inicio({
 									email,
 									password,
-								}, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad)
+								}, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad, horarios, changeTitle)
 							}
 						}
 					}}
@@ -140,7 +141,7 @@ const trie = async (usuario, navigation, inicioSesion, empresasLoad, user, logou
 	return res
 }
 
-const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad) => {
+const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad, horarios, changeTitle) => {
 	await logout()
 	try {
 		res = await trie(usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading)
@@ -176,7 +177,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					{
 						text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
 							rol: ans.usuario.rol,
-							cantNoticias: 0
+							cantNoticias: 0,
 						})
 					}
 				],
@@ -231,7 +232,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					})
 				})
 				horariosLoad(data)
-				empresasLoad(Object.values(fav))
+				empresasLoad(data)
 			} else {
 				empresasLoad([])
 			}
@@ -244,7 +245,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 						text: "OK", onPress: () => {
 							navigation.navigate('PrincipalDrawer', {
 								rol: ans.usuario.rol,
-								cantNoticias: cantNoticias
+								cantNoticias: cantNoticias,
 							})
 						}
 					}
@@ -337,6 +338,7 @@ const mapDispatchToProps = dispatch => ({
 	empresasLoad: (empresas) => dispatch(empresasLoad(empresas)),
 	logout: () => dispatch(logout()),
 	horariosLoad: (favoritos) => dispatch(horariosLoad(favoritos)),
+	changeTitle: (text) => dispatch(changeTitle(text))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

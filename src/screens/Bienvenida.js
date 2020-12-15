@@ -7,6 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import empresas from '../store/reducers/empresas'
 import { back } from '../../env'
 import { horariosLoad } from '../store/actions/horarios'
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { Title } from 'react-native-paper'
 
 
 const Item = ({ item, onPress, style }) => {
@@ -20,7 +22,7 @@ const Item = ({ item, onPress, style }) => {
 }
 
 
-function Bienvenida({ user, empresas, navigation, horariosLoad, horarios }) {
+function Bienvenida({ user, empresas, navigation, horariosLoad, horarios, }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         const backgroundColor = "#e84c22";
@@ -36,7 +38,8 @@ function Bienvenida({ user, empresas, navigation, horariosLoad, horarios }) {
                         })
                     } else {
                         navigation.navigate('FavXRecorridos', {
-                            recorrido: item
+                            recorrido: item,
+                            title: item.origen + '-' + item.destino
                         })
                     }
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { connect } from 'react-redux'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, ScrollView } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, ScrollView, Image, Animated, Modal } from "react-native";
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
 import moment from 'moment';
@@ -13,8 +13,37 @@ import { createIconSetFromFontello } from "react-native-vector-icons";
 function infoRecorrido({ navigation, route, agregarFav, user, empresas, horarios, horariosLoad }) {
     const { item, favo } = route.params
     const [fav, setFav] = useState(favo)
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -1540,
+            duration: 3000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
     return (
-        <ScrollView style={[styles.container, { padding: 20 }]}>
+        <ScrollView style={!loading ? ([styles.container, { padding: 20 }]) : ([styles.container, { padding: 20 }, { opacity: 0.25 }])}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={[styles.texto2, { marginBottom: 20 }]}>{item.nombre}</Text>
@@ -55,16 +84,24 @@ function infoRecorrido({ navigation, route, agregarFav, user, empresas, horarios
                 {fav ?
                     (<TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                         onPress={() => {
-                            setFav(false)
-                            removeFav(item, user, empresas, navigation)
+                            if (!loading) {
+                                startAnimation()
+                                setLoading(true)
+                                setFav(false)
+                                removeFav(item, user, empresas, navigation, horarios, horariosLoad, setLoading)
+                            }
                         }}>
                         <Icon name="heart" size={40} color='#e84c22' />
                     </TouchableOpacity>
                     ) : (
                         <TouchableOpacity style={[styles.bordes, { width: 70, height: 70, justifyContent: 'center', alignItems: 'center', marginTop: 14 }]}
                             onPress={() => {
-                                setFav(true)
-                                agregarFavo(item, agregarFav, user, empresas, navigation, horarios, horariosLoad)
+                                if (!loading) {
+                                    startAnimation()
+                                    setLoading(true)
+                                    setFav(true)
+                                    agregarFavo(item, agregarFav, user, empresas, navigation, horarios, horariosLoad, setLoading)
+                                }
                             }}>
                             <Icon name="heart-o" size={40} color='#e84c22' />
                         </TouchableOpacity>
@@ -80,7 +117,7 @@ function infoRecorrido({ navigation, route, agregarFav, user, empresas, horarios
     )
 }
 
-const agregarFavo = async (item, agregarFav, user, empresas, navigation, horarios, horariosLoad) => {
+const agregarFavo = async (item, agregarFav, user, empresas, navigation, horarios, horariosLoad, setLoading) => {
     let res = await fetch(back + 'addFavorito', {
         method: 'POST',
         headers: {
@@ -103,12 +140,17 @@ const agregarFavo = async (item, agregarFav, user, empresas, navigation, horario
         horar = horar.map(x => {
             if (x.origen == item.origen && x.destino == item.destino) {
                 flag = true
+                let flag2 = false
                 x.Horarios.map(y => {
                     if (y.id == item.id) {
+                        flag2 = true
                         y = { ...y, ...item }
                     }
                     return y
                 })
+                if (!flag2) {
+                    x.Horarios.push(item)
+                }
             }
             return x
         })
@@ -122,20 +164,25 @@ const agregarFavo = async (item, agregarFav, user, empresas, navigation, horario
 
         }
         horariosLoad(horar)
+        setLoading(false)
         Alert.alert(
             "El horario ha sido guardado!",
             'Ahora recibirás las noticias de este horario',
             [
                 {
-                    text: "OK", onPress: () => navigation.navigate('InfoRecorrido', {
-                        item
-                    })
+                    text: "OK", onPress: () => {
+
+                        navigation.navigate('InfoRecorrido', {
+                            item
+                        })
+                    }
                 }
             ],
             { cancelable: false }
         );
 
     } else {
+        setLoading(false)
         Alert.alert(
             "Este horario ya es parte de tus favoritos!",
             'ya recibes sus noticias!',
@@ -147,7 +194,7 @@ const agregarFavo = async (item, agregarFav, user, empresas, navigation, horario
     }
 }
 
-const removeFav = async (item, user, empresas, navigation) => {
+const removeFav = async (item, user, empresas, navigation, horarios, horariosLoad, setLoading) => {
     let res = await fetch(back + 'removeFavorito', {
         method: 'POST',
         headers: {
@@ -165,21 +212,34 @@ const removeFav = async (item, user, empresas, navigation) => {
     })
     res = await res.json()
     if (res.ok) {
+        let horar = horarios.data
+        let flag = false
+        horar = horar.map(x => {
+            if (x.origen == item.origen && x.destino == item.destino) {
+                flag = true
+                x.Horarios = x.Horarios.filter(y => y.id != item.id)
+            }
+            return x
+        }).filter(x => x.Horarios.length > 0)
+        horariosLoad(horar)
+        setLoading(false)
         Alert.alert(
-            "El horario ha sido quitado de tus favoritos!",
-            'Ya no recibirás las noticias de este horario',
+            "Has dejado de seguir este horario!",
+            'Ahora no recibirás sus noticias',
             [
                 {
-                    text: "OK", onPress: () => navigation.navigate('InfoRecorrido', {
-                        item,
-                        fav: false
-                    })
+                    text: "OK", onPress: () => {
+                        navigation.navigate('InfoRecorrido', {
+                            item
+                        })
+                    }
                 }
             ],
             { cancelable: false }
         );
 
     } else {
+        setLoading(false)
         Alert.alert(
             "Oh no! algo anda mal",
             'No se ha podido quitar de favoritos, intente nuevamente',
@@ -200,6 +260,15 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         alignItems: 'center',
         // justifyContent: 'center',
+    }, containerLoading: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    tinyLogo: {
+        width: 250,
+        height: 245,
     },
     headerText: {
         fontWeight: 'bold',

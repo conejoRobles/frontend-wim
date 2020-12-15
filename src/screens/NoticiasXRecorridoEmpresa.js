@@ -7,28 +7,6 @@ import noticias from '../store/reducers/noticias'
 import moment from 'moment';
 
 
-// const DATA = [
-//     {
-//         id: "0",
-//         titulo: 'Bus en Mantención',
-//         descripcion: 'En bus se puso triste :C'
-//     },
-//     {
-//         id: "1",
-//         titulo: 'Bus Enfermito',
-//         descripcion: 'Al bus le duele la guatita'
-//     },
-//     {
-//         id: "2",
-//         titulo: 'Bus con su periodo',
-//         descripcion: 'Al bus le llego la regla y esta con colicos :c'
-//     },
-//     {
-//         id: "3",
-//         titulo: 'Bus con su periodo',
-//         descripcion: 'Al bus le llego la regla y esta con colicos :c'
-//     }
-// ]
 
 function tiempo(minutos) {
     if (minutos > 59) {
@@ -65,8 +43,7 @@ const Item = ({ item, onPress, style }) => {
 }
 
 function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
-    const { noticias, recorrido, horario } = route.params
-    let data = noticias
+    const { noticias, recorrido, horario, reco } = route.params
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         if (user.rol == 'empresa') {
@@ -78,7 +55,8 @@ function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
                             item,
                             recorrido,
                             horario,
-                            noticias
+                            noticias,
+                            reco
                         })
                         setSelectedId(item.id)
                     }}
@@ -98,21 +76,29 @@ function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
+            <View>
+                <Text style={[styles.texto4, { textAlign: 'center', marginTop: 20 }]}>{reco.origen}- {reco.destino}</Text>
+                <TouchableOpacity
+                    style={[styles.button2]}>
+                    <Text style={styles.texto2}>{horario.nombre}</Text>
+                </TouchableOpacity>
+            </View>
             {user.rol == 'empresa' ? (<TouchableOpacity
                 onPress={() => {
                     navigation.navigate('AgregarNoticias', {
                         horario,
                         recorrido,
-                        noticias
+                        noticias,
+                        reco
                     })
                 }}
                 style={[styles.button2]}>
                 <Text style={styles.texto2}>Agregar Noticia</Text>
             </TouchableOpacity>) : (<></>)}
             {
-                data.length > 0 && data != null && data != undefined ? (
+                noticias.length > 0 && noticias != null && noticias != undefined ? (
                     <FlatList
-                        data={data}
+                        data={noticias}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}
@@ -126,7 +112,12 @@ function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
 }
 
 const styles = StyleSheet.create({
-    headerText: {
+    texto4: {
+        color: '#e84c22',
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    }, headerText: {
         fontWeight: 'bold',
         fontSize: 10,
         color: 'white',
@@ -143,12 +134,9 @@ const styles = StyleSheet.create({
         marginVertical: 15,
     },
     button2: {
-        backgroundColor: 'rgba(232,76,34,0.3)',
-        // opacity: 0.3,
-        // borderRadius: 50,
         borderBottomRightRadius: 50,
         borderBottomLeftRadius: 50,
-        height: 45,
+        height: 35,
         justifyContent: 'center',
     },
     contenedor: {

@@ -19,7 +19,8 @@ function Horarios({ user, empresas, navigation, route }) {
                                     navigation.navigate('NoticiasxRecorridoEmpresa', {
                                         noticias: item.Noticias ? Object.values(item.Noticias) : [],
                                         recorrido: reco.id,
-                                        horario: item
+                                        horario: item,
+                                        reco
                                     })
                                 } else {
                                     navigation.navigate('AgregarHorario', {
@@ -72,6 +73,7 @@ function Horarios({ user, empresas, navigation, route }) {
                                     navigation.navigate('NoticiasxRecorridoEmpresa', {
                                         noticias: item.Noticias ? Object.values(item.Noticias) : [],
                                         recorrido: reco.id,
+                                        reco,
                                         horario: item
                                     })
                                 } else {
@@ -123,7 +125,9 @@ function Horarios({ user, empresas, navigation, route }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-
+            <View>
+                <Text style={[styles.texto5, { textAlign: 'center', marginTop: 20 }]}>{reco.origen} - {reco.destino}</Text>
+            </View>
             {forNews ? (<></>) : (
                 <TouchableOpacity
                     onPress={() => navigation.navigate('AgregarHorario', {
@@ -133,32 +137,28 @@ function Horarios({ user, empresas, navigation, route }) {
                     style={[styles.button2]}>
                     <Text style={styles.texto4}>Agregar Horario</Text>
                 </TouchableOpacity>)}
-            {/* {reco.Horarios ? (
-                (reco.Horarios.size() > 0) ? (<FlatList
-                    data={Object.values(reco.Horarios)}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    extraData={selectedId}
-                />):(
-                        <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text> 
-                )  
-            ): (
-                <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
-            )} */}
-            {reco.Horarios ? (<FlatList
-                data={Object.values(reco.Horarios)}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                extraData={selectedId}
-            />) : (
-                    <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
+            {reco.Horarios ?
+                (
+                    <FlatList
+                        data={Object.values(reco.Horarios)}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        extraData={selectedId}
+                    />
+                ) : (
+                    <Text style={[styles.texto5, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
                 )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    header: {
+    texto5: {
+        color: '#e84c22',
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    }, header: {
         width: '100%',
         height: 50,
         // flex: 1,
