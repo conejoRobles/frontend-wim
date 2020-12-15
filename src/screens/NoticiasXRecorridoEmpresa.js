@@ -76,25 +76,27 @@ function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <View>
-                <Text style={[styles.texto4, { textAlign: 'center', marginTop: 20 }]}>{reco.origen}- {reco.destino}</Text>
-                <TouchableOpacity
-                    style={[styles.button2]}>
-                    <Text style={styles.texto2}>{horario.nombre}</Text>
-                </TouchableOpacity>
+            <View style={[styles.button7, styles.bordes, { backgroundColor: 'white', marginBottom: 0, height: 70, paddingBottom: 10, }]}>
+                <Text style={[styles.texto4, { textAlign: 'center', marginTop: 20 }]}>{reco.origen} - {reco.destino}</Text>
             </View>
-            {user.rol == 'empresa' ? (<TouchableOpacity
-                onPress={() => {
-                    navigation.navigate('AgregarNoticias', {
-                        horario,
-                        recorrido,
-                        noticias,
-                        reco
-                    })
-                }}
-                style={[styles.button2]}>
-                <Text style={styles.texto2}>Agregar Noticia</Text>
+            {user.rol == 'pasajero' ? (<TouchableOpacity
+                style={[styles.button2, { width: '50%', alignSelf: 'center' }]}>
+                <Text style={styles.texto2}>{horario.nombre}</Text>
             </TouchableOpacity>) : (<></>)}
+            {
+                user.rol == 'empresa' ? (<TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('AgregarNoticias', {
+                            horario,
+                            recorrido,
+                            noticias,
+                            reco
+                        })
+                    }}
+                    style={[styles.button2, { width: '70%', alignSelf: 'center' }]}>
+                    <Text style={styles.texto2}>Agregar Noticia</Text>
+                </TouchableOpacity>) : (<></>)
+            }
             {
                 noticias.length > 0 && noticias != null && noticias != undefined ? (
                     <FlatList
@@ -107,12 +109,18 @@ function NoticiasXRecorridoEmpresa({ navigation, route, user }) {
                         <Text style={[styles.texto2, { color: 'black', marginTop: '70%' }]}>Aún no hay noticias</Text>
                     )
             }
-        </View>
+        </View >
     );
 }
 
 const styles = StyleSheet.create({
-    texto4: {
+    button7: {
+        backgroundColor: 'rgba(232,76,34,0.3)',
+        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        height: 35,
+        justifyContent: 'center',
+    }, texto4: {
         color: '#e84c22',
         fontSize: 28,
         fontWeight: 'bold',
@@ -134,6 +142,7 @@ const styles = StyleSheet.create({
         marginVertical: 15,
     },
     button2: {
+        backgroundColor: 'rgba(232,76,34,0.3)',
         borderBottomRightRadius: 50,
         borderBottomLeftRadius: 50,
         height: 35,
@@ -167,6 +176,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginHorizontal: 10,
         fontSize: 20,
+    }, bordes2: {
+        borderWidth: 2,
+        borderColor: '#ff4b00'
     },
     bordes: {
         borderWidth: 1,

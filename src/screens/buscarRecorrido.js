@@ -292,14 +292,29 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                             <Text style={styles.textStyle} onPress={() => {
                                 if (dataSearch.origen != '' && dataSearch.destino != '') {
                                     if (!loading) {
-                                        setModalVisible(false)
-                                        startAnimation()
-                                        setLoading(true)
-                                        publicar(navigation, dataSearch).then((recos) => {
-                                            setRecorridos(recos)
-                                            setLoading(false)
-                                            setSearch(true)
-                                        })
+                                        let horaInicio = new Date(dataSearch.horaInicio)
+                                        let horaTermino = new Date(dataSearch.horaTermino)
+                                        if (horaInicio.getTime() > horaTermino.getTime()) {
+                                            Alert.alert(
+                                                "Oh no!",
+                                                "La hora mínima debe ser menor a la hora máxima",
+                                                [
+                                                    {
+                                                        text: "OK"
+                                                    }
+                                                ],
+                                                { cancelable: false }
+                                            );
+                                        } else {
+                                            setModalVisible(false)
+                                            startAnimation()
+                                            setLoading(true)
+                                            publicar(navigation, dataSearch).then((recos) => {
+                                                setRecorridos(recos)
+                                                setLoading(false)
+                                                setSearch(true)
+                                            })
+                                        }
                                     }
                                 } else {
                                     Alert.alert(
@@ -374,6 +389,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
 }
 
 const publicar = async (navigation, dataSearch) => {
+
     let res = await fetch(back + 'searchRecorrido', {
         method: 'POST',
         headers: {
@@ -396,17 +412,19 @@ const publicar = async (navigation, dataSearch) => {
             res2 = await res2.json()
             if (res2.ok) {
                 if (res2.recorrido.Horarios != undefined && res2.recorrido.Horarios != null) {
+                    let dateAux = new Date()
                     let horarios = Object.values(res2.recorrido.Horarios)
                     let todo2 = horarios.map(horario => {
                         if (horario.dias[dataSearch.dia].activo) {
                             let horaI = new Date(horario.horaInicio)
+                            dateAux.setHours(horaI.getHours(), horaI.getMinutes(), 0)
                             if (horaI.getHours() >= horaInicio.getHours() && horaI.getHours() <= horaTermino.getHours()) {
                                 if (horaI.getHours() == horaTermino.getHours()) {
                                     if (horaI.getMinutes() <= horaTermino.getMinutes()) {
-                                        return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa, telefono: res2.recorrido.telefono, precios: res2.recorrido.precios }
+                                        return { ...horario, horaInicio: dateAux.toString(), nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa, telefono: res2.recorrido.telefono, precios: res2.recorrido.precios, }
                                     }
                                 } else {
-                                    return { ...horario, nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa, telefono: res2.recorrido.telefono, precios: res2.recorrido.precios }
+                                    return { ...horario, horaInicio: dateAux.toString(), nombre: recorrido.nombre, origen: recorrido.origen, destino: recorrido.destino, recorrido: recorrido.recorrido, empresa: recorrido.empresa, telefono: res2.recorrido.telefono, precios: res2.recorrido.precios, }
                                 }
                             }
                         }
@@ -427,7 +445,15 @@ const publicar = async (navigation, dataSearch) => {
                     })
                 })
             })
-            return recos
+            return recos.sort((a, b) => {
+                if (new Date(a.horaInicio).getTime() > new Date(b.horaInicio).getTime()) {
+                    return 1
+                }
+                if (new Date(a.horaInicio).getTime() < new Date(b.horaInicio).getTime()) {
+                    return -1
+                }
+                return 0
+            })
         })
     } else {
         return []

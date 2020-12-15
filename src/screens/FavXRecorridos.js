@@ -81,6 +81,7 @@ const Item = ({ item, onPress, style }) => {
 function FavXRecorridos({ navigation, empresas, route }) {
     const [selectedId, setSelectedId] = useState(null)
     const { recorrido } = route.params
+    console.log(Object.values(recorrido.Horarios))
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
@@ -106,7 +107,21 @@ function FavXRecorridos({ navigation, empresas, route }) {
             {
                 Object.values(recorrido.Horarios).length > 0 ? (
                     <FlatList
-                        data={Object.values(recorrido.Horarios)}
+                        data={Object.values(recorrido.Horarios).map(x => {
+                            let a = new Date(x.horaInicio)
+                            let b = new Date()
+                            b.setHours(a.getHours(), a.getMinutes(), 0)
+                            x.horaInicio = b.toString()
+                            return x
+                        }).sort((a, b) => {
+                            if (new Date(a.horaInicio).getTime() > new Date(b.horaInicio).getTime()) {
+                                return 1
+                            }
+                            if (new Date(a.horaInicio).getTime() < new Date(b.horaInicio).getTime()) {
+                                return -1
+                            }
+                            return 0
+                        })}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}

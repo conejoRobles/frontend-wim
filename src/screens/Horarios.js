@@ -125,30 +125,34 @@ function Horarios({ user, empresas, navigation, route }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
-            <View>
+            <View style={[styles.button2, styles.bordes2, { backgroundColor: 'white', marginBottom: 0, height: 60, paddingBottom: 70, paddingTop: 0 }]}>
                 <Text style={[styles.texto5, { textAlign: 'center', marginTop: 20 }]}>{reco.origen} - {reco.destino}</Text>
             </View>
-            {forNews ? (<></>) : (
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('AgregarHorario', {
-                        isNew: true,
-                        recorrido: reco
-                    })}
-                    style={[styles.button2]}>
-                    <Text style={styles.texto4}>Agregar Horario</Text>
-                </TouchableOpacity>)}
-            {reco.Horarios ?
-                (
-                    <FlatList
-                        data={Object.values(reco.Horarios)}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        extraData={selectedId}
-                    />
-                ) : (
-                    <Text style={[styles.texto5, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
-                )}
-        </View>
+            {
+                forNews ? (<></>) : (
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('AgregarHorario', {
+                            isNew: true,
+                            recorrido: reco
+                        })}
+                        style={[styles.button2, { width: '60%', alignSelf: 'center' }]}>
+                        <Text style={styles.texto4}>Agregar Horario</Text>
+                    </TouchableOpacity>)
+            }
+            {
+                reco.Horarios ?
+                    (
+                        <FlatList
+                            data={Object.values(reco.Horarios)}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.id}
+                            extraData={selectedId}
+                        />
+                    ) : (
+                        <Text style={[styles.texto5, { color: 'black', marginTop: '70%' }]}>Aún no has agregado horarios</Text>
+                    )
+            }
+        </View >
     );
 }
 
@@ -227,6 +231,11 @@ const styles = StyleSheet.create({
     // ff3d00
     bordes: {
         borderWidth: 2,
+        borderColor: '#ff4b00'
+    }, bordes2: {
+        borderWidth: 1,
+        borderBottomWidth: 5,
+        borderTopWidth: 0,
         borderColor: '#ff4b00'
     },
     dias: {
