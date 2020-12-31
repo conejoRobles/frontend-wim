@@ -8,45 +8,103 @@ import empresas from '../store/reducers/empresas'
 import { back } from '../../env'
 import { horariosLoad } from '../store/actions/horarios'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Title } from 'react-native-paper'
 
 
 const Item = ({ item, onPress, style }) => {
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, styles.bordes, style]}>
-            <Text style={styles.texto}>{item.origen}</Text>
-            <Text style={styles.texto}>-</Text>
-            <Text style={styles.texto}>{item.destino}</Text>
-        </TouchableOpacity>
+        <TouchableOpacity onPress={onPress} style={[styles.button, styles.bordes, style,]}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: '7%', maxHeight: '60%' }}>
+                <Text style={[styles.texto, { flex: 1, paddingTop: '7%' }]}>
+                    {item.origen}
+                    <Text> </Text>
+                    <FontAwesome5
+                        name={'arrow-right'}
+                        solid
+                        size={15}
+                        color='white'
+                    />
+                    <Text> </Text>
+                    {item.destino}
+                </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+                {<View style={{ marginTop: '1%', marginRight: '2%' }}>
+                    <FontAwesome5
+                        name={'clock'}
+                        solid
+                        size={15}
+                        color='white'
+                    />
+                </View>}
+                <Text style={[styles.texto3, { fontSize: 15, color: 'white' }]}>
+                    Horarios: {Object.values(item.Horarios).length}</Text>
+            </View>
+        </TouchableOpacity >
     )
 }
 
+const Item2 = ({ item, onPress, style }) => {
+    return (
+        <TouchableOpacity onPress={onPress} style={[styles.button, styles.bordes, style,]}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: '7%', maxHeight: '60%' }}>
+                <Text style={[styles.texto, { flex: 1, paddingTop: '7%' }]}>
+                    {item.origen}
+                    <Text> </Text>
+                    <FontAwesome5
+                        name={'arrow-right'}
+                        solid
+                        size={15}
+                        color='white'
+                    />
+                    <Text> </Text>
+                    {item.destino}
+                </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+                {<View style={{ marginTop: '1%', marginRight: '2%' }}>
+                    <FontAwesome5
+                        name={'clock'}
+                        solid
+                        size={15}
+                        color='white'
+                    />
+                </View>}
+                <Text style={[styles.texto3, { fontSize: 15, color: 'white' }]}>
+                    Horarios: {Object.values(item.Horarios).length}</Text>
+            </View>
+        </TouchableOpacity >
+    )
+}
 
 function Bienvenida({ user, empresas, navigation, horariosLoad, horarios, }) {
     const [selectedId, setSelectedId] = useState(null)
     const renderItem = ({ item }) => {
         const backgroundColor = "#e84c22";
-        return (
-            <Item
-                item={item}
-                onPress={() => {
-                    setSelectedId(item.id)
-                    if (user.rol == 'empresa') {
-                        navigation.navigate('AgregarRecorrido', {
-                            isNew: false,
-                            reco: item
-                        })
-                    } else {
-                        navigation.navigate('FavXRecorridos', {
-                            recorrido: item,
-                            title: item.origen + '-' + item.destino
-                        })
-                    }
+        {
+            return (
+                <Item
+                    item={item}
+                    onPress={() => {
+                        setSelectedId(item.id)
+                        if (user.rol == 'empresa') {
+                            navigation.navigate('AgregarRecorrido', {
+                                isNew: false,
+                                reco: item
+                            })
+                        } else {
+                            navigation.navigate('FavXRecorridos', {
+                                recorrido: item,
+                                title: item.origen + '-' + item.destino
+                            })
+                        }
 
-                }}
-                style={{ backgroundColor }}
-            />
-        )
+                    }}
+                    style={{ backgroundColor }}
+                />
+            )
+        }
     }
     return (
         <View style={[styles.container]}>
@@ -54,7 +112,7 @@ function Bienvenida({ user, empresas, navigation, horariosLoad, horarios, }) {
             <View style={[styles.button, styles.bordes, { backgroundColor: 'white', marginBottom: 0, }]}>
                 <Text style={styles.texto2}>Bienvenido</Text>
                 {
-                    user.rol == 'empresa' ? (<Text style={styles.texto3}>Aqui tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aqui tenemos tus recorridos Guardados</Text>)
+                    user.rol == 'empresa' ? (<Text style={styles.texto3}>Aquí tenemos tus recorridos publicados</Text>) : (<Text style={styles.texto3}>Aquí tenemos tus recorridos Favoritos</Text>)
                 }
             </View>
 
@@ -71,7 +129,15 @@ function Bienvenida({ user, empresas, navigation, horariosLoad, horarios, }) {
             {user.rol == 'empresa' ? (
                 empresas.data.length > 0 ? (
                     <FlatList
-                        data={empresas.data}
+                        data={empresas.data.sort((a, b) => {
+                            if (a.origen > b.origen) {
+                                return 1
+                            }
+                            if (a.origen < b.origen) {
+                                return -1
+                            }
+                            return 0
+                        })}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         extraData={selectedId}
@@ -151,7 +217,7 @@ const styles = StyleSheet.create({
         // marginTop: Constants.statusBarHeight,
     },
     texto: {
-        fontSize: 25,
+        fontSize: 22,
         fontWeight: 'bold',
         color: 'white'
     },

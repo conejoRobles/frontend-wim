@@ -132,8 +132,8 @@ const trie = async (usuario, navigation, inicioSesion, empresasLoad, user, logou
 			'Content-Type': 'Application/json',
 		},
 		body: JSON.stringify({
-			correo: usuario.email,
-			pass: usuario.password,
+			correo: usuario.email.replace(' ', ''),
+			pass: usuario.password.replace(' ', ''),
 		}),
 		signal: controller.signal
 	})
@@ -165,7 +165,15 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 			let ans2 = await res2.json()
 			if (ans2.ok) {
 				let recorridos = ans2.recorridos
-				empresasLoad(Object.values(recorridos))
+				empresasLoad(Object.values(recorridos).map(x => {
+					let noticias = 0
+					Object.values(x.Horarios).map(y => {
+						noticias += y.Noticias != null && y.Noticias != undefined ? (Object.values(y.Noticias).length) : (0)
+					})
+					cantNoticias += noticias
+					x = { ...x, cantidadNoticias: noticias }
+					return x
+				}))
 			} else {
 				empresasLoad([])
 			}
@@ -177,7 +185,7 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 					{
 						text: "OK", onPress: () => navigation.navigate('PrincipalDrawer', {
 							rol: ans.usuario.rol,
-							cantNoticias: 0,
+							cantNoticias: cantNoticias,
 						})
 					}
 				],

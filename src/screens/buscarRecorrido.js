@@ -342,6 +342,13 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }} onPress={() => {
                     setdataSearch({ ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen })
+                    startAnimation()
+                    setLoading(true)
+                    publicar(navigation, { ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen }).then((recos) => {
+                        setRecorridos(recos)
+                        setLoading(false)
+                        setSearch(true)
+                    })
                 }}>
                     <FontAwesome5
                         name={'exchange-alt'}

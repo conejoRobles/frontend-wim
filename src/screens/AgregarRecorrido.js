@@ -131,7 +131,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                             <TextInput style={styles.inputText2}
                                 editable={editar}
                                 value={tarifa.precio}
-                                placeholder='Ej: 800,1000,1200,etc.'
+                                placeholder='Ej: 800,1.000,1.200,etc.'
                                 onChangeText={(text) => {
                                     setTarifa({ ...tarifa, precio: text })
                                 }}
@@ -310,16 +310,29 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                 )
             }
 
-            <View style={{ width: '90%', borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: 380, marginTop: 10, alignItems: 'center' }}>
+            <View style={{ width: '80%', flexDirection: "row", borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: '50%', marginTop: 10, }}>
                 <FlatList
                     data={recorrido.precios}
                     renderItem={({ item }) =>
-                        <View>
-                            <Text style={styles.texto1}>{item.nombre}: ${item.precio}</Text>
+                        <View style={[{ flexDirection: "row" }]}>
+                            <Text style={styles.texto1}>{item.nombre}</Text>
                         </View>
                     }
                     keyExtractor={(item) => item.id}
                     style={{ width: '90%', padding: 15 }}
+                />
+                <FlatList
+                    data={recorrido.precios}
+                    renderItem={({ item }) =>
+                        <View style={[{ flexDirection: "row" }]}>
+                            <Text style={styles.texto1}>: $</Text>
+                            <View style={{ flex: 1 }}>
+                                <Text style={[styles.texto1, { flex: 1, justifyContent: 'center', alignSelf: 'flex-end' }]}>{item.precio.replace('.', '').split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.').split('').reverse().join('').replace(/^[\.]/, '')}</Text>
+                            </View>
+                        </View>
+                    }
+                    keyExtractor={(item) => item.id}
+                    style={{ width: '40%', paddingTop: 15, marginRight: '12%' }}
                 />
             </View>
             {!isNew ? (
@@ -599,7 +612,7 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     texto1: {
-        fontSize: 25,
+        fontSize: 20,
         color: 'black'
     },
     bordes: {

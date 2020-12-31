@@ -244,6 +244,7 @@ function TabPasajero({ navigation, route }) {
 }
 
 function TabEmpresa() {
+  let cant2 = getTotalNoticias()
   return (
     <Tab.Navigator
       initialRouteName="Bienvenida"
@@ -252,6 +253,7 @@ function TabEmpresa() {
         showLabel: false,
       }}
     >
+
       <Tab.Screen
         name="Bienvenida"
         component={RutasStackScreenEmpresa}
@@ -268,6 +270,7 @@ function TabEmpresa() {
         name="NoticiaEmpresa"
         component={NoticiaEmpresaStackScreen}
         options={{
+          tabBarBadge: cant2,
           tabBarIcon: ({ color }) => (
             <FontAwesome5
               name={'bell'}

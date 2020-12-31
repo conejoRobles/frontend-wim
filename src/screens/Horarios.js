@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, Alert } from 'react-native'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { connect } from 'react-redux'
 import moment from 'moment';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -113,8 +114,23 @@ function Horarios({ user, empresas, navigation, route }) {
                                                 }
                                                 keyExtractor={(item) => item.id}
                                                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
-                                            />)}
+                                            />
+
+                                        )}
                                 </View>
+                                {user.rol == 'empresa' ? (
+                                    <View style={{ flexDirection: "row" }}>
+                                        {<View style={{ marginTop: '2%', marginRight: '2%' }}>
+                                            <FontAwesome5
+                                                name={'bell'}
+                                                solid
+                                                size={15}
+                                                color='black'
+                                            />
+                                        </View>}
+                                        <Text style={[styles.texto2, { fontSize: 16, color: 'black', marginTop: '0.7%' }]}>Noticias: {item.Noticias ? Object.values(item.Noticias).length : 0} </Text>
+                                    </View>
+                                ) : (<></>)}
                             </View>
                         </TouchableOpacity>
                     )
@@ -143,7 +159,22 @@ function Horarios({ user, empresas, navigation, route }) {
                 reco.Horarios ?
                     (
                         <FlatList
-                            data={Object.values(reco.Horarios)}
+                            data={
+                                Object.values(reco.Horarios).map(x => {
+                                    let a = new Date(x.horaInicio)
+                                    let b = new Date()
+                                    b.setHours(a.getHours(), a.getMinutes(), 0)
+                                    x.horaInicio = b.toString()
+                                    return x
+                                }).sort((a, b) => {
+                                    if (new Date(a.horaInicio).getTime() > new Date(b.horaInicio).getTime()) {
+                                        return 1
+                                    }
+                                    if (new Date(a.horaInicio).getTime() < new Date(b.horaInicio).getTime()) {
+                                        return -1
+                                    }
+                                    return 0
+                                })}
                             renderItem={renderItem}
                             keyExtractor={(item) => item.id}
                             extraData={selectedId}

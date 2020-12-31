@@ -81,7 +81,6 @@ const Item = ({ item, onPress, style }) => {
 function FavXRecorridos({ navigation, empresas, route }) {
     const [selectedId, setSelectedId] = useState(null)
     const { recorrido } = route.params
-    console.log(Object.values(recorrido.Horarios))
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (

@@ -66,16 +66,26 @@ function infoRecorrido({ navigation, route, agregarFav, user, empresas, horarios
             </View>
             <View style={[{ borderTopWidth: 1, borderTopColor: '#e84c22', marginBottom: 10 }]}>
                 <Text style={[styles.texto]}>Precios:</Text>
-                <View style={{ width: '100%', borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: 180, marginTop: 10, alignItems: 'center' }}>
+                <View style={{ width: '100%', borderColor: '#e84c22', borderWidth: 1, borderRadius: 20, height: 120, marginTop: 10, alignItems: 'center', flexDirection: "row" }}>
                     <FlatList
                         data={item.precios}
                         renderItem={({ item }) =>
-                            <View>
-                                <Text style={styles.texto1}>{item.nombre}: ${item.precio}</Text>
+                            <View style={[{ flexDirection: "row" }]}>
+                                <Text style={styles.texto3}>{item.nombre}</Text>
                             </View>
                         }
                         keyExtractor={(item) => item.id}
-                        style={{ width: '90%', padding: 15 }}
+                        style={{ width: '100%', padding: 15 }}
+                    />
+                    <FlatList
+                        data={item.precios}
+                        renderItem={({ item }) =>
+                            <View style={[{ flexDirection: "row" }]}>
+                                <Text style={styles.texto3}>: ${item.precio.replace('.', '').split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.').split('').reverse().join('').replace(/^[\.]/, '')}</Text>
+                            </View>
+                        }
+                        keyExtractor={(item) => item.id}
+                        style={{ width: '90%' }}
                     />
                 </View>
             </View>
@@ -113,7 +123,10 @@ function infoRecorrido({ navigation, route, agregarFav, user, empresas, horarios
             <View >
                 <Text> </Text>
             </View>
-        </ScrollView>
+            <View >
+                <Text> </Text>
+            </View>
+        </ScrollView >
     )
 }
 

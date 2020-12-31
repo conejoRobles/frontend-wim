@@ -15,7 +15,6 @@ function tiempo(minutos) {
         if (horas > 23) {
             let dias = Math.trunc(horas / 24)
             horas = horas % 24
-            m
             return "" + dias + "d " + horas + "h " + m + "m"
         }
         return "" + horas + "h " + m + "m"

@@ -5,9 +5,10 @@ import { Picker } from '@react-native-community/picker'
 import { agregar } from '../store/actions/noticias'
 import { back } from '../../env'
 import uuid from 'uuid/v4'
+import empresas from '../store/reducers/empresas'
 
 
-function agregarNoticia({ navigation, agregar, user, route, }) {
+function agregarNoticia({ navigation, agregar, user, route, empresas }) {
     const { recorrido, noticias, horario, reco } = route.params
     const [noticia, setNoticia] = useState({
         id: uuid(),
@@ -142,7 +143,7 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
                         { cancelable: false }
                     );
                 } else {
-                    publicar(noticia, agregar, navigation, user, recorrido, noticias, horario, setLoading)
+                    publicar(noticia, agregar, navigation, user, recorrido, noticias, horario, setLoading, empresas, reco)
                 }
             }}>
                 <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
@@ -153,7 +154,7 @@ function agregarNoticia({ navigation, agregar, user, route, }) {
 }
 
 
-const publicar = async (noticia, agregar, navigation, user, recorrido, noticias, horario, setLoading) => {
+const publicar = async (noticia, agregar, navigation, user, recorrido, noticias, horario, setLoading, empresas, reco) => {
     setLoading(true)
     let hoy = new Date()
     let termino = new Date()
@@ -192,6 +193,11 @@ const publicar = async (noticia, agregar, navigation, user, recorrido, noticias,
         await agregar(noticia, recorrido)
         noticias.unshift(noticia)
         horario.Noticias = noticias
+        empresas.data.map(x => {
+            if (x.id == recorrido) {
+                x.cantidadNoticias = x.cantidadNoticias + 1
+            }
+        })
         setLoading(false)
         Alert.alert(
             "Genial!",

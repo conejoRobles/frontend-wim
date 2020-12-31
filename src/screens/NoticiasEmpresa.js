@@ -1,15 +1,41 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 
-const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-        <Text style={styles.texto}>{item.origen}</Text>
-        <Text style={styles.texto}>-</Text>
-        <Text style={styles.texto}>{item.destino}</Text>
-    </TouchableOpacity>
-)
+const Item = ({ item, onPress, style }) => {
+    return (
+        <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: '7%', maxHeight: '60%' }}>
+                <Text style={[styles.texto, { flex: 1, paddingTop: '7%' }]}>
+                    {item.origen}
+                    <Text> </Text>
+                    <FontAwesome5
+                        name={'arrow-right'}
+                        solid
+                        size={15}
+                        color='white'
+                    />
+                    <Text> </Text>
+                    {item.destino}
+                </Text>
+            </View>
+            <View style={{ flexDirection: "row", }}>
+                {<View style={{ marginTop: '1%', marginRight: '2%' }}>
+                    <FontAwesome5
+                        name={'bell'}
+                        solid
+                        size={15}
+                        color='white'
+                    />
+                </View>}
+                <Text style={[styles.texto3, { fontSize: 15, color: 'white', }]}>Noticias: {item.cantidadNoticias} </Text>
+            </View>
+
+        </TouchableOpacity>
+    )
+}
 
 function NoticiasEmpresa({ navigation, empresas }) {
     const [selectedId, setSelectedId] = useState(null)
@@ -32,7 +58,15 @@ function NoticiasEmpresa({ navigation, empresas }) {
         <View style={[styles.container]}>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             {empresas.data.length > 0 ? (<FlatList
-                data={empresas.data}
+                data={empresas.data.sort((a, b) => {
+                    if (a.origen > b.origen) {
+                        return 1
+                    }
+                    if (a.origen < b.origen) {
+                        return -1
+                    }
+                    return 0
+                })}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 extraData={selectedId}

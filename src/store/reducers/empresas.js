@@ -52,6 +52,7 @@ export default (state = initialState, action) => {
             recorridos = [...state.data]
             reco = recorridos.map(recorrido => {
                 if (recorrido.id == action.recorrido) {
+                    recorrido.cantidadNoticias = recorrido.cantidadNoticias + 1
                     let noticias = recorrido.Noticias ? Object.values(recorrido.Noticias) : []
                     noticias.unshift(action.noticia)
                     recorrido.Noticias = noticias
@@ -68,6 +69,7 @@ export default (state = initialState, action) => {
             recorridos = [...state.data]
             reco = recorridos.map(recorrido => {
                 if (recorrido.id == action.recorrido) {
+                    recorrido.cantidadNoticias = recorrido.cantidadNoticias - 1
                     let noticias = recorrido.Noticias ? Object.values(recorrido.Noticias) : []
                     noticias = noticias.filter(x => x.id != action.noticia.id)
                     recorrido.Noticias = noticias
