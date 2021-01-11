@@ -69,7 +69,7 @@ function leftButton({ navigation }) {
 function rightButton() {
   return (
     <TouchableOpacity>
-      <Icon name="info-circle" size={30} style={styles.icon} />
+      <Icon name="question-circle" size={30} style={styles.icon} />
     </TouchableOpacity>
   )
 }
@@ -288,7 +288,15 @@ function PrincipalDrawer({ route, navigation }) {
   const { rol, cantNoticias } = route.params
   setTotalNoticias(cantNoticias)
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator drawerContentOptions={{
+      activeTintColor: 'white',
+      activeBackgroundColor: '#e84c22',
+      inactiveTintColor: '#04254E',
+      inactiveBackgroundColor: 'white',
+      labelStyle: {
+        marginLeft: 5,
+      }
+    }}>
       { rol == 'empresa' ? (
         <Drawer.Screen options={{}} name="Inicio" component={TabEmpresa} />
       ) : (

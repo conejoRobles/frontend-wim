@@ -1,63 +1,12 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, ScrollView, Image, Animated, Modal, FlatList } from "react-native";
 import { Badge } from 'react-native-paper'
 import { connect } from 'react-redux'
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-// const DATA = [
-//     {
-//         id: "0",
-//         empresa: 'Hola',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "1",
-//         empresa: 'Conejo',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "2",
-//         empresa: 'Estoy',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "3",
-//         empresa: 'Aburrida',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "4",
-//         empresa: 'Pero',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "5",
-//         empresa: 'Ya',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "6",
-//         empresa: 'Termine',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-//     {
-//         id: "7",
-//         empresa: 'c:',
-//         HorarioSalida: '10:30',
-//         HorarioLlegada: '11:20'
-//     },
-// ]
 
-// Crear componente *******************************************
 const Item = ({ item, onPress, style }) => {
     let horaInicio = new Date(item.horaInicio)
     let horaTermino = new Date(item.horaTermino)
@@ -97,8 +46,38 @@ function FavXRecorridos({ navigation, empresas, route }) {
             />
         )
     }
+
+    const [loading, setLoading] = useState(false)
+
+    const [animation, setAnimation] = useState(new Animated.Value(0))
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: -1540,
+            duration: 3000,
+            useNativeDriver: true,
+        }).start()
+    }
+    const rotateInterPolate = animation.interpolate({
+        inputRange: [0, 360],
+        outputRange: ["0deg", "-360deg"],
+    })
+    const animatedStyles = {
+        transform: [{ rotate: rotateInterPolate }],
+    };
     return (
-        <View style={styles.container}>
+        <View style={!loading ? ([styles.container, { padding: 20 }]) : ([styles.container, { padding: 20 }, { opacity: 0.25 }])}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={loading}
+            >
+                <Animated.View style={[styles.containerLoading, { backgroundColor: null }, animatedStyles]} >
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/logo.png')}
+                    ></Image>
+                </Animated.View>
+            </Modal>
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             <View>
                 <Text style={[styles.texto4, { textAlign: 'center', marginTop: 20 }]}>{recorrido.origen} - {recorrido.destino}</Text>
@@ -131,6 +110,63 @@ function FavXRecorridos({ navigation, empresas, route }) {
             }
         </View>
     )
+}
+
+const removeFav = async (item, user, empresas, navigation, horarios, horariosLoad, setLoading) => {
+    let res = await fetch(back + 'removeFavorito', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+        },
+        body: JSON.stringify({
+            rut: user.rut,
+            origen: item.origen,
+            destino: item.destino,
+            empresa: item.empresa,
+            nombreEmpresa: item.nombre,
+            recorrido: item.recorrido,
+            id: item.id
+        }),
+    })
+    res = await res.json()
+    if (res.ok) {
+        let horar = horarios.data
+        let flag = false
+        horar = horar.map(x => {
+            if (x.origen == item.origen && x.destino == item.destino) {
+                flag = true
+                x.Horarios = x.Horarios.filter(y => y.id != item.id)
+            }
+            return x
+        }).filter(x => x.Horarios.length > 0)
+        horariosLoad(horar)
+        setLoading(false)
+        Alert.alert(
+            "Has dejado de seguir este horario!",
+            'Ahora no recibirás sus noticias',
+            [
+                {
+                    text: "OK", onPress: () => {
+                        navigation.navigate('InfoRecorrido', {
+                            item
+                        })
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+
+    } else {
+        setLoading(false)
+        Alert.alert(
+            "Oh no! algo anda mal",
+            'No se ha podido quitar de favoritos, intente nuevamente',
+            [
+                { text: "Volver a intentar" }
+            ],
+            { cancelable: false }
+        );
+    }
 }
 
 const styles = StyleSheet.create({

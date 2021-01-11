@@ -17,7 +17,7 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
     const [search, setSearch] = useState(false)
     const [dia, setDia] = useState((new Date().getDay() - 1) < 0 ? 6 : (new Date().getDay() - 1))
     const [date, setDate] = useState((new Date()));
-    const [date2, setDate2] = useState((new Date()));
+    const [date2, setDate2] = useState((new Date()).setHours(date.getHours() + 1));
     const [modalVisible, setModalVisible] = useState(false)
     const [modalVisible2, setModalVisible2] = useState(false)
     const [show, setShow] = useState(false)
@@ -131,66 +131,76 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                                 }}
                             />
                         </View>
-                        <TouchableOpacity
-                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
-                            onPress={() => {
-                                if (dataSearch.origen != '' && dataSearch.destino != '') {
-                                    if (!loading) {
-                                        setModalVisible2(false)
-                                        startAnimation()
-                                        setLoading(true)
-                                        publicar(navigation, dataSearch).then((recos) => {
-                                            setRecorridos(recos)
-                                            setLoading(false)
-                                            setSearch(true)
-                                        })
-                                    }
-                                } else {
-                                    Alert.alert(
-                                        "Falta algo más!",
-                                        "Debes agregar un origen y un destino",
-                                        [
-                                            {
-                                                text: "OK", onPress: () => {
-                                                    setModalVisible(false)
-                                                    setModalVisible2(true)
+                        <View style={[{ flexDirection: "row", justifyContent: 'center', marginTop: 10 }]}>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", marginRight: 10 }}
+                            >
+                                <Text style={styles.textStyle} onPress={() => {
+                                    setModalVisible2(false)
+                                    setModalVisible(false)
+                                }}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
+                                onPress={() => {
+                                    if (dataSearch.origen != '' && dataSearch.destino != '') {
+                                        if (!loading) {
+                                            setModalVisible2(false)
+                                            startAnimation()
+                                            setLoading(true)
+                                            publicar(navigation, dataSearch).then((recos) => {
+                                                setRecorridos(recos)
+                                                setLoading(false)
+                                                setSearch(true)
+                                            })
+                                        }
+                                    } else {
+                                        Alert.alert(
+                                            "Falta algo más!",
+                                            "Debes agregar un origen y un destino",
+                                            [
+                                                {
+                                                    text: "OK", onPress: () => {
+                                                        setModalVisible(false)
+                                                        setModalVisible2(true)
+                                                    }
                                                 }
-                                            }
-                                        ],
-                                        { cancelable: false }
-                                    );
-                                }
-                            }}
-                        >
-                            <Text style={styles.textStyle} onPress={() => {
-                                if (dataSearch.origen != '' && dataSearch.destino != '') {
-                                    if (!loading) {
-                                        setModalVisible2(false)
-                                        startAnimation()
-                                        setLoading(true)
-                                        publicar(navigation, dataSearch).then((recos) => {
-                                            setRecorridos(recos)
-                                            setLoading(false)
-                                            setSearch(true)
-                                        })
+                                            ],
+                                            { cancelable: false }
+                                        );
                                     }
-                                } else {
-                                    Alert.alert(
-                                        "Falta algo más!",
-                                        "Debes agregar un origen y un destino",
-                                        [
-                                            {
-                                                text: "OK", onPress: () => {
-                                                    setModalVisible(false)
-                                                    setModalVisible2(true)
+                                }}
+                            >
+                                <Text style={styles.textStyle} onPress={() => {
+                                    if (dataSearch.origen != '' && dataSearch.destino != '') {
+                                        if (!loading) {
+                                            setModalVisible2(false)
+                                            startAnimation()
+                                            setLoading(true)
+                                            publicar(navigation, dataSearch).then((recos) => {
+                                                setRecorridos(recos)
+                                                setLoading(false)
+                                                setSearch(true)
+                                            })
+                                        }
+                                    } else {
+                                        Alert.alert(
+                                            "Falta algo más!",
+                                            "Debes agregar un origen y un destino",
+                                            [
+                                                {
+                                                    text: "OK", onPress: () => {
+                                                        setModalVisible(false)
+                                                        setModalVisible2(true)
+                                                    }
                                                 }
-                                            }
-                                        ],
-                                        { cancelable: false }
-                                    );
-                                }
-                            }}>Aceptar</Text>
-                        </TouchableOpacity>
+                                            ],
+                                            { cancelable: false }
+                                        );
+                                    }
+                                }}>Buscar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -258,54 +268,20 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                                 display={"spinner"}
                             />}
                         </View>
-                        <TouchableOpacity
-                            style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
-                            onPress={() => {
-                                if (dataSearch.origen != '' && dataSearch.destino != '') {
-                                    if (!loading) {
-                                        setModalVisible(false)
-                                        startAnimation()
-                                        setLoading(true)
-                                        publicar(navigation, dataSearch).then((recos) => {
-                                            setRecorridos(recos)
-                                            setLoading(false)
-                                            setSearch(true)
-                                        })
-                                    }
-                                } else {
-                                    Alert.alert(
-                                        "Falta algo más!",
-                                        "Debes agregar un origen y un destino",
-                                        [
-                                            {
-                                                text: "OK", onPress: () => {
-                                                    setModalVisible(false)
-                                                    setModalVisible2(true)
-                                                }
-                                            }
-                                        ],
-                                        { cancelable: false }
-                                    );
-                                }
-                            }}
-                        >
-                            <Text style={styles.textStyle} onPress={() => {
-                                if (dataSearch.origen != '' && dataSearch.destino != '') {
-                                    if (!loading) {
-                                        let horaInicio = new Date(dataSearch.horaInicio)
-                                        let horaTermino = new Date(dataSearch.horaTermino)
-                                        if (horaInicio.getTime() > horaTermino.getTime()) {
-                                            Alert.alert(
-                                                "Oh no!",
-                                                "La hora mínima debe ser menor a la hora máxima",
-                                                [
-                                                    {
-                                                        text: "OK"
-                                                    }
-                                                ],
-                                                { cancelable: false }
-                                            );
-                                        } else {
+                        <View style={[{ flexDirection: "row", justifyContent: 'center' }]}>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", marginRight: 10 }}
+                            >
+                                <Text style={styles.textStyle} onPress={() => {
+                                    setModalVisible2(false)
+                                    setModalVisible(false)
+                                }}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ ...styles.openButton, backgroundColor: "#e84c22", }}
+                                onPress={() => {
+                                    if (dataSearch.origen != '' && dataSearch.destino != '') {
+                                        if (!loading) {
                                             setModalVisible(false)
                                             startAnimation()
                                             setLoading(true)
@@ -315,24 +291,68 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                                                 setSearch(true)
                                             })
                                         }
-                                    }
-                                } else {
-                                    Alert.alert(
-                                        "Falta algo más!",
-                                        "Debes agregar un origen y un destino",
-                                        [
-                                            {
-                                                text: "OK", onPress: () => {
-                                                    setModalVisible(false)
-                                                    setModalVisible2(true)
+                                    } else {
+                                        Alert.alert(
+                                            "Falta algo más!",
+                                            "Debes agregar un origen y un destino",
+                                            [
+                                                {
+                                                    text: "OK", onPress: () => {
+                                                        setModalVisible(false)
+                                                        setModalVisible2(true)
+                                                    }
                                                 }
+                                            ],
+                                            { cancelable: false }
+                                        );
+                                    }
+                                }}
+                            >
+                                <Text style={styles.textStyle} onPress={() => {
+                                    if (dataSearch.origen != '' && dataSearch.destino != '') {
+                                        if (!loading) {
+                                            let horaInicio = new Date(dataSearch.horaInicio)
+                                            let horaTermino = new Date(dataSearch.horaTermino)
+                                            if (horaInicio.getTime() > horaTermino.getTime()) {
+                                                Alert.alert(
+                                                    "Oh no!",
+                                                    "La hora mínima debe ser menor a la hora máxima",
+                                                    [
+                                                        {
+                                                            text: "OK"
+                                                        }
+                                                    ],
+                                                    { cancelable: false }
+                                                );
+                                            } else {
+                                                setModalVisible(false)
+                                                startAnimation()
+                                                setLoading(true)
+                                                publicar(navigation, dataSearch).then((recos) => {
+                                                    setRecorridos(recos)
+                                                    setLoading(false)
+                                                    setSearch(true)
+                                                })
                                             }
-                                        ],
-                                        { cancelable: false }
-                                    );
-                                }
-                            }}>Buscar</Text>
-                        </TouchableOpacity>
+                                        }
+                                    } else {
+                                        Alert.alert(
+                                            "Falta algo más!",
+                                            "Debes agregar un origen y un destino",
+                                            [
+                                                {
+                                                    text: "OK", onPress: () => {
+                                                        setModalVisible(false)
+                                                        setModalVisible2(true)
+                                                    }
+                                                }
+                                            ],
+                                            { cancelable: false }
+                                        );
+                                    }
+                                }}>Buscar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -342,13 +362,33 @@ function buscarRecorrido({ user, empresas, navigation, route }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginHorizontal: 15, justifyContent: 'center', }} onPress={() => {
                     setdataSearch({ ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen })
-                    startAnimation()
-                    setLoading(true)
-                    publicar(navigation, { ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen }).then((recos) => {
-                        setRecorridos(recos)
-                        setLoading(false)
-                        setSearch(true)
-                    })
+                    if (dataSearch.origen != '' && dataSearch.destino != '') {
+                        if (!loading) {
+                            setModalVisible(false)
+                            startAnimation()
+                            setLoading(true)
+                            publicar(navigation, { ...dataSearch, origen: dataSearch.destino, destino: dataSearch.origen }).then((recos) => {
+                                setRecorridos(recos)
+                                setLoading(false)
+                                setSearch(true)
+                            })
+                        }
+                    } else {
+                        Alert.alert(
+                            "Falta algo más!",
+                            "Debes agregar un origen y un destino",
+                            [
+                                {
+                                    text: "OK", onPress: () => {
+                                        setModalVisible(false)
+                                        setModalVisible2(true)
+                                    }
+                                }
+                            ],
+                            { cancelable: false }
+                        );
+                    }
+
                 }}>
                     <FontAwesome5
                         name={'exchange-alt'}
