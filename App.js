@@ -27,6 +27,7 @@ import Horarios from './src/screens/Horarios'
 import AgregarHorario from './src/screens/AgregarHorario'
 import buscarRecorrido from './src/screens/buscarRecorrido'
 import infoRecorrido from './src/screens/infoRecorrido'
+import Help from './src/screens/help'
 import FavXRecorridos from './src/screens/FavXRecorridos'
 
 
@@ -68,7 +69,9 @@ function leftButton({ navigation }) {
 
 function rightButton() {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity style={{ marginLeft: 20 }}
+      onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+    >
       <Icon name="question-circle" size={30} style={styles.icon} />
     </TouchableOpacity>
   )
@@ -111,8 +114,17 @@ function AuthStackScreen({ navigation, horarios }) {
           number: 5,
           headerStyle: { backgroundColor: '#e84c22' },
           headerTitleStyle: { color: 'white' },
-          headerRight: rightButton
-
+          headerRight: () => {
+            return (
+              <TouchableOpacity style={{ marginLeft: 20 }}
+                onPress={() => {
+                  navigation.navigate('Ayuda')
+                }}
+              >
+                <Icon name="question-circle" size={30} style={styles.icon} />
+              </TouchableOpacity>
+            )
+          }
         })}
       />
     </AuthStack.Navigator>
@@ -304,6 +316,7 @@ function PrincipalDrawer({ route, navigation }) {
         )
       }
       <Drawer.Screen options={{}} name="Cuenta" component={EditarCuenta} />
+      <Drawer.Screen options={{}} name="Ayuda" component={Help} />
     </Drawer.Navigator>
   )
 

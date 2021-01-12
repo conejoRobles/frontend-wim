@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import Logo from '../components/Logo'
 import {
 	StyleSheet,
+	ScrollView,
+	useWindowDimensions,
 	Text,
 	View,
 	TouchableOpacity,
@@ -11,9 +13,10 @@ import {
 } from 'react-native';
 
 const Home = ({ navigation }) => {
-
+	const user_width = useWindowDimensions().width
+	const user_height = useWindowDimensions().height
 	return (
-		<View style={styles.container}>
+		<ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', }} >
 			<StatusBar hidden />
 			<ImageBackground source={require('../../assets/home.png')} style={styles.image} resizeMode='cover'>
 				<Logo />
@@ -34,7 +37,7 @@ const Home = ({ navigation }) => {
 					<Text style={styles.textoBoton}>Iniciar sesión</Text>
 				</TouchableOpacity>
 			</ImageBackground>
-		</View >
+		</ScrollView >
 	);
 }
 
@@ -93,7 +96,6 @@ const styles = StyleSheet.create({
 		height: '100%',
 		alignItems: 'center',
 		justifyContent: 'center',
-		// backgroundColor: 'blue'
 	}
 });
 

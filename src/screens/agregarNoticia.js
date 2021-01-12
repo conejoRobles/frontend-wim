@@ -190,9 +190,10 @@ const publicar = async (noticia, agregar, navigation, user, recorrido, noticias,
     noticia = { ...noticia, fechaTermino: termino.toString(), fechaPublicacion: hoy.toString() }
     res = await res.json()
     if (res.ok) {
-        await agregar(noticia, recorrido)
+
         noticias.unshift(noticia)
         horario.Noticias = noticias
+        await agregar(noticia, recorrido)
         empresas.data.map(x => {
             if (x.id == recorrido) {
                 x.cantidadNoticias = x.cantidadNoticias + 1

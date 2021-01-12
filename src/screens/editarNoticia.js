@@ -6,7 +6,7 @@ import { eliminarNoticia, editar, noticiasLoad } from '../store/actions/noticias
 import { back } from '../../env'
 
 
-function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
+function editarNoticia({ navigation, editar, route, eliminarNoticia, user, empresas }) {
     const { item, recorrido, noticias, horario } = route.params
     const [noticia, setNoticia] = useState({ ...item })
 
@@ -110,13 +110,13 @@ function editarNoticia({ navigation, editar, route, eliminarNoticia, user }) {
             <View style={{ flex: 1, flexDirection: 'row', marginHorizontal: 20 }}>
                 <TouchableOpacity style={[styles.button, { flex: 1, backgroundColor: '#04254E', marginHorizontal: 10 }]} onPress={() => {
                     startAnimation()
-                    eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias, horario, setLoading)
+                    eliminar(item, eliminarNoticia, navigation, user, recorrido, noticias, horario, setLoading, empresas)
                 }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Eliminar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.button, { flex: 1, marginHorizontal: 10 }]} onPress={() => {
                     startAnimation()
-                    publicar(noticia, editar, user, recorrido, navigation, noticias, horario, setLoading)
+                    publicar(noticia, editar, user, recorrido, navigation, noticias, horario, setLoading, empresas)
                 }}>
                     <Text style={[styles.texto, { color: 'white', marginBottom: 0 }]}>Publicar</Text>
                 </TouchableOpacity>
@@ -200,7 +200,7 @@ const publicar = async (noticia, editar, user, recorrido, navigation, noticias, 
     }
 }
 
-const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias, horario, setLoading) => {
+const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noticias, horario, setLoading, empresas) => {
     setLoading(true)
     let res = await fetch(back + 'removeNoticia', {
         method: 'POST',
@@ -216,9 +216,14 @@ const eliminar = async (item, eliminarNoticia, navigation, user, recorrido, noti
     })
     res = await res.json()
     if (res.ok) {
-        await eliminarNoticia(item, recorrido)
         noticias = noticias.filter(x => x.id != item.id)
         horario.Noticias = noticias
+        await eliminarNoticia(item, recorrido)
+        empresas.data.map(x => {
+            if (x.id == recorrido) {
+                x.cantidadNoticias = x.cantidadNoticias - 1
+            }
+        })
         setLoading(false)
         Alert.alert(
             "Genial!",

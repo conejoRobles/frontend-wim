@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 function Horarios({ user, empresas, navigation, route }) {
     const [selectedId, setSelectedId] = useState(null)
     const { reco, forNews } = route.params
+
     const renderItem = ({ item }) => {
         return (
             <>
@@ -159,22 +160,25 @@ function Horarios({ user, empresas, navigation, route }) {
                 reco.Horarios ?
                     (
                         <FlatList
-                            data={
-                                Object.values(reco.Horarios).map(x => {
-                                    let a = new Date(x.horaInicio)
-                                    let b = new Date()
-                                    b.setHours(a.getHours(), a.getMinutes(), 0)
-                                    x.horaInicio = b.toString()
-                                    return x
-                                }).sort((a, b) => {
-                                    if (new Date(a.horaInicio).getTime() > new Date(b.horaInicio).getTime()) {
-                                        return 1
-                                    }
-                                    if (new Date(a.horaInicio).getTime() < new Date(b.horaInicio).getTime()) {
-                                        return -1
-                                    }
-                                    return 0
-                                })}
+                            data={empresas.data.map(z => {
+                                if (z.id == reco.id) {
+                                    return Object.values(z.Horarios).map(x => {
+                                        let a = new Date(x.horaInicio)
+                                        let b = new Date()
+                                        b.setHours(a.getHours(), a.getMinutes(), 0)
+                                        x.horaInicio = b.toString()
+                                        return x
+                                    }).sort((a, b) => {
+                                        if (new Date(a.horaInicio).getTime() > new Date(b.horaInicio).getTime()) {
+                                            return 1
+                                        }
+                                        if (new Date(a.horaInicio).getTime() < new Date(b.horaInicio).getTime()) {
+                                            return -1
+                                        }
+                                        return 0
+                                    })
+                                }
+                            }).filter(j => j != undefined && j != null)[0]}
                             renderItem={renderItem}
                             keyExtractor={(item) => item.id}
                             extraData={selectedId}

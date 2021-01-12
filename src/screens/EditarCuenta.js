@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { connect } from 'react-redux'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, Alert, ImageBackground, StatusBar, useWindowDimensions, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
@@ -15,9 +15,11 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 	const [showPass, setShowPass] = useState({ value: true })
 	const [editar, setEditar] = useState(false)
 	const [rol, setRol] = useState(user.rol)
+	const user_width = useWindowDimensions().width
+	const user_height = useWindowDimensions().height
 
 	return editar ? (
-		<View style={[styles.container]} >
+		<ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', paddingTop: (user_height * 0.05), paddingBottom: (user_height * 0.05) }} >
 			<StatusBar backgroundColor="#e84c22" />
 			<Text style={styles.titulo}>Cuenta</Text>
 			<View style={styles.inputView}>
@@ -111,9 +113,9 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 			>
 				<Text style={styles.textoBoton}>Cerrar Sesión</Text>
 			</TouchableOpacity>
-		</View>
+		</ScrollView>
 	) : (
-			<View style={styles.container} >
+			<ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', paddingTop: (user_height * 0.05), paddingBottom: (user_height * 0.05) }} >
 				<StatusBar backgroundColor="#e84c22" />
 				<Text style={styles.titulo}>Cuenta</Text>
 				<View style={[styles.inputView, { backgroundColor: 'white' }]}>
@@ -196,7 +198,7 @@ const EditarCuenta = ({ navigation, user, load, logout }) => {
 				>
 					<Text style={styles.textoBoton}>Cerrar Sesión</Text>
 				</TouchableOpacity>
-			</View>
+			</ScrollView>
 		)
 }
 
@@ -300,12 +302,11 @@ const guardar = async (usuario) => {
 }
 
 
+
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
 		backgroundColor: 'white',
-		alignItems: 'center',
-		justifyContent: 'center'
 	},
 	titulo: {
 		fontSize: 35,
