@@ -4,58 +4,6 @@ import { Badge } from 'react-native-paper'
 import { connect } from 'react-redux'
 import { horariosConstants } from '../store/constants/horarios'
 
-const DATA = [
-    {
-        id: "0",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "1",
-        origen: 'San Carlos',
-        destino: 'Chillán'
-    },
-    {
-        id: "2",
-        origen: 'Chillán',
-        destino: 'Pinto'
-    },
-    {
-        id: "3",
-        origen: 'Pinto',
-        destino: 'Chillán'
-    },
-    {
-        id: "4",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "5",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "6",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "7",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "8",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-    {
-        id: "9",
-        origen: 'Chillán',
-        destino: 'San Carlos'
-    },
-]
 
 // Crear componente *******************************************
 const Item = ({ item, onPress, style }) => {
@@ -96,13 +44,18 @@ const Item = ({ item, onPress, style }) => {
 
 function NoticiaPasajero({ navigation, empresas, horarios }) {
     const [selectedId, setSelectedId] = useState(null)
-    let data = []
-    empresas.data.map(x => {
-        let aux = Object.values(x).filter(y => y.id != null && y.id != undefined)
-        aux.map(y => {
-            data.push(y)
+    let cantNoticias = 0
+    if (horarios.data.length > 0) {
+        horarios.data.map(item => {
+            if (item.Horarios != null && item.Horarios != undefined) {
+                item.Horarios.map(x => {
+                    if (x.Noticias != null && x.Noticias != undefined) {
+                        cantNoticias += Object.values(x.Noticias).length
+                    }
+                })
+            }
         })
-    })
+    }
     const renderItem = ({ item }) => {
         const backgroundColor = item.id === selectedId ? "#d5d5d5" : "#f1f1f1";
         return (
@@ -124,12 +77,20 @@ function NoticiaPasajero({ navigation, empresas, horarios }) {
             <StatusBar backgroundColor="#e84c22"></StatusBar>
             {
                 horarios.data.length > 0 ? (
-                    <FlatList
-                        data={horarios.data}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        extraData={selectedId}
-                    />
+                    <>
+                        {
+                            cantNoticias > 0 ? (
+                                <FlatList
+                                    data={horarios.data}
+                                    renderItem={renderItem}
+                                    keyExtractor={(item) => item.id}
+                                    extraData={selectedId}
+                                />
+                            ) : (
+                                    <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>Aun no hay noticias!</Text>
+                                )
+                        }
+                    </>
                 ) : (
                         <Text style={[styles.texto4, { color: 'black', marginTop: '70%' }]}>No sigues ningun recorrido</Text>
                     )

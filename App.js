@@ -17,7 +17,7 @@ import NoticiasXRecorridoEmpresa from './src/screens/NoticiasXRecorridoEmpresa'
 import NoticiasXRecorridoPasajero from './src/screens/NoticiasXRecorridoPasajero'
 import NoticiaEmpresa from './src/screens/NoticiasEmpresa'
 import { LinearGradient } from 'expo-linear-gradient';
-import { Provider, connect } from 'react-redux'
+import { Provider, connect, useSelector } from 'react-redux'
 import store from './src/store/store'
 import EditarCuenta from './src/screens/EditarCuenta'
 import agregarNoticia from './src/screens/agregarNoticia'
@@ -52,8 +52,8 @@ let noticias = 0
 const getTotalNoticias = () => {
   return noticias
 }
-const setTotalNoticias = (valor) => {
-  noticias = valor
+const setTotalNoticias = (value) => {
+  noticias = value
   return noticias
 }
 function leftButton({ navigation }) {
@@ -298,7 +298,35 @@ function TabEmpresa() {
 
 function PrincipalDrawer({ route, navigation }) {
   const { rol, cantNoticias } = route.params
-  setTotalNoticias(cantNoticias)
+  const user = useSelector(state => state.user)
+  let cantiNoticias = 0
+  if (user.rol == 'pasajero') {
+    let data = useSelector(state => state.horarios.data)
+    data.map(item => {
+      if (item.Horarios != null && item.Horarios != undefined) {
+        item.Horarios.map(x => {
+          if (x.Noticias != null && x.Noticias != undefined) {
+            cantiNoticias += Object.values(x.Noticias).length
+          }
+        })
+      }
+    })
+    setTotalNoticias(cantiNoticias)
+  } else {
+    let recorridos = useSelector(state => state.empresas.data)
+    recorridos.map(x => {
+      if (x.Horarios != null && x.Horarios != undefined) {
+        Object.values(x.Horarios).map(y => {
+          if (y.Noticias != undefined && y.Noticias != null) {
+            cantiNoticias += Object.values(y.Noticias).length
+
+          }
+        })
+      }
+    })
+    setTotalNoticias(cantiNoticias)
+  }
+
   return (
     <Drawer.Navigator drawerContentOptions={{
       activeTintColor: 'white',

@@ -21,31 +21,6 @@ function Help() {
 			setPlaying(false);
 		}
 	}, []);
-	const reproductor = (ancho, alto) => {
-		// const [playing, setPlaying] = useState(false);
-
-		const onStateChange = useCallback((state) => {
-			if (state === "ended") {
-				setPlaying(false);
-				Alert.alert("video has finished playing!");
-			}
-		}, []);
-
-		const togglePlaying = useCallback(() => {
-			setPlaying((prev) => !prev);
-		}, []);
-
-		return (
-			<View>
-				<YoutubePlayer
-					height={alto}
-					width={ancho}
-					play={playing}
-					videoId={"K0rMVzktzWs"}
-					onChangeState={onStateChange}
-				/>
-			</View>)
-	}
 	return (
 		<View style={[styles.container]}>
 			<StatusBar backgroundColor="#ff6900"></StatusBar>
@@ -54,44 +29,68 @@ function Help() {
 				<Text style={styles.texto3}>Aquí encontraras tutoriales</Text>
 			</View>
 			<ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', marginTop: '4%', paddingBottom: '10%', borderTopColor: 'red' }} >
-				<Text style={styles.texto2}>The Boyz</Text>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Editar tu cuenta</Text>
 				<YoutubePlayer
 					height={200}
 					width={300}
 					play={playing}
-					videoId={"FUzOtPLCVtQ"}
+					videoId={"nw9E3fQvUEY"}
 					onChangeState={onStateChange}
 				/>
-				<Text style={styles.texto2}>HBD</Text>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Cerrar sesión</Text>
 				<YoutubePlayer
 					height={200}
 					width={300}
 					play={playing}
-					videoId={"K0rMVzktzWs"}
+					videoId={"nw9E3fQvUEY"}
 					onChangeState={onStateChange}
 				/>
-				<Text style={styles.texto2}>HBD</Text>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Agregar un recorrido</Text>
 				<YoutubePlayer
 					height={200}
 					width={300}
 					play={playing}
-					videoId={"K0rMVzktzWs"}
+					videoId={"nw9E3fQvUEY"}
 					onChangeState={onStateChange}
 				/>
-				<Text style={styles.texto2}>HBD</Text>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Editar un recorrido</Text>
 				<YoutubePlayer
 					height={200}
 					width={300}
 					play={playing}
-					videoId={"K0rMVzktzWs"}
+					videoId={"nw9E3fQvUEY"}
 					onChangeState={onStateChange}
 				/>
-				<Text style={styles.texto2}>HBD</Text>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Agregar un horario</Text>
 				<YoutubePlayer
 					height={200}
 					width={300}
 					play={playing}
-					videoId={"K0rMVzktzWs"}
+					videoId={"nw9E3fQvUEY"}
+					onChangeState={onStateChange}
+				/>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Editar un horario</Text>
+				<YoutubePlayer
+					height={200}
+					width={300}
+					play={playing}
+					videoId={"nw9E3fQvUEY"}
+					onChangeState={onStateChange}
+				/>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Agregar una noticia</Text>
+				<YoutubePlayer
+					height={200}
+					width={300}
+					play={playing}
+					videoId={"nw9E3fQvUEY"}
+					onChangeState={onStateChange}
+				/>
+				<Text style={[styles.texto2, { marginBottom: 12 }]}>Editar una noticia</Text>
+				<YoutubePlayer
+					height={200}
+					width={300}
+					play={playing}
+					videoId={"nw9E3fQvUEY"}
 					onChangeState={onStateChange}
 				/>
 			</ScrollView>

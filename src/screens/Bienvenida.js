@@ -39,7 +39,7 @@ const Item = ({ item, onPress, style }) => {
                     />
                 </View>}
                 <Text style={[styles.texto3, { fontSize: 15, color: 'white' }]}>
-                    Horarios: {Object.values(item.Horarios).length}</Text>
+                    Horarios: {item.Horarios != null && item.Horarios != undefined ? Object.values(item.Horarios).length : 0}</Text>
             </View>
         </TouchableOpacity >
     )

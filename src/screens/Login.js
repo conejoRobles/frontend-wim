@@ -10,7 +10,7 @@ import { AppLoading } from 'expo'
 import { logout } from '../store/actions/user'
 import { back } from '../../env'
 
-const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosLoad, horarios, changeTitle }) => {
+const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosLoad, horarios, }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPass, setShowPass] = useState(true);
@@ -110,7 +110,7 @@ const Login = ({ navigation, inicioSesion, empresasLoad, user, logout, horariosL
 								inicio({
 									email,
 									password,
-								}, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad, horarios, changeTitle)
+								}, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad, horarios)
 							}
 						}
 					}}
@@ -141,7 +141,7 @@ const trie = async (usuario, navigation, inicioSesion, empresasLoad, user, logou
 	return res
 }
 
-const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad, horarios, changeTitle) => {
+const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading, horariosLoad, horarios,) => {
 	await logout()
 	try {
 		res = await trie(usuario, navigation, inicioSesion, empresasLoad, user, logout, setLoading)
@@ -167,10 +167,12 @@ const inicio = async (usuario, navigation, inicioSesion, empresasLoad, user, log
 				let recorridos = ans2.recorridos
 				empresasLoad(Object.values(recorridos).map(x => {
 					let noticias = 0
-					Object.values(x.Horarios).map(y => {
-						noticias += y.Noticias != null && y.Noticias != undefined ? (Object.values(y.Noticias).length) : (0)
-					})
-					cantNoticias += noticias
+					if (x.Horarios != null && x.Horarios != undefined) {
+						Object.values(x.Horarios).map(y => {
+							noticias += y.Noticias != null && y.Noticias != undefined ? (Object.values(y.Noticias).length) : (0)
+						})
+						cantNoticias += noticias
+					}
 					x = { ...x, cantidadNoticias: noticias }
 					return x
 				}))

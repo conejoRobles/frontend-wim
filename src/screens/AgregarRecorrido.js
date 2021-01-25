@@ -120,6 +120,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                             <TextInput style={styles.inputText2}
                                 editable={editar}
                                 value={tarifa.nombre}
+                                autoCapitalize={"words"}
                                 placeholder='Ej: General, estudiante, etc.'
                                 onChangeText={(text) => {
                                     setTarifa({ ...tarifa, nombre: text })
@@ -242,6 +243,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                             editable={
                                 (editar)
                             }
+                            autoCapitalize={"words"}
                             value={recorrido.origen}
                             style={styles.inputText}
                             onChangeText={text => setRecorrido({ ...recorrido, origen: text })}
@@ -256,6 +258,7 @@ function AgregarRecorrido({ navigation, user, route, agregarRec, editarRecorrido
                             editable={
                                 (editar)
                             }
+                            autoCapitalize={"words"}
                             value={recorrido.destino}
                             style={styles.inputText}
                             onChangeText={text => setRecorrido({ ...recorrido, destino: text })}
